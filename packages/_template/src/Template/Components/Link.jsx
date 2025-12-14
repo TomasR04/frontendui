@@ -1,7 +1,7 @@
 import { ProxyLink } from "@hrbolek/uoisfrontend-shared"
-import { URIRoot } from "../../uriroot";
+import { URIRoot } from "../uriroot";
 
-export const TemplateURI = `${URIRoot}/template/view/`;
+export const LinkURI = `${URIRoot}/template/view/`;
 
 /**
  * A React component that renders a `ProxyLink` to an "template" entity's view page.
@@ -30,6 +30,8 @@ export const TemplateURI = `${URIRoot}/template/view/`;
  *
  * @see ProxyLink - The base component used for rendering the link.
  */
-export const Link = ({template, ...props}) => {
-    return <ProxyLink to={TemplateURI + template.id} {...props}>{template.name}</ProxyLink>
+export const Link = ({ item, children, ...props}) => {
+    return <ProxyLink to={LinkURI + item.id} {...props}>{children || item?.fullname || item?.name || item?.id || "Nevim"}</ProxyLink>
+    // return <BaseUI.Link item={item} />
+    // return <a>{children || item?.fullname || item?.name || item?.id || "Nevim"}</a>
 }

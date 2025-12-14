@@ -1,5 +1,6 @@
 import { CardCapsule as _CardCapsule} from "@hrbolek/uoisfrontend-shared"
 import { PersonFill } from "react-bootstrap-icons"
+import { Link } from "./Link"
 
 /**
  * A specialized card component that displays an `TemplateLink` as its title and encapsulates additional content.
@@ -28,11 +29,13 @@ import { PersonFill } from "react-bootstrap-icons"
  *   <Button variant="primary">Click Me</Button>
  * </TemplateCardCapsule>
  */
-export const CardCapsule = ({UI, template, children, title=null}) => {
+export const CardCapsule = ({ item, children, title=null}) => {
+    
     if (!title) {
-        title = <><PersonFill /> <UI.Link template={template} /></>
+        title = <><PersonFill /> <Link item={item} /></>
     }
     return (
+        
         <_CardCapsule title={title}>
             {children}
         </_CardCapsule>

@@ -27,5 +27,5 @@ import { ChildWrapper } from "@hrbolek/uoisfrontend-shared";
  *
  * // Result: Both <CustomMessage /> and <CustomIcon /> receive the 'template' prop with the specified entity.
  */
-export const Children = ({template, children, ...props}) => 
-    <ChildWrapper template={template} children={children} {...props} />
+export const Children = ({item, children, ...props}) => 
+    <ChildWrapper item={item} children={children} {...props} />

@@ -1,7 +1,8 @@
-import Row from "react-bootstrap/Row"
+// import Row from "react-bootstrap/Row"
+import { MediumCard } from "./MediumCard"
+import { CardCapsule } from "./CardCapsule"
+import { Row } from "../../Base/Helpers/Row"
 import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared"
-import { TemplateCardCapsule } from "./TemplateCardCapsule"
-import { TemplateMediumCard } from "./MediumCard"
 
 /**
  * A large card component for displaying detailed content and layout for an template entity.
@@ -27,17 +28,18 @@ import { TemplateMediumCard } from "./MediumCard"
  *   <p>Additional content for the middle column.</p>
  * </TemplateLargeCard>
  */
-export const LargeCard = ({UI, template, children}) => {
+export const LargeCard = ({ item, children }) => {
+    // console.log("LargeCard.item", item)
     return (
-        <UI.CardCapsule template={template} >
+        <CardCapsule item={item} >
             <Row>
                 <LeftColumn>
-                    <UI.MediumCard template={template}/>
+                    <MediumCard item={item} />
                 </LeftColumn>
                 <MiddleColumn>
                     {children}
                 </MiddleColumn>
             </Row>
-        </UI.CardCapsule>
+        </CardCapsule>
     )
 }

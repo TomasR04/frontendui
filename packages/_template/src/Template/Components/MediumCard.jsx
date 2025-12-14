@@ -1,7 +1,7 @@
 import { PersonFill } from "react-bootstrap-icons"
-import { TemplateLink } from "./Link"
-import { TemplateCardCapsule } from "./TemplateCardCapsule"
-import { TemplateMediumContent } from "./MediumContent"
+import { CardCapsule } from "./CardCapsule"
+import { MediumContent } from "./MediumContent"
+import { Link } from "./Link"
 
 /**
  * A card component that displays detailed content for an template entity.
@@ -28,12 +28,12 @@ import { TemplateMediumContent } from "./MediumContent"
  *   <p>Additional details or actions for the entity.</p>
  * </TemplateMediumCard>
  */
-export const MediumCard = ({UI, template, children}) => {
+export const MediumCard = ({ item, children }) => {
     return (
-        <UI.CardCapsule title={<><PersonFill /> <UI.Link template={template} /></>}>
-            <UI.MediumContent template={template}>
+        <CardCapsule title={<><PersonFill /> <Link item={item} /></>}>
+            <MediumContent item={item}>
                 {children}
-            </UI.MediumContent>
-        </UI.CardCapsule>
+            </MediumContent>
+        </CardCapsule>
     )
 }

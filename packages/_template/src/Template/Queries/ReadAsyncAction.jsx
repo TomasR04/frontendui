@@ -1,9 +1,11 @@
-import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
 import { LargeFragment } from "./Fragments";
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
+import { reduceToFirstEntity } from "../../../../dynamic/src/Store";
 
 const ReadQueryStr = `
 query ReadQuery($id: UUID!) {
-  result: ById(id: $id) {
+  result: userById(id: $id) {
     ...Large
   }
 }
@@ -39,4 +41,5 @@ const ReadQuery = createQueryStrLazy(`${ReadQueryStr}`, LargeFragment)
  *     console.error("Error fetching data:", error);
  *   });
  */
-export const ReadAsyncAction = createAsyncGraphQLAction(ReadQuery)
+// export const ReadAsyncAction = createAsyncGraphQLAction2(ReadQuery, reduceToFirstEntity("result"))
+export const ReadAsyncAction = createAsyncGraphQLAction2(ReadQuery)

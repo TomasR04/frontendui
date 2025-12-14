@@ -40,13 +40,13 @@ import { useParams } from "react-router"
  *   }
  * />
  */
-export const EditPage = ({UI, children}) => {
+export const EditPage = ({ children }) => {
     const {id} = useParams()
-    const template = {id}
+    const item = {id}
     return (
-        <UI.PageContentLazy template={template}>
-            <UI.LiveEdit template={template} />
+        <PageContentLazy item={item}>
+            <LiveEdit item={item} />
             {children}
-        </UI.PageContentLazy>
+        </PageContentLazy>
     )
 }

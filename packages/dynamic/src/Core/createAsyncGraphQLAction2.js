@@ -9,8 +9,10 @@ import { updateItemsFromGraphQLResult } from "../Store/Middlewares/updateItemsFr
 
 
 export const createAsyncGraphQLAction2 = (graphQLQuery, params=updateItemsFromGraphQLResult, ...middlewares) => {
-    
+    let graphQLQueryStr = ""
     if (typeof graphQLQuery === "function") {
+        graphQLQueryStr = graphQLQuery?.__metadata?.queryStr
+        // nodes = graphQLQuery?.__metadata?.nodes
         graphQLQuery = graphQLQuery()
     }
 
@@ -34,7 +36,7 @@ export const createAsyncGraphQLAction2 = (graphQLQuery, params=updateItemsFromGr
                 "createAsyncGraphQLAction2: missing GraphQL client (second argument AsyncAction(vars, client))"
             );
         }
-
+        // console.log("requesting GraphQL", { query: graphQLQuery, variables: { ...params, ...vars } })
         const jsonResult = await gqlClient.request({ query: graphQLQuery, variables: { ...params, ...vars } });
         // tady lze volat svoje middlewary / normalizaci
         // updateItemsFromGraphQLResult(data)(dispatch, getState, () => data)
@@ -64,6 +66,6 @@ export const createAsyncGraphQLAction2 = (graphQLQuery, params=updateItemsFromGr
         }
         
     };
-
+    AsyncAction.__metadata = {queryStr: graphQLQueryStr}
     return AsyncAction;
 };

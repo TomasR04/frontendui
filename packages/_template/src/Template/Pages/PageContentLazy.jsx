@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
-import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
+import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
 
 /**
  * A lazy-loading component for displaying content of a template entity.
@@ -31,41 +31,41 @@ import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
  *   )}
  * </TemplatePageContentLazy>
  */
-export const PageContentLazy = ({UI, template, children, asyncAction=null }) => {
+export const PageContentLazy = ({ item, children, asyncAction = null }) => {
     if (!asyncAction) {
         asyncAction = UI.ReadAsyncAction
     }
-    const { error, loading, entity, fetch } = useAsyncAction(asyncAction, template)
+    const { error, loading, entity, fetch } = useAsyncThunkAction(asyncAction, item)
     const [delayer] = useState(() => CreateDelayer())
-  
+
     const handleChange = async (e) => {
-      const value = e?.target?.value && template
-      await delayer(() => fetch(value))
+        const value = e?.target?.value && item
+        await delayer(() => fetch(value))
     }
-  
+
     const handleBlur = async (e) => {
-      const value = e?.target?.value && template
-      await delayer(() => fetch(value))
+        const value = e?.target?.value && item
+        await delayer(() => fetch(value))
     }
-  
+
     return (
-      <>
-        {loading && <LoadingSpinner />}
-        {error && <ErrorHandler errors={error} />}
-        {entity && (
-          <UI.PageContent template={entity} onChange={handleChange} onBlur={handleBlur}>
-            {React.Children.map(children, child =>
-              React.isValidElement(child)
-                ? React.cloneElement(child, {
-                    ...child.props,
-                    template: entity,
-                    onChange: handleChange,
-                    onBlur: handleBlur
-                  })
-                : child
+        <>
+            {loading && <LoadingSpinner />}
+            {error && <ErrorHandler errors={error} />}
+            {entity && (
+                <PageContent item={entity} onChange={handleChange} onBlur={handleBlur}>
+                    {React.Children.map(children, child =>
+                        React.isValidElement(child)
+                            ? React.cloneElement(child, {
+                                ...child.props,
+                                template: entity,
+                                onChange: handleChange,
+                                onBlur: handleBlur
+                            })
+                            : child
+                    )}
+                </PageContent>
             )}
-          </UI.PageContent>
-        )}
-      </>
+        </>
     )
 }

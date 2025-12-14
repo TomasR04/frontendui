@@ -1,5 +1,6 @@
-import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
 import { LargeFragment } from "./Fragments";
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
 
 const DeleteMutationStr = `
 mutation DeleteMutation($id: UUID!, $lastchange: DateTime!) {
@@ -18,4 +19,4 @@ mutation DeleteMutation($id: UUID!, $lastchange: DateTime!) {
 }
 `
 const DeleteMutation = createQueryStrLazy(`${DeleteMutationStr}`, LargeFragment)
-export const DeleteAsyncAction = createAsyncGraphQLAction(DeleteMutation)
+export const DeleteAsyncAction = createAsyncGraphQLAction2(DeleteMutation)

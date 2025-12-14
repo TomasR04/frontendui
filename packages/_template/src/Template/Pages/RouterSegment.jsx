@@ -1,7 +1,6 @@
-import { TemplateURI } from "../Components/TemplateLink"
-import { TemplateEditPage } from "./TemplateEditPage"
-import { TemplatePage } from "./TemplatePage"
-import { TemplateVectorPage } from "./TemplateVectorPage"
+import { LinkURI } from "../Components/Link"
+import { Page, PageEdit } from "./Page"
+import { VectorPage } from "./VectorPage"
 
 /**
  * Definice segmentů rout pro Template stránky.
@@ -34,15 +33,15 @@ import { TemplateVectorPage } from "./TemplateVectorPage"
  */
 export const TemplateRouterSegments = [
     {
-        path: `/${TemplateURI}:id`,
-        element: (<TemplatePage />),
+        path: `/${LinkURI}:id`,
+        element: (<Page />),
     },
+    // {
+    //     path: `/${LinkURI}`,
+    //     element: (<VectorPage />),
+    // },
     {
-        path: `/${TemplateURI}`,
-        element: (<TemplateVectorPage />),
-    },
-    {
-        path: `/${TemplateURI.replace('view', 'edit')}:id`,
-        element: (<TemplateEditPage />),
+        path: `/${LinkURI.replace('view', 'edit')}:id`,
+        element: (<PageEdit />),
     }
 ]

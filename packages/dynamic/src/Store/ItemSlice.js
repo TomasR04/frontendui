@@ -68,7 +68,7 @@ export const ItemSlice = createSlice({
          * payload: { ...item }
          */
         item_add: (state, action) => {
-            console.log("item_add", action)
+            // console.log("item_add", action)
             upsertItem(state, action.payload);
         },
 

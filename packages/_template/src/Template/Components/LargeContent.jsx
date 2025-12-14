@@ -14,8 +14,9 @@
  * 
  * <TemplateLargeContent template={templateEntity} />
  */
-export const LargeContent = ({UI, template}) => {
+export const LargeContent = ({ item }) => {
     return (
-        <pre>{JSON.stringify(template, null, 4)}</pre>
+        
+        <pre>{JSON.stringify(item, null, 4)}</pre>
     )
 }

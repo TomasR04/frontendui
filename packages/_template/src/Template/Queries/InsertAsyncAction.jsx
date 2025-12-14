@@ -1,5 +1,6 @@
-import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
 import { LargeFragment } from "./Fragments";
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
 
 
 const InsertMutationStr = `
@@ -18,4 +19,4 @@ mutation InsertMutation($id: UUID, $name: String, $name_en: String) {
 `
 
 const InsertMutation = createQueryStrLazy(`${InsertMutationStr}`, LargeFragment)
-export const InsertAsyncAction = createAsyncGraphQLAction(InsertMutation)
+export const InsertAsyncAction = createAsyncGraphQLAction2(InsertMutation)

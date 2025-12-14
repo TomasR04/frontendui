@@ -27,87 +27,89 @@ import compression from "vite-plugin-compression";
 
 // Export the Vite configuration
 export default defineConfig({
-  // base: "/app/",
+    // base: "/app/",
 
 
-  // Plugins section
-  plugins: [
-    react(), // Adds React plugin for handling JSX/TSX and fast refresh
-    compression(), // Add gzip compression
-  ],
-
-  // Module resolution settings
-  resolve: {
-    preserveSymlinks: true, // Prevents breaking symbolic links, useful for monorepos
-    alias: {
-      // Define aliases for modules, resolving them to specific paths
-      "@hrbolek/uoisfrontend-dynamic": path.resolve(__dirname, "../../packages/dynamic/src"),
-      
-    },
-  },
-
-  // Dependency optimization settings
-  optimizeDeps: {
-    include: [
-      // List dependencies to pre-bundle for faster development
-      'invariant',
-      'classnames',
-      'react-bootstrap',
+    // Plugins section
+    plugins: [
+        react(), // Adds React plugin for handling JSX/TSX and fast refresh
+        // compression(), // Add gzip compression
     ],
-    exclude: [
-      // Exclude specific libraries or modules from optimization
-      "@hrbolek/uoisfrontend-dynamic",
-      "@hrbolek/uoisfrontend-shared",
-      "@hrbolek/uoisfrontend-gql-shared",
-      "@hrbolek/uoisfrontend-ug",
-      "@hrbolek/uoisfrontend-granting",
-      "@hrbolek/uoisfrontend-admissions",
-      "@hrbolek/uoisfrontend-requests",
-    ],
-  },
 
-  // Development server configuration
-  server: {
-    proxy: {
-      // Define proxy rules for API requests
-      // Example: Requests to /api/gql are proxied to http://localhost:33001
-      '/api/gql': 'http://localhost:33001',
-    },
-    watch: {
-      // Specify paths to watch for changes
-      ignored: [
-        // Ensure certain packages are not ignored during file watching
-        '!../../packages/dynamic/**',
-        '!../../packages/shared/**',
-        '!../../packages/gql-shared/**',
-        '!../../packages/ug/**',
-        '!../../packages/granting/**',
-        '!../../packages/admissions/**',
-        '!../../packages/requests/**',
-        
-        '!../../packages/z_pack/**',
-      ],
-    },
-    hmr: {
-      overlay: true, // Display overlay in the browser for HMR errors
-    },
-  },
-
-  // Build options
-  build: {
-    rollupOptions: {
-      external: [
-        "react",
-        "react-dom",
-        'shared', // Prevent specific libraries from being bundled into the output
-      ],
-      output: {
-        // UMD/IIFE pro prohlížeč:
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
+    // Module resolution settings
+    resolve: {
+        preserveSymlinks: true, // Prevents breaking symbolic links, useful for monorepos
+        alias: {
+            // Define aliases for modules, resolving them to specific paths
+            "@hrbolek/uoisfrontend-dynamic": path.resolve(__dirname, "../../packages/dynamic/src"),
+            "@hrbolek/uoisfrontend-shared": path.resolve(__dirname, "../../packages/shared/src"),
         },
-      },
     },
-  },
+
+    // Dependency optimization settings
+    optimizeDeps: {
+        include: [
+            // List dependencies to pre-bundle for faster development
+            'invariant',
+            'classnames',
+            'react-bootstrap',
+            'prop-types',
+            'graphql'
+        ],
+        exclude: [
+            // Exclude specific libraries or modules from optimization
+            "@hrbolek/uoisfrontend-dynamic",
+            "@hrbolek/uoisfrontend-shared",
+            "@hrbolek/uoisfrontend-gql-shared",
+            "@hrbolek/uoisfrontend-ug",
+            "@hrbolek/uoisfrontend-granting",
+            "@hrbolek/uoisfrontend-admissions",
+            "@hrbolek/uoisfrontend-requests",
+        ],
+    },
+
+    // Development server configuration
+    server: {
+        proxy: {
+            // Define proxy rules for API requests
+            // Example: Requests to /api/gql are proxied to http://localhost:33001
+            '/api/gql': 'http://localhost:33001',
+        },
+        watch: {
+            // Specify paths to watch for changes
+            ignored: [
+                // Ensure certain packages are not ignored during file watching
+                '!../../packages/dynamic/**',
+                '!../../packages/shared/**',
+                '!../../packages/gql-shared/**',
+                '!../../packages/ug/**',
+                '!../../packages/granting/**',
+                '!../../packages/admissions/**',
+                '!../../packages/requests/**',
+
+                '!../../packages/z_pack/**',
+            ],
+        },
+        hmr: {
+            overlay: true, // Display overlay in the browser for HMR errors
+        },
+    },
+
+    // Build options
+    build: {
+        rollupOptions: {
+            external: [
+                // "react",
+                // "react-dom",
+                'shared', // Prevent specific libraries from being bundled into the output
+            ],
+            output: {
+                // UMD/IIFE pro prohlížeč:
+                globals: {
+                    react: "React",
+                    "react-dom": "ReactDOM",
+                },
+            },
+        },
+    },
 });

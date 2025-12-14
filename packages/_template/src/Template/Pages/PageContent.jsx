@@ -1,3 +1,7 @@
+import { LargeCard } from "../Components/LargeCard"
+import { useGQLEntityContext } from "../Utils/GQLEntityProvider"
+import { PageNavbar } from "./PageNavbar"
+
 /**
  * Renders a page layout for a single template entity, including navigation and detailed view.
  *
@@ -7,7 +11,6 @@
  *
  * @component
  * @param {Object} props - Component props.
- * @param {{ id: string|number, name: string }} props.template - The template entity to display.
  * @param {React.ReactNode} [props.children] - Optional nested content rendered inside the card.
  * @returns {JSX.Element} Rendered page layout for a template.
  *
@@ -17,12 +20,14 @@
  *   <p>Additional info here.</p>
  * </TemplatePageContent>
  */
-export const PageContent = ({UI, template, children, ...props}) => {
+export const PageContent = ({ children, ...props}) => {
+    const { item } = useGQLEntityContext()
+    // if (!item) return null
     return (<>
-        <UI.PageNavbar template={template} />
-        <UI.LargeCard template={template} {...props} >
-            Template {JSON.stringify(template)}
+        <PageNavbar item={item} />
+        <LargeCard item={item} {...props} >
             {children}
-        </UI.LargeCard>
+            {/* Template {JSON.stringify(item)} */}
+        </LargeCard>        
     </>)
 }

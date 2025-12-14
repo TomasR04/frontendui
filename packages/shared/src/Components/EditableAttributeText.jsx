@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useDispatch } from "react-redux"
 import { TextInput } from './TextInput'
 import { CreateAsyncQueryValidator2 } from "@hrbolek/uoisfrontend-gql-shared"

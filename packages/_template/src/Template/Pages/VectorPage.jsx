@@ -1,8 +1,8 @@
 import { useLocation } from "react-router"
-import { InfiniteScroll, MyNavbar } from "@hrbolek/uoisfrontend-shared"
-import { TemplateReadPageAsyncAction } from "../Queries"
-import { TemplateLink, TemplateMediumCard } from "../Components"
-import { TemplatePageNavbar } from "./PageNavbar"
+import { InfiniteScroll } from "@hrbolek/uoisfrontend-shared"
+import { ReadPageAsyncAction } from "../Queries"
+import { Link, MediumCard } from "../Components"
+import { PageNavbar } from "./PageNavbar"
 import { Col } from "react-bootstrap"
 
 /**
@@ -24,14 +24,14 @@ import { Col } from "react-bootstrap"
  *
  * <TemplateVisualiser items={templates} />
  */
-const TemplateVisualiser = ({items}) => {
+const CardVisualiser = ({items}) => {
     return (
         <>
             {items.map(template => (
                 <Col key={requesttype.id} >
-                    <TemplateMediumCard key={template.id} template={template}>
+                    <MediumCard key={template.id} template={template}>
                         
-                    </TemplateMediumCard>
+                    </MediumCard>
                 </Col>
             ))}
         </>
@@ -57,7 +57,7 @@ const TemplateVisualiser = ({items}) => {
  *
  * <TemplateTableVisualiser items={templates} />
  */
-export const TemplateTableVisualiser = ({items}) => {
+export const TableVisualiser = ({items}) => {
     return (
         <table className="table table-striped">
             <thead>
@@ -71,7 +71,7 @@ export const TemplateTableVisualiser = ({items}) => {
             {items.map(template => (
                 <tr key={template?.id} >
                     <td>
-                        <TemplateLink template={template} />
+                        <Link template={template} />
                     </td>
                     <td>{template?.name}</td>
                     <td></td>
@@ -109,7 +109,7 @@ export const TemplateTableVisualiser = ({items}) => {
  *   <Footer />
  * </TemplateVectorPage>
  */
-export const TemplateVectorPage = ({children, Visualiser=TemplateVisualiser}) => {
+export const VectorPage = ({children, Visualiser=CardVisualiser}) => {
     const { search } = useLocation();
     let actionParams = { skip: 0, limit: 10};
     try {
@@ -121,11 +121,11 @@ export const TemplateVectorPage = ({children, Visualiser=TemplateVisualiser}) =>
     }
     const onSearchChange = () => null
     return (<>
-        <TemplatePageNavbar template={template} onSearchChange={onSearchChange} />
+        <PageNavbar template={template} onSearchChange={onSearchChange} />
         <InfiniteScroll
             preloadedItems={[]} // No preloaded items for template
             actionParams={actionParams} 
-            asyncAction={TemplateReadPageAsyncAction}
+            asyncAction={ReadPageAsyncAction}
             Visualiser={Visualiser}
         />
         {children}

@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { Label } from './Label'
 
-export const Input_ = ({label,  ariaHidden=false , ...props}) => {
-    const {id, value, defaultValue, onChange=(e)=>null, type } = props
+export const Input_ = ({ label, ariaHidden = false, ...props }) => {
+    const { id, value, defaultValue, onChange = (e) => null, type } = props
     const fired = useRef(false)
     useEffect(() => {
         if (!fired.current) {
-            const e = {target:{id, value: (value || defaultValue)}}
+            const e = { target: { id, value: (value || defaultValue) } }
             onChange(e)
             // console.log("Input.onChange", e)
             fired.current = true
@@ -57,8 +57,8 @@ export const Input_ = ({label,  ariaHidden=false , ...props}) => {
  *   onChange={(e) => console.log(e.target.value)} // Will log 25 as number
  * />
  */
-export const Input = ({ label, ariaHidden = false, children, ...props }) => {
-    const { id, value, defaultValue, onChange = () => null, onBlur= () => null, type } = props;
+export const Input__ = ({ label, ariaHidden = false, children, ...props }) => {
+    const { id, value, defaultValue, onChange = () => null, onBlur = () => null, type } = props;
     const fired = useRef(false);
 
     // Pomocná funkce pro konverzi hodnoty podle typu
@@ -89,9 +89,73 @@ export const Input = ({ label, ariaHidden = false, children, ...props }) => {
 
     if (ariaHidden) return null;
 
-    const inputElement = <input {...props} onChange={handleChange(onChange)} onBlur={handleChange(onBlur)}/>;
+    const inputElement = <input {...props} onChange={handleChange(onChange)} onBlur={handleChange(onBlur)} />;
 
     if (!label) return inputElement;
 
     return <Label title={label}>{inputElement}{children}</Label>;
+};
+
+
+export const Input = ({ label, ariaHidden = false, children, ...props }) => {
+    const {
+        id,
+        value,
+        defaultValue,
+        onChange = () => null,
+        onBlur = () => null,
+        type,
+        ...rest
+    } = props;
+
+    const touchedRef = useRef(false);
+
+    const coerceValue = (val) => {
+        if (type === "number") {
+            if (val === "" || val == null) return "";
+            const num = Number(val);
+            return Number.isNaN(num) ? "" : num;
+        }
+        return val ?? "";
+    };
+
+    const emit = (cb) => (e) => {
+        // uživatel něco udělal (change/blur), ale mount sem nikdy nejde
+        const coercedValue = coerceValue(e.target.value);
+        cb({ target: { id, value: coercedValue } });
+    };
+
+    const handleChange = (e) => {
+        touchedRef.current = true;
+        emit(onChange)(e);
+    };
+
+    const handleBlur = (e) => {
+        // nechceme střílet blur, pokud uživatel reálně nic nezměnil
+        if (!touchedRef.current) return;
+        emit(onBlur)(e);
+    };
+
+    if (ariaHidden) return null;
+
+    const inputElement = (
+        <input
+            id={id}
+            type={type}
+            value={value}
+            defaultValue={defaultValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            {...rest}
+        />
+    );
+
+    if (!label) return inputElement;
+
+    return (
+        <Label title={label}>
+            {inputElement}
+            {children}
+        </Label>
+    );
 };

@@ -1,7 +1,7 @@
 import Nav from 'react-bootstrap/Nav'
 import { ProxyLink, MyNavbar, useHash } from '@hrbolek/uoisfrontend-shared';
 
-import { TemplateURI } from '../Components'
+import { LinkURI } from '../Components'
 
 /**
  * Allow to use HashContainer for determination which component at page will be rendered.
@@ -17,7 +17,7 @@ import { TemplateURI } from '../Components'
  * it is usefull to define globally active "areas" like science, administration, teaching, ...
  */
 const TemplatePageSegments = [
-    { segment: 'education', label: 'Výuka'},
+    { segment: 'education', label: 'Výuka' },
     { segment: 'reaserach', label: 'Tvůrčí činnost' },
     { segment: 'administration', label: 'Organizační činnost' },
     { segment: 'development', label: 'Rozvoj' },
@@ -55,12 +55,12 @@ const TemplatePageSegments = [
  * <TitleNavButton template={{ id: 456 }} segment="settings" label="Template Settings" />
  * // Resulting URL: `/ug/template/view/456#settings`
  */
-const TitleNavButton = ({ template, segment, label, ...props }) => {
+const TitleNavButton = ({ item, segment, label, ...props }) => {
     // const urlbase = (segment) => `/templates/template/${segment}/${template?.id}`;
-    const urlbase = (segment) => `${TemplateURI}${template?.id}#${segment}`;
+    const urlbase = (segment) => `${LinkURI}${item?.id}#${segment}`;
     return (
         <Nav.Link as={"span"} {...props}>
-            <ProxyLink to={urlbase(segment)}>{label}</ProxyLink>
+            {/* <ProxyLink to={urlbase(segment)}>{label}</ProxyLink> */}
         </Nav.Link>
     );
 };
@@ -87,24 +87,24 @@ const TitleNavButton = ({ template, segment, label, ...props }) => {
  * const template = { id: 123, ... };
  * <TemplatePageNavbar template={template} onSearchChange={handleSearchChange} />
  */
-export const PageNavbar = ({UI, template, children, onSearchChange }) => {
-    const [currentHash, setHash] = useHash(); // Use the custom hook to manage hash
-    
+export const PageNavbar = ({ item, children, onSearchChange }) => {
+    // const [currentHash, setHash] = useHash(); // Use the custom hook to manage hash
+    const currentHash = "da"
     return (
         <div className='screen-only'>
-        <MyNavbar onSearchChange={onSearchChange} >
-            {template && TemplatePageSegments.map(({ segment, label }) => (
-                <Nav.Item key={segment} >
-                    <UI.TitleNavButton
-                        template={template}
-                        segment={segment}
-                        label={label}
-                        className={segment===currentHash?"active":""} aria-current={segment===currentHash?"page":undefined}
-                    />
-                </Nav.Item>
-            ))}
-            {children}
-      </MyNavbar>
-      </div>
+            <MyNavbar onSearchChange={onSearchChange} >
+                {item && TemplatePageSegments.map(({ segment, label }) => (
+                    <Nav.Item key={segment} >
+                        <TitleNavButton
+                            template={item}
+                            segment={segment}
+                            label={label}
+                            className={segment === currentHash ? "active" : ""} aria-current={segment === currentHash ? "page" : undefined}
+                        />
+                    </Nav.Item>
+                ))}
+                {children}
+            </MyNavbar>
+        </div>
     );
 };

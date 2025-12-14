@@ -89,7 +89,7 @@ export function createGraphQLClient(options) {
         getHeaders,
         onGraphQLErrors,
     } = options;
-
+    // console.log("createGraphQLClient.options", options)
     /**
      * Základní request metoda – všechno přes ni.
      *

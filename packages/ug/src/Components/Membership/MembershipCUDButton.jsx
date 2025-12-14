@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import { ButtonWithDialog, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 import { MembershipMediumEditableContent } from "./MembershipMediumEditableContent";
@@ -131,23 +129,3 @@ export const MembershipCUDButton = ({ operation, children, membership, onDone = 
     </>);
 };
 
-// Prop validation using PropTypes
-MembershipCUDButton.propTypes = {
-    /** The operation to perform: "C" for create, "U" for update, "D" for delete. */
-    operation: PropTypes.oneOf(['C', 'U', 'D']).isRequired,
-    /** The label or content for the button. */
-    children: PropTypes.node,
-    /** The parameters for the operation. */
-    membership: PropTypes.shape({
-        id: PropTypes.string, // Required for "U" and "D" operations
-        name: PropTypes.string,
-        name_en: PropTypes.string,
-    }).isRequired,
-    /** Callback executed after the operation completes. Receives the `membership` object. */
-    onDone: PropTypes.func,
-};
-
-// Default props
-MembershipCUDButton.defaultProps = {
-    onDone: () => {},
-};

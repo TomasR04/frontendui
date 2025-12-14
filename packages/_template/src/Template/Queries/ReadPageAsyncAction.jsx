@@ -1,12 +1,13 @@
-import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
+import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared";
 import { LargeFragment } from "./Fragments";
+import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
 
 const ReadPageQueryStr = `
-query ReadPageQuery($skip: Int, $limit: Int, $where: WhereInputFilter) {
-  result: Page(skip: $skip, limit: $limit, where: $where) {
+query ReadPageQuery($skip: Int, $limit: Int, $where: UserWhereInputFilter) {
+  result: userPage(skip: $skip, limit: $limit, where: $where) {
     ...Large
   }
 }
 `
 const ReadPageQuery = createQueryStrLazy(`${ReadPageQueryStr}`, LargeFragment)
-export const ReadPageAsyncAction = createAsyncGraphQLAction(ReadPageQuery)
+export const ReadPageAsyncAction = createAsyncGraphQLAction2(ReadPageQuery)

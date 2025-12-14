@@ -1,6 +1,11 @@
 import { useParams } from "react-router"
-import { TemplatePageContentLazy } from "./PageContentLazy"
-import { TemplateLargeContent } from "../Components/TemplateLargeContent"
+import { AsyncAcionProvider } from "../Utils/GQLEntityProvider"
+import { PageContent } from "./PageContent"
+import { ReadAsyncAction } from "../Queries"
+import { PlaceChild } from "../Utils/PlaceChild"
+import { MediumCardVectors } from "../Vectors/VectorAttribute"
+import { MediumCardScalars } from "../Scalars/ScalarAttribute"
+import { LiveEdit } from "../Components"
 
 /**
  * A page component for displaying lazy-loaded content of a template entity.
@@ -37,15 +42,38 @@ import { TemplateLargeContent } from "../Components/TemplateLargeContent"
  *   }
  * />
  */
-
-export const Page = ({UI, children}) => {
-    const {id} = useParams()
-    const template = {id}
+export const PageWrap = ({ children }) => {
+    // const {id} = useParams()
+    const id = "51d101a0-81f1-44ca-8366-6cf51432e8d6";
+    const item = {id}
     return (
-        <UI.PageContentLazy template={template}>
-            {/* the parameters `template={template}` are injected in `TemplatePageContentLazy` */}
-            <UI.LargeContent /> 
-            {children}
-        </UI.PageContentLazy>
+        // <div>Hello</div>
+        <AsyncAcionProvider item={item} queryAsyncAction={ReadAsyncAction}>
+            <PageContent>
+                {children}
+            </PageContent>
+        </AsyncAcionProvider>
     )
 }
+
+
+
+export const Page = () => {
+    return (
+        // <div>Hello</div>
+        <PageWrap>
+            <PlaceChild Component={MediumCardScalars} />
+            <PlaceChild Component={MediumCardVectors} />
+        </PageWrap>
+    )
+}
+
+export const PageEdit = () => {
+    return (
+        // <div>Hello</div>
+        <PageWrap>
+            <PlaceChild Component={LiveEdit} />
+        </PageWrap>
+    )
+}
+

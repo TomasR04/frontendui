@@ -23,11 +23,11 @@ import { Input } from "@hrbolek/uoisfrontend-shared"
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-export const MediumEditableContent = ({UI, template, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
+export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     return (
         <>           
-            <Input id={"name"} label={"Název"} className="form-control" defaultValue={template?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={template?.name_en|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"name"} label={"Název"} className="form-control" defaultValue={item?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={item?.name_en|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
             {children}
         </>
     )

@@ -16,8 +16,11 @@
 export const withUI =
     (UI) =>
     (Component) =>
-    (props) =>
-        Component({ UI, ...props });
+    (props) => {
+        console.log("withUI", Component, UI, props)
+        return Component({ UI, ...props });
+    }
+        
 
 /**
  * Varianta HOC, která „uzamkne“ UI na konkrétní sadu.
@@ -76,6 +79,7 @@ const MediumCard = ({ UI, item, title, children }) => (
  * od které se může dědit pomocí inheritUI.
  */
 const DummyUISet = {
+    name: "DummyUISet",
     /** @type {(props: any) => any} */
     Link: MediumContent,
     /** @type {(props: any) => any} */
@@ -120,6 +124,7 @@ const DummyUISet = {
  * }}
  */
 const bindUISet = (spec) => ({
+    name: spec.name,
     Link: withUI(spec)(spec.Link),
     CardCapsule: withUI(spec)(spec.CardCapsule),
     MediumCard: withUI(spec)(spec.MediumCard),
@@ -151,5 +156,7 @@ const bindUISet = (spec) => ({
  */
 export const inheritUI = (child = {}, parent = DummyUISet) => {
     const ui = { ...parent, ...child };
-    return bindUISet(ui);
+    const newSet = bindUISet(ui);
+    console.log("newSet", newSet)
+    return newSet
 };

@@ -211,7 +211,7 @@ const isTypenameCorrectlyPlaced = (queryString) => {
  * and ensures each node is included only once in the final output.
  *
  * @param {string} queryStr - A string representing a GraphQL query or fragment.
- * @param  {...Function} nodes - Additional createQuery(...) nodes that should be included (once each).
+ * @param  {...Function} fragments - Additional createQuery(...) nodes that should be included (once each).
  * @returns {Function} A callable function. When invoked, returns the complete joined string.
  *
  * @example
@@ -246,59 +246,35 @@ const isTypenameCorrectlyPlaced = (queryString) => {
  * // Getting final string (with all unique fragments)
  * console.log(rootQuery());
  */
-export const createQueryStrLazy = (queryStr, ...nodes) => {
+export const createQueryStrLazy = (queryStr, ...fragments) => {
+  const visitor = (node, visited) => {
+    // node musí být objekt/funkce (kvůli WeakSet) a mít metadata
+    if (!node || (typeof node !== "function" && typeof node !== "object")) return "";
+    const meta = node.__metadata;
+    if (!meta || typeof meta.queryStr !== "string") return "";
 
+    if (visited.has(node)) return "";
+    visited.add(node);
 
-    // if (!isTypenameCorrectlyPlaced(queryStr)) {
-    //     console.error(`query does not have __typename this can lead to improper error catching`)
-    //     console.error(queryStr)
-    // }
+    const nodes = Array.isArray(meta.nodes) ? meta.nodes : [];
+    const subStrings = nodes.map((subNode) => visitor(subNode, visited)).filter(Boolean);
 
-    /**
-     * Internal helper that traverses the "gql tree" once, collecting all strings.
-     * @param {Function} node   - The gql node (i.e., a function) we want to traverse.
-     * @param {WeakSet} visited - A set of nodes already visited, to avoid duplicates.
-     * @returns {string} The compiled string for this node and all its descendants.
-     */
-    const visitor = (node, visited) => {
-        // Extract the node's "signature" (the string + sub-nodes).
-        const { queryStr, nodes } = node.__metadata;
-        // TODO
-        // compute hash from query
-        // and use that hash for judging if visited
-        // compare with check if node visited
+    const own = meta.queryStr; // případně .trim()
+    return [own, ...subStrings].filter(Boolean).join("\n");
+  };
 
-        // If we have visited this node before, return an empty string (avoid duplicates).
-        if (visited.has(node)) {
-            return "";
-        }
-        visited.add(node);
-    
-        // Recursively compile each sub-node.
-        const subStrings = nodes.map((subNode) => visitor(subNode, visited));
-    
-        // Join this node’s string plus all its subfragments.
-        return [queryStr.trim(), ...subStrings].join("\n");
-    }
-  
-    /**
-     * This wrapper function, when called, compiles everything into one string.
-     * We create a fresh WeakSet on each top-level call, so sub-calls
-     * don’t repeat.
-     */
-    const lazyResult = () => {
-        const visited = new WeakSet();
-        return visitor(lazyResult, visited);
-    }
-  
-    // Store the node's own data in a property:
-    lazyResult.__metadata = {
-        queryStr: queryStr,
-        nodes: nodes,
-    };
-  
-    return lazyResult;
-}
+  const lazyResult = () => {
+    const visited = new WeakSet();
+    return visitor(lazyResult, visited);
+  };
+
+  lazyResult.__metadata = {
+    queryStr,
+    nodes: fragments,
+  };
+
+  return lazyResult;
+};
   
 // const p = 'query p {...t ...q}'
 // const q = 'fragment q {...t}'

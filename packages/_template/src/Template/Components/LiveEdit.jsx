@@ -1,7 +1,9 @@
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
-import { TemplateUpdateAsyncAction } from "../Queries";
+import { UpdateAsyncAction } from "../Queries";
 import { useState } from "react";
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
+import { AsyncAcionProvider, useGQLEntityContext } from "../Utils/GQLEntityProvider";
+import { MediumEditableContent } from "./MediumEditableContent";
 
 /**
  * TemplateLiveEdit Component
@@ -32,33 +34,40 @@ import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfronte
  * @returns {JSX.Element}
  *   Interaktivní komponenta pro live editaci šablony, včetně spinneru a error handleru.
  */
-export const LiveEdit = ({UI, template, children, asyncAction=UI.UpdateAsyncAction}) => {
-    const { loading, error, entity, fetch } = useAsyncAction(asyncAction, template, { deferred: true });
-    const [delayer] = useState(() => CreateDelayer());
-    const onChange_ = async (e) => {
-        const { value, id } = e.target;
-        if (value) {
-            if (entity) {
-                console.log(entity[id] === value, entity[id], value)
-                if (entity[id] === value) return;
-            } else {
-                console.log(template[id] === value, template[id], value)
-                if (template[id] === value) return;
-            }
-            await delayer(() => fetch({ 
-                id: template.id, 
-                lastchange: (entity?.lastchange || template?.lastchange), 
-                [id]: value 
-            }));
-        }
+export const LiveEdit = ({ children, asyncAction=UpdateAsyncAction}) => {
+    const { onChange, onBlur, item } = useGQLEntityContext()
+    return (
+        <AsyncAcionProvider 
+            item={item} 
+            queryAsyncAction={asyncAction}
+            options={{deferred: true, network: true}}
+            onChange={onChange}
+            onBlur={onBlur}
+        >
+            <LiveEditWrapper item={item}>
+                {children}
+                <hr />
+                <pre>{JSON.stringify(item, null, 2)}</pre>
+            </LiveEditWrapper>
+        </AsyncAcionProvider>
+    )
+}
+
+const LiveEditWrapper = ({ item, children }) => {
+    const { run , error, loading, entity, data, onChange, onBlur } = useGQLEntityContext()
+    const localOnChange = async (e) => {
+        const newItem = { ...item, [e.target.id]: e.target.value }
+        const newEvent = { target: { value: newItem } }
+        // console.log("LiveEditWrapper localOnChange start e", e, '=>', newEvent)
+        const result = await onChange(newEvent)
+        // console.log("LiveEditWrapper localOnChange end e", e, '=>', newItem, '=>', result)
+        return result
     }
-    
-    return (<>
-        {loading && <LoadingSpinner />}
-        {error && <ErrorHandler errors={error} />}
-        {entity && (
-            <UI.MediumEditableContent template={entity} onChange={onChange_} onBlur={onChange_} />
-        )}
-        {children}
-    </>)
+    return (
+        <MediumEditableContent item={item} onChange={localOnChange} onBlur={onBlur} >
+            {children}
+            <hr />
+            <pre>{JSON.stringify(item, null, 2)}</pre>
+        </MediumEditableContent>
+    )
 }

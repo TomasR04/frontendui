@@ -1,8 +1,8 @@
 import { ButtonWithDialog, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
 
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
-import { TemplateDeleteAsyncAction, TemplateInsertAsyncAction, TemplateUpdateAsyncAction } from "../Queries";
-import { TemplateMediumEditableContent } from "./MediumEditableContent";
+import { DeleteAsyncAction, InsertAsyncAction, UpdateAsyncAction } from "../Queries";
+import { MediumEditableContent } from "./MediumEditableContent";
 
 /**
  * TemplateCUDButton Component
@@ -67,27 +67,27 @@ import { TemplateMediumEditableContent } from "./MediumEditableContent";
  *
  * @returns {JSX.Element} The dynamically selected button component for the specified operation.
  */
-export const CUDButton = ({UI, operation, children, template, onDone = () => {}, onOptimistic = () => {}, ...props }) => {
+export const CUDButton = ({ operation, children, item, onDone = () => {}, onOptimistic = () => {}, ...props }) => {
     const operationConfig = {
         C: {
-            asyncAction: TemplateInsertAsyncAction,
+            asyncAction: InsertAsyncAction,
             dialogTitle: "Vložit novou template",
             loadingMsg: "Vkládám novou template",
-            renderContent: () => <UI.MediumEditableContent template={template} />,
+            renderContent: () => <MediumEditableContent item={item} />,
         },
         U: {
-            asyncAction: TemplateUpdateAsyncAction,
+            asyncAction: UpdateAsyncAction,
             dialogTitle: "Upravit template",
             loadingMsg: "Ukládám template",
-            renderContent: () => <UI.MediumEditableContent template={template} />,
+            renderContent: () => <MediumEditableContent item={item} />,
         },
         D: {
-            asyncAction: TemplateDeleteAsyncAction,
+            asyncAction: DeleteAsyncAction,
             dialogTitle: "Chcete odebrat template?",
             loadingMsg: "Odstraňuji template",
             renderContent: () => (
                 <h2>
-                    {template?.name} ({template?.name_en})
+                    {item?.name} ({item?.name_en})
                 </h2>
             ),
         },
@@ -99,16 +99,16 @@ export const CUDButton = ({UI, operation, children, template, onDone = () => {},
 
     const { asyncAction, dialogTitle, loadingMsg, renderContent } = operationConfig[operation];
 
-    const { error, loading, fetch, entity } = useAsyncAction(asyncAction, template, { deferred: true });
+    const { error, loading, fetch, entity } = useAsyncAction(asyncAction, item, { deferred: true });
     const handleClick = async (params = {}) => {
-        const fetchParams = { ...template, ...params };
+        const fetchParams = { ...item, ...params };
         onOptimistic(fetchParams);
         const freshTemplate = await fetch(fetchParams);
         onDone(freshTemplate); // Pass the result to the external callback
     };
 
     // Validate required fields for "U" and "D"
-    if ((operation === 'U' || operation === 'D') && !template?.id) {
+    if ((operation === 'U' || operation === 'D') && !item?.id) {
         return <ErrorHandler errors={`For '${operation}' operation, 'template' must include an 'id' key.`} />;
     }
 
@@ -119,7 +119,7 @@ export const CUDButton = ({UI, operation, children, template, onDone = () => {},
             buttonLabel={children}
             dialogTitle={dialogTitle}
             {...props}
-            params={template}
+            params={item}
             onClick={handleClick}
         >
             {renderContent()}

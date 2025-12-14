@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 import Button from "react-bootstrap/Button"
 import Modal from 'react-bootstrap/Modal';
 import Row from "react-bootstrap/Row"
@@ -75,17 +73,3 @@ export const Dialog = ({
     );
 };
 
-
-Dialog.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ]),
-
-    title: PropTypes.string,
-    oklabel: PropTypes.string,
-    cancellabel: PropTypes.string,
-
-    onOk: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-  }

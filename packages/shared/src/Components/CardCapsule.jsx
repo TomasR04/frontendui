@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import Card from "react-bootstrap/Card";
 import {useEffect} from 'react'
 import { SimpleCardCapsule } from "./SimpleCardCapsule";
