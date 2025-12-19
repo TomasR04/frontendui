@@ -1,7 +1,7 @@
 import { LiveEdit } from "../Components";
 import { UpdateAsyncAction } from "../Queries";
 import { PlaceChild } from "../../Base/Helpers/PlaceChild";
-import { PageCapsule } from "./PageCapsule";
+import { PageBase } from "./PageBase";
 
 const UpdateLiveEdit = (props) => (
     <LiveEdit {...props} asyncMutationAction={UpdateAsyncAction} />
@@ -9,9 +9,9 @@ const UpdateLiveEdit = (props) => (
 
 export const PageEdit = ({ children, Editor = UpdateLiveEdit }) => {
     return (
-        <PageCapsule>
+        <PageBase>
             {children?children:<PlaceChild Component={Editor} />
             }
-        </PageCapsule>
+        </PageBase>
     );
 };

@@ -1,8 +1,5 @@
 import { LinkURI } from "../Components/Link"
 import { Page } from "./Page"
-import { PageEdit } from "./PageEdit"
-import { PageFakulta } from "./SpecificPages/Fakulta"
-import { PageKatedra } from "./SpecificPages/Katedra"
 import { PageVector } from "./PageVector"
 import { PageUpdateItem } from "./PageUpdateItem"
 

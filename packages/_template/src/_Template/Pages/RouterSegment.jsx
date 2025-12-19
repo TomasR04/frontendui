@@ -1,7 +1,7 @@
 import { LinkURI } from "../Components/Link"
-import { Page, PageMediumCard } from "./Page"
-import { PageEdit } from "./PageEdit"
-import { VectorPage } from "./VectorPage"
+import { Page } from "./Page"
+import { PageVector } from "./PageVector"
+import { PageUpdateItem } from "./PageUpdateItem"
 
 /**
  * Definice segmentů rout pro Template stránky.
@@ -43,10 +43,23 @@ export const TemplateRouterSegments = [
     // },
     {
         path: `/${LinkURI.replace('view', 'edit')}:id`,
-        element: (<PageEdit />),
+        element: (<PageUpdateItem />),
     },
+    // {
+    //     path: `/${LinkURI.replace('group', 'fakulta')}:id`,
+    //     element: (<PageFakulta />),
+    // },
+    // {
+    //     path: `/${LinkURI.replace('group', 'katedra')}:id`,
+    //     element: (<PageKatedra />),
+    // },
+    // {
+    //     path: `/${LinkURI.replace('view', 'view2')}:id`,
+    //     element: (<PageMediumCard />),
+    // },
     {
-        path: `/${LinkURI.replace('view', 'view2')}:id`,
-        element: (<PageMediumCard />),
-    }    
+        path: `/${LinkURI.replace('/:id', '')}`,
+        element: (<PageVector />),
+    },   
+    
 ]

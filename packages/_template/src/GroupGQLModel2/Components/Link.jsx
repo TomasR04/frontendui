@@ -34,10 +34,10 @@ export const LinkURI = `${URIRoot}/group/view/`;
 export const Link = ({ item, LinkURI: LinkURI_ = LinkURI, action="view", children, ...props}) => {
     const targetURI = LinkURI_.replace('view', action);
     // const {__typename="group"} = item || {};
-    const typename = item?.grouptype?.name || "group";
+    // const typename = item?.grouptype?.name || "group";
     // console.log('Link::typename', typename);
-    const finalTargetURI = targetURI.replace('group', typename.toLowerCase());
-    return <ProxyLink to={finalTargetURI + item?.id} {...props}>{children || item?.fullname || item?.name || item?.id || "Nevim"}</ProxyLink>
+    // const finalTargetURI = targetURI.replace('group', typename.toLowerCase());
+    return <ProxyLink to={targetURI + item?.id} {...props}>{children || item?.fullname || item?.name || item?.id || "Nevim"}</ProxyLink>
     // return <BaseUI.Link item={item} />
     // return <a>{children || item?.fullname || item?.name || item?.id || "Nevim"}</a>
 }

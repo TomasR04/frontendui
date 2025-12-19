@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useGQLClient } from "../../../../dynamic/src/Store";
+import { useGQLClient } from "../Store";
 
 const mergeArraysById = (array1 = [], array2 = []) => {
     const mergedMap = new Map();
@@ -32,6 +32,12 @@ const extractArrayFromThunkResult = (thunkResult) => {
     return [];
 };
 
+const isVisibleInViewport = (node) => {
+    if (!node) return false;
+    const r = node.getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > 0;
+};
+
 const dummy = () => null;
 /**
  * useInfiniteScroll
@@ -50,15 +56,13 @@ export const useInfiniteScroll = ({
     actionParams,
     asyncAction,
     calculateNewFilter = defaultCalculateNewFilter,
-    rootRef,
     reset = 0,
     onAll = dummy,
     enabled = true,
+    autoload = true,
 } = {}) => {
     const dispatch = useDispatch();
     const gqlClient = useGQLClient();
-
-    const observerRef = useRef(null);
 
     const initialFilter = useMemo(() => ({ ...(actionParams || {}) }), [actionParams]);
 
@@ -68,17 +72,25 @@ export const useInfiniteScroll = ({
         hasMore: true,
         error: null,
         items: preloadedItems,
+        result: null,
     }));
 
-    // Když se změní preloadedItems (např. store dorazil), můžeš je převzít
+    // refs pro stabilní přístup v async kódu
+    const stateRef = useRef(state);
+    useEffect(() => { stateRef.current = state; }, [state]);
+
+    const filterRef = useRef(initialFilter);
+    useEffect(() => { filterRef.current = state.filter; }, [state.filter]);
+
+    const enabledRef = useRef(enabled);
+    useEffect(() => { enabledRef.current = enabled; }, [enabled]);
+
+    // preloaded items update
     useEffect(() => {
-        setState((prev) => ({
-            ...prev,
-            items: preloadedItems,
-        }));
+        setState((prev) => ({ ...prev, items: preloadedItems }));
     }, [preloadedItems]);
 
-    // Reset (typicky změna filtru)
+    // reset
     useEffect(() => {
         setState((prev) => ({
             ...prev,
@@ -86,27 +98,18 @@ export const useInfiniteScroll = ({
             loading: false,
             hasMore: true,
             error: null,
-            // nechávám items, ať se ti tabulka “nezhroutí”; kdybys chtěl vymazat, dej items: []
+            // dle potřeby: items: []
             items: prev.items,
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reset]);
 
-
-    const filterRef = useRef(initialFilter);
-    useEffect(() => { filterRef.current = state.filter; }, [state.filter]);
-
-    const stateRef = useRef(state);
-    useEffect(() => { stateRef.current = state; }, [state]);
-
     const loadMore = useCallback(async () => {
-        if (!enabled) return null;
+        if (!enabledRef.current) return null;
 
-        // guard proti paralelním fetchům / konci
         const snap = stateRef.current;
         if (snap.loading || !snap.hasMore) return null;
 
-        // okamžitě nastav loading
         setState((prev) => ({ ...prev, loading: true, error: null }));
 
         const params = filterRef.current;
@@ -119,7 +122,6 @@ export const useInfiniteScroll = ({
                 const nextItems = mergeArraysById(prev.items, fetched);
                 const limit = params?.limit;
 
-                // bez limitu: hasMore = přišlo něco
                 if (limit == null) {
                     const hasMore = fetched.length > 0;
                     if (!hasMore) onAll();
@@ -156,41 +158,57 @@ export const useInfiniteScroll = ({
             }));
             return null;
         }
-    }, [dispatch, asyncAction, gqlClient, enabled, calculateNewFilter, onAll]);
+    }, [dispatch, asyncAction, gqlClient, calculateNewFilter, onAll]);
 
+    // sentinel node
+    const sentinelNodeRef = useRef(null);
+    const sentinelRef = useCallback((node) => {
+        sentinelNodeRef.current = node;
+    }, []);
+
+    // IO + robustní "prefill", když je sentinel už vidět
     useEffect(() => {
-        // načti první stránku hned
-        loadMore();
-    }, [loadMore]);
+        const node = sentinelNodeRef.current;
+        if (!enabled || !node) return;
 
-    // Ref callback pro sentinel element
-    const sentinelRef = useCallback(
-        (node) => {
-            console.log("sentinelRef", node);
-            if (!enabled) return;
-
-            // odpoj starý observer
-            if (observerRef.current) {
-                observerRef.current.disconnect();
-                observerRef.current = null;
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && enabledRef.current) {
+                loadMore();
             }
+        });
 
-            if (!node) return;
+        observer.observe(node);
 
-            observerRef.current = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) {
-                        // loadMore si hlídá loading/hasMore
-                        loadMore();
-                    }
-                },
-                { threshold: 0, root: rootRef?.current ?? null }
-            );
+        let cancelled = false;
 
-            observerRef.current.observe(node);
-        },
-        [loadMore, enabled]
-    );
+        const prefill = async () => {
+            if (!autoload) return;
+
+            // nech doběhnout layout
+            await new Promise((r) => requestAnimationFrame(r));
+            await new Promise((r) => setTimeout(r, 0));
+
+            // pokud je sentinel už vidět, načítej dokud se neodsune mimo viewport nebo není hasMore
+            while (!cancelled && enabledRef.current) {
+                const s = stateRef.current;
+                if (s.loading || !s.hasMore) break;
+
+                if (!isVisibleInViewport(node)) break;
+
+                await loadMore();
+
+                // render tick
+                await new Promise((r) => requestAnimationFrame(r));
+            }
+        };
+
+        prefill();
+
+        return () => {
+            cancelled = true;
+            observer.disconnect();
+        };
+    }, [enabled, autoload, loadMore, reset]);
 
     return {
         items: state.items,
@@ -202,20 +220,5 @@ export const useInfiniteScroll = ({
 
         loadMore,
         sentinelRef,
-
-        // utility
-        setItems: (updater) =>
-            setState((prev) => ({
-                ...prev,
-                items: typeof updater === "function" ? updater(prev.items) : updater,
-            })),
-        resetTo: (nextParams) =>
-            setState((prev) => ({
-                ...prev,
-                filter: { ...(nextParams || {}) },
-                loading: false,
-                hasMore: true,
-                error: null,
-            })),
     };
 };

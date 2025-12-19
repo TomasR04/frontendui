@@ -1,12 +1,15 @@
 import { useParams } from "react-router"
 import { AsyncActionProvider } from "../../Base/Helpers/GQLEntityProvider"
+import { PlaceChild } from "../../Base/Helpers/PlaceChild"
+import { PageNavbar } from "./PageNavbar"
 import { ReadAsyncAction } from "../Queries"
 
-export const PageCapsule = ({ children, queryAsyncAction=ReadAsyncAction }) => {
+export const PageBase = ({ children, queryAsyncAction=ReadAsyncAction }) => {
     const {id} = useParams()
     const item = {id}
     return (
         <AsyncActionProvider item={item} queryAsyncAction={queryAsyncAction}>
+            <PlaceChild Component={PageNavbar} />
             {children}
         </AsyncActionProvider>
     )

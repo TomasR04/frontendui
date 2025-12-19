@@ -38,13 +38,14 @@ const LargeFragmentStr = `
 fragment Large on GroupGQLModel {
   ...Medium
     subgroups {
-    __typename
-    id
-    name
-    grouptype {
-      __typename
-      id
-      name
+        __typename
+        id
+        name
+        grouptype {
+        __typename
+        id
+        name
+        }
     }
     memberships {
       __typename
@@ -68,7 +69,7 @@ fragment Large on GroupGQLModel {
       startdate
       enddate
 }
-  }
+  
 }
 `
 
