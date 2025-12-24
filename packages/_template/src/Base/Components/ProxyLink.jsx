@@ -2,7 +2,7 @@ import React from "react";
 import { useCallback } from "react";
 import { useMemo } from "react";
 import { Link, useResolvedPath } from "react-router-dom";
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 /**
  * shared module.
  * @module shared/components
@@ -37,12 +37,16 @@ export const useLink = ({
 } = {}) => {
     
     const resolved = useResolvedPath(to);
-    // const navigate = useNavigate()
-    const navigate = () => null
+    const navigate = useNavigate()
+    // const navigate = () => null
 
-    const follow = useCallback(() => navigate(href), [navigate])
-    
-    return useMemo(() => {
+    const follow = useCallback(() => {
+        console.log("state.href", state.href)
+        navigate(state.href)
+    }, [navigate])
+
+
+    const state = useMemo(() => {
         // SSR-safe guard
         const origin =
             typeof window !== "undefined" ? window.location.origin : "http://localhost";
@@ -80,6 +84,9 @@ export const useLink = ({
             reloadDocument: !isLocal,
         };
     }, [to, preserveHash, preserveSearch, resolved]);
+
+
+    return state
 };
 
 /**

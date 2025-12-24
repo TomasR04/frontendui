@@ -1,18 +1,21 @@
-import { AbsolutePermissionGate, useRoles as useRolePermission } from "../../../../dynamic/src/Hooks/useRoles"
+import { PermissionGate } from "../../../../dynamic/src/Hooks/useRoles"
 import { LinkURI, MediumEditableContent } from "../Components"
 import { useState } from "react"
-import { Dialog } from "@hrbolek/uoisfrontend-shared"
 import { ReadItemURI } from "../Pages/PageReadItem"
 import { useCreateSession } from "../../../../dynamic/src/Hooks/useCreateSession"
 import { InsertAsyncAction } from "../Queries"
 import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator"
+import { Dialog } from "../../Base/FormControls/Dialog"
+import { ProxyLink } from "../../Base/Components/ProxyLink"
+import { makeMutationURI } from "./helpers"
 
-export const CreateURI = LinkURI.replace('view', 'create')
+
+export const CreateURI = makeMutationURI(LinkURI, "create", { withId: false });
 
 export const CreateLink = (props) => (
-    <AbsolutePermissionGate roles={["superadmin"]}>
+    <PermissionGate oneOfRoles={["superadmin"]} mode={"absolute"}>
         <ProxyLink to={CreateURI} {...props}>Create</ProxyLink>
-    </AbsolutePermissionGate>
+    </PermissionGate>
 );
 
 export const CreateButton = ({ children, ...props }) => {
@@ -22,20 +25,20 @@ export const CreateButton = ({ children, ...props }) => {
     }
 
     return (
-        <AbsolutePermissionGate roles={["superadmin"]} >
+        <PermissionGate oneOfRoles={["superadmin"]} mode={"absolute"} >
             <button {...props} onClick={handleClick}>{children || "Vytvořit nový"}</button>
             {visible && (
-                <CreateDialog 
-                    onOk={handleClick} 
-                    onCancel={handleClick} 
+                <CreateDialog
+                    onOk={handleClick}
+                    onCancel={handleClick}
                 />
             )}
-        </AbsolutePermissionGate>
+        </PermissionGate>
     )
 }
 
 export const CreateDialog = ({
-    title = "Editace",
+    title = "Nový typ",
     oklabel = "Ok",
     cancellabel = "Zrušit",
     mutationAsyncAction = InsertAsyncAction,

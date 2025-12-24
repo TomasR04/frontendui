@@ -3,7 +3,6 @@ import { useGQLClient } from "../Store";
 import { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
 import { AsyncStateIndicator } from "../../../_template/src/Base/Helpers/AsyncStateIndicator";
 
 /**
@@ -50,12 +49,21 @@ export const hasIntersection = (a, b) => {
  * @param {boolean} [options.caseInsensitive=true]
  * @returns {{ can: boolean, roleNames: string[] }}
  */
-export const useRoles = (item = {}, oneOfRoles = [], options = {}) => {
-    const { caseInsensitive = false } = options;
+export const useItemRoles = ({ item = {}, oneOfRoles = [], caseInsensitive = false } = {}) => {
+    const currentUserRoles = item?.rbacobject?.currentUserRoles;
+
+    const roleNames = useMemo(() => {
+        const roles = Array.isArray(currentUserRoles) ? currentUserRoles : [];
+        const norm = (s) => {
+            if (typeof s !== "string") return "";
+            const t = s.trim();
+            return caseInsensitive ? t.toLowerCase() : t;
+        };
+        return roles.map(r => r?.roletype?.name).map(norm).filter(Boolean);
+    }, [currentUserRoles, caseInsensitive]);
 
     const can = useMemo(() => {
-        const currentUserRoles = item?.rbacobject?.currentUserRoles ?? [];
-        if (!Array.isArray(currentUserRoles) || currentUserRoles.length === 0) return false;
+        if (!Array.isArray(currentUserRoles)) return false;
         if (!Array.isArray(oneOfRoles) || oneOfRoles.length === 0) return false;
 
         const norm = (s) => {
@@ -64,57 +72,43 @@ export const useRoles = (item = {}, oneOfRoles = [], options = {}) => {
             return caseInsensitive ? t.toLowerCase() : t;
         };
 
-        // roleNames uživatele → Set
-        const userSet = new Set(
-            currentUserRoles
-                .map((role) => role?.roletype?.name)
-                .map(norm)
-                .filter(Boolean)
-        );
+        const userSet = new Set(roleNames);
+        return oneOfRoles.some(r => userSet.has(norm(r)));
+    }, [currentUserRoles, oneOfRoles, caseInsensitive, roleNames]);
 
-        // stačí najít jednu shodu
-        for (const r of oneOfRoles) {
-            if (userSet.has(norm(r))) return true;
-        }
-        return false;
-    }, [item, oneOfRoles, caseInsensitive]);
+    const error =
+        currentUserRoles == null
+            ? `Nelze posoudit práva, data nejsou k dispozici.\n${JSON.stringify(item?.rbacobject)}`
+            : null;
 
-    // volitelně můžeš vracet i normalizované roleNames (užitečné pro debug/UI)
-    const roleNames = useMemo(() => {
-        const currentUserRoles = item?.rbacobject?.currentUserRoles ?? [];
-        if (!Array.isArray(currentUserRoles)) return [];
-        const norm = (s) => {
-            if (typeof s !== "string") return "";
-            const t = s.trim();
-            return caseInsensitive ? t.toLowerCase() : t;
-        };
-        return currentUserRoles
-            .map((role) => role?.roletype?.name)
-            .map(norm)
-            .filter(Boolean);
-    }, [item, caseInsensitive]);
-
-    return { can, roleNames };
+    return { can, roleNames, loading: false, error };
 };
 
-export const PermissionGate = ({
-    item = {},
-    roles = [],
-    enabled = true,
+export const ItemPermissionGate = ({
+    item,
+    oneOfRoles = [],
     deniedFallback = null,
     children,
 }) => {
-    const { can, roleNames } = useRoles(item, roles, { enabled });
+    if (!item)
+        throw Error("(Item)PermissionGate must have item property it is missing now")
 
-    if (!enabled) return null;
+    const { can, loading, error } = useItemRoles({ item, oneOfRoles });
 
-    if (!can) {
-        return deniedFallback; // default null
+    if (loading || error) {
+        return (
+            <AsyncStateIndicator
+                loading={loading}
+                error={error}
+                text="Ověřuji oprávnění"
+            />
+        );
     }
 
-    return typeof children === "function"
-        ? children({ can, roleNames })
-        : children;
+    if (can === false) return (<>{deniedFallback}</>); // default null
+
+    // can === true (nebo když can vrací true/false a loading už je false)
+    return <>{children}</>;
 };
 
 const cache = new Map(); // Map<string, CacheEntry<any>>
@@ -205,7 +199,7 @@ const queryMe = `
  * @param {{ ttlMs?: number, enabled?: boolean, cacheKey?: string }} [options]
  * @returns {{ loading: boolean, allowed: boolean|null, roles: string[], error: any }}
  */
-export function useAbsoluteRoles(oneOfRoles = [], options = {}) {
+export function useAbsoluteRoles({ oneOfRoles = [], ...options }) {
     const gqlClient = useGQLClient();
     const enabled = options.enabled ?? true;
     const ttlMs = options.ttlMs ?? 60_000;
@@ -269,21 +263,45 @@ export function useAbsoluteRoles(oneOfRoles = [], options = {}) {
     return state;
 }
 
+export const usePermissionRoles = ({
+    mode = "absolute",
+    item = {},
+    oneOfRoles = [],
+    ...options
+}) => {
+    const [firstMode] = useState(mode)
+    if (firstMode !== mode)
+        throw Error("Mode parameter of usePermissionRoles hook cannot be changed during lifetime")
+    if (mode === "item")
+        return useItemRoles({ item, oneOfRoles, ...options })
+    if (mode === "absolute") {
+        // allow skip the item parameter
+        return useAbsoluteRoles({ oneOfRoles, ...options })
+    }
+    throw Error("Mode parameter of usePermissionRoles hook must be one of 'absolute' or 'item'")
+}
+
 const dummyRoles = []
+const localDeniedFallback = (<>Nemáte dostatečná oprávnění</>)
 export const AbsolutePermissionGate = ({
-    roles = dummyRoles,
-    enabled = true,
-    loadingFallback = null,
+    oneOfRoles = dummyRoles,
+    deniedFallback = localDeniedFallback,
     children,
 }) => {
-    const { loading, allowed, error } = useAbsoluteRoles(roles, { enabled });
+    const { loading, allowed, error } = useAbsoluteRoles({ oneOfRoles });
 
-    if (!enabled) return null;
     return (
-        <>  
-            {loading && loadingFallback}
-            <AsyncStateIndicator error={error} loading={!loadingFallback? loading:false} text="Ověřuji oprávnění" />
-            {allowed && children}
+        <>
+            <AsyncStateIndicator error={error} loading={loading} text="Ověřuji oprávnění" />
+            {allowed === true && children}
+            {allowed === false && deniedFallback}
         </>
-    )
+    );
+};
+
+export const PermissionGate = ({ oneOfRoles, mode = "absolute", ...props }) => {
+    if (!oneOfRoles) throw Error("PermissionGate.oneOfRoles must be specified");
+    if (mode === "absolute") return <AbsolutePermissionGate oneOfRoles={oneOfRoles} {...props} />;
+    if (mode === "item") return <ItemPermissionGate oneOfRoles={oneOfRoles} {...props} />;
+    throw Error("PermissionGate.mode must be one of 'absolute' or 'item'");
 };

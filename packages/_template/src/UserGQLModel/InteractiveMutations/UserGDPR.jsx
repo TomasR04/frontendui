@@ -1,9 +1,9 @@
 import { ButtonWithDialog } from "@hrbolek/uoisfrontend-shared"
-import { useRoles } from "../../../../dynamic/src/Hooks/useRoles"
+import { useItemRoles } from "../../../../dynamic/src/Hooks/useRoles"
 
 
 export const UserGDPR = ({ item, ...props }) => {
-    const { can, roleNames } = useRoles(item, ["zpracovatel gdpr"])
+    const { can, roleNames } = useItemRoles(item, ["zpracovatel gdpr"])
     if (can)
         return (
             <ButtonWithDialog {...props}>

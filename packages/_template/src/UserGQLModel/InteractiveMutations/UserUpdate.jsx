@@ -1,9 +1,9 @@
 import { ButtonWithDialog } from "@hrbolek/uoisfrontend-shared"
-import { useRoles } from "../../../../dynamic/src/Hooks/useRoles"
+import { useItemRoles } from "../../../../dynamic/src/Hooks/useRoles"
 
 
 export const UserUpdate = ({ item, ...props }) => {
-    const { can, roleNames } = useRoles(item, ["administrátor"])
+    const { can, roleNames } = useItemRoles(item, ["administrátor"])
     if (can)
         return (
             <ButtonWithDialog {...props}>

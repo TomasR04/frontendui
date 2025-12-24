@@ -1,19 +1,22 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useGQLEntityContext } from "../../Base/Helpers/GQLEntityProvider";
-import { AbsolutePermissionGate, useRoles as useRolePermission } from "../../../../dynamic/src/Hooks/useRoles"
+import { PermissionGate, usePermissionRoles } from "../../../../dynamic/src/Hooks/useRoles"
 import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
 import { LinkURI, MediumEditableContent } from "../Components";
 import { Row } from "../../Base/Components/Row";
 import { Col } from "../../Base/Components/Col";
-import { Dialog, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
 import { DeleteAsyncAction } from "../Queries";
 import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator";
 import { useState } from "react";
 import { useCallback } from "react";
 import { VectorItemsURI } from "../Pages";
+import { ProxyLink, useLink } from "../../Base/Components/ProxyLink";
+import { useMemo } from "react";
+import { Dialog } from "../../Base/FormControls/Dialog";
+import { makeMutationURI } from "./helpers";
 
-export const DeleteURI = LinkURI.replace('view', 'delete')
 
+export const DeleteURI = makeMutationURI(LinkURI, "delete", { withId: true });
 
 export const DeleteLink = ({ item, preserveHash = true, preserveSearch = true, ...props }) => {
     const to = useMemo(() => {
@@ -22,22 +25,21 @@ export const DeleteLink = ({ item, preserveHash = true, preserveSearch = true, .
     }, [item?.id]);
 
     return (
-        <AbsolutePermissionGate roles={["superadmin"]}>
+        <PermissionGate oneOfRoles={["superadmin"]} mode={"absolute"}>
             <ProxyLink
                 to={to}
                 preserveHash={preserveHash}
                 preserveSearch={preserveSearch}
                 {...props}
             />
-        </AbsolutePermissionGate>
+        </PermissionGate>
     );
 };
 
 export const DeleteBody = ({ children, mutationAsyncAction = DeleteAsyncAction }) => {
     const navigate = useNavigate();
     const { item } = useGQLEntityContext()
-    // const { can, roleNames } = useRolePermission(item, ["administrátor"])
-    const { loading, allowed, error } = useAbsoluteRoles(["superadmin"]);
+
     const {
         draft,
         dirty,
@@ -54,10 +56,8 @@ export const DeleteBody = ({ children, mutationAsyncAction = DeleteAsyncAction }
     const handleConfirm = async () => {
         const result = await commitNow(draft)
         console.log("handleConfirm", result)
-
-        if (navigate) {
-            const link = VectorItemsURI
-            navigate(link, { replace: true })
+        if (result && navigate) {
+            navigate(VectorItemsURI, { replace: true })
         }
     }
 
@@ -68,95 +68,91 @@ export const DeleteBody = ({ children, mutationAsyncAction = DeleteAsyncAction }
     if (!item) return null
 
     return (
-        <div>
-            <AsyncStateIndicator error={error} loading={loading} text="Ověřuji oprávnění..." />
-            {!allowed && (
-                <div>
-                    <h1>
-                        Nemáte oprávnění
-                    </h1>
-                    {/* <pre>{JSON.stringify(roleNames)}</pre> */}
-                </div>
-            )}
-            {allowed && (
-                <Row>
-                    <Col></Col>
-                    <Col>
-                        <MediumEditableContent item={draft} onChange={onChange} onBlur={onBlur} >
-                            <AsyncStateIndicator error={savingError} loading={saving} text={"Ukládám"} />
-                            {children}
-                            <button
-                                className="btn btn-warning form-control"
-                                onClick={handleCancel}
-                            // disabled={!dirty || saving}
-                            >
-                                Zrušit
-                            </button>
-                            <button
-                                className="btn btn-primary form-control"
-                                onClick={handleConfirm}
-                            // disabled={!dirty || saving}
-                            >
-                                Smazat
-                            </button>
+        <PermissionGate mode="absolute" oneOfRoles={["superadmin"]}>
+            <Row>
+                <Col></Col>
+                <Col>
+                    <MediumEditableContent item={draft} onChange={onChange} onBlur={onBlur} >
+                        <AsyncStateIndicator error={savingError} loading={saving} text={"Ukládám"} />
+                        {children}
+                        <button
+                            className="btn btn-warning form-control"
+                            onClick={handleCancel}
+                            disabled={saving}
+                        >
+                            Zrušit
+                        </button>
+                        <button
+                            className="btn btn-primary form-control"
+                            onClick={handleConfirm}
+                            disabled={saving}
+                        >
+                            Smazat
+                        </button>
 
-                        </MediumEditableContent>
-                    </Col>
-                    <Col></Col>
-                </Row>
-            )}
-        </div>
-
+                    </MediumEditableContent>
+                </Col>
+                <Col></Col>
+            </Row>
+        </PermissionGate>
     )
 }
 
 export const DeleteButton = ({ children, ...props }) => {
     // const { can, roleNames } = useRoles(item, ["superadmin"])
-    // const { follow } = useLink({to: VectorItemsURI})
+    const { follow } = useLink({ to: VectorItemsURI })
     const [visible, setVisible] = useState(false)
+    const togleVisible = () => setVisible(prev => !prev)
     const handleOkClick = () => {
         setVisible(false)
-        // follow()
+        follow()
     }
     const handleCancelClick = () => {
         setVisible(false)
     }
 
     return (
-        <AbsolutePermissionGate roles={["superadmin"]} >
-            <button {...props} onClick={handleOkClick}>{children || "Editovat"}</button>
+        <PermissionGate oneOfRoles={["superadmin"]} mode={"absolute"}>
+            <button {...props} onClick={togleVisible}>{children || "Odstranit"}</button>
             {visible && <DeleteDialog onOk={handleOkClick} onCancel={handleCancelClick} />}
-        </AbsolutePermissionGate>
+            {/* {JSON.stringify(visible)} */}
+        </PermissionGate>
     )
 }
 
+const dummyFunc = () => null
 export const DeleteDialog = ({
     title = "Odstranit",
-   
+
     oklabel = "Odstranit",
     cancellabel = "Zrušit",
-    onOk: handleOk,
-    onCancel: handleCancel,
+    onOk: handleOk = dummyFunc,
+    onCancel: handleCancel = dummyFunc,
 }) => {
-    const { item, onChange: contextOnChange } = useGQLEntityContext()
     const {
+        item,
+        // onChange: contextOnChange 
+    } = useGQLEntityContext()
+    const {
+        draft,
         onCancel,
         commitNow,
         error,
         loading: saving
     } = useEditAction(DeleteAsyncAction, item, { mode: "confirm" })
 
-    const handleCancel_ = useCallback(async () => {
-        onCancel()
-        handleCancel()
-    }, [onCancel, handleCancel])
-
     const handleConfirm = useCallback(async () => {
-        const result = await commitNow();
-        handleOk()
+        const result = await commitNow(draft);
+        handleOk(result);
+
         return result;
-    }, [commitNow, contextOnChange]);
-    
+    }, [commitNow, handleOk, draft]);
+
+    const handleCancel_ = useCallback(async () => {
+        onCancel();
+        handleCancel();
+    }, [onCancel, handleCancel]);
+
     return (
         <Dialog
             title={title}
@@ -166,7 +162,7 @@ export const DeleteDialog = ({
             onOk={handleConfirm}
         >
             <AsyncStateIndicator error={error} loading={saving} text={"Odstraňuji"} />
-            <MediumEditableContent item={item} onChange={onChange} onBlur={onBlur} />
+            {/* <MediumEditableContent item={item} onChange={contextOnChange} onBlur={contextOnChange} /> */}
         </Dialog>
     )
 }
