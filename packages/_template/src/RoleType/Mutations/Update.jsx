@@ -21,7 +21,11 @@ const permissions = {
 }
 
 export const UpdateLink = ({...props}) => {
-    return <BaseUpdateLink {...props} uriPattern={UpdateURI} />
+    return <BaseUpdateLink 
+        {...props} 
+        uriPattern={UpdateURI} 
+        {...permissions}
+    />
 }
 
 export const UpdateButton = ({...props}) => {

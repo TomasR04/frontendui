@@ -1,7 +1,6 @@
 import { PermissionGate } from "../../../../dynamic/src/Hooks/useRoles"
 import { LinkURI, MediumEditableContent } from "../Components"
 import { useState } from "react"
-import { ReadItemURI } from "../Pages/PageReadItem"
 import { useCreateSession } from "../../../../dynamic/src/Hooks/useCreateSession"
 import { InsertAsyncAction } from "../Queries"
 import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator"
@@ -11,6 +10,7 @@ import { makeMutationURI } from "./helpers"
 
 
 export const CreateURI = makeMutationURI(LinkURI, "create", { withId: false });
+const ReadItemURI = `${LinkURI}:id`
 
 export const CreateLink = ({
     oneOfRoles=["superadmin"],
@@ -31,7 +31,7 @@ export const CreateButton = ({
     oneOfRoles=["superadmin"],
     mode="absolute",
     DefaultContent: DefaultContent_ = DefaultContent,
-
+    readItemURI=ReadItemURI,
     ...props 
 }) => {
     const [visible, setVisible] = useState(false)
@@ -48,6 +48,7 @@ export const CreateButton = ({
                     onCancel={handleClick}
                     mutationAsyncAction={mutationAsyncAction}
                     DefaultContent={DefaultContent_}
+                    readItemURI={readItemURI}
                 />
             )}
         </PermissionGate>
@@ -63,11 +64,12 @@ export const CreateDialog = ({
     onCancel: handleCancel = dummyFunc,
     mutationAsyncAction = InsertAsyncAction,
     DefaultContent: DefaultContent_ = DefaultContent,
+    readItemURI=ReadItemURI,
     children,
     ...props
 }) => {
     const session = useCreateSession({
-        readUri: ReadItemURI,
+        readUri: readItemURI,
         mutationAsyncAction,
         onAfterConfirm: handleOk,
         onAfterCancel: handleCancel
@@ -96,12 +98,13 @@ export const CreateBody = ({
     onOk,
     onCancel,
     DefaultContent: DefaultContent_=DefaultContent,
+    readItemURI=ReadItemURI,
     oneOfRoles=["superadmin"],
     mode="absolute",    
     ...props
 }) => {
     const session = useCreateSession({
-        readUri: ReadItemURI,
+        readUri: readItemURI,
         mutationAsyncAction,
         onAfterConfirm: async (result, draft) => {
             if (onOk) return onOk(result, draft);

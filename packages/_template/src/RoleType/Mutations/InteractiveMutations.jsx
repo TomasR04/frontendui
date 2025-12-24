@@ -4,7 +4,6 @@ import { CreateButton, CreateLink } from "./Create"
 import { UpdateButton, UpdateLink } from "./Update"
 import { ProxyLink } from "../../Base/Components/ProxyLink"
 import { DeleteButton } from "./Delete"
-import { UpdateLink2 } from "./Update2"
 
 export const PageLink = ({ children, preserveHash = true, preserveSearch = true, ...props }) => {
     return (
@@ -27,7 +26,6 @@ export const InteractiveMutations = ({ item }) => {
             <UpdateButton className="btn btn-outline-success" item={item}>Upravit Dialog</UpdateButton>
             <CreateButton className="btn btn-outline-success">Vytvořit nový</CreateButton>
             <DeleteButton className="btn btn-outline-danger" >Odstranit</DeleteButton>
-            <UpdateLink2 className="btn btn-outline-success" item={item}>Upravit</UpdateLink2>
             
         </CardCapsule>
     )

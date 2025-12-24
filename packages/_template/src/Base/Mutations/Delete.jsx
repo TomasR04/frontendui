@@ -7,7 +7,6 @@ import { DeleteAsyncAction } from "../Queries";
 import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator";
 import { useState } from "react";
 import { useCallback } from "react";
-import { VectorItemsURI } from "../Pages";
 import { ProxyLink, useLink } from "../../Base/Components/ProxyLink";
 import { useMemo } from "react";
 import { Dialog } from "../../Base/FormControls/Dialog";
@@ -15,6 +14,7 @@ import { makeMutationURI } from "./helpers";
 
 
 export const DeleteURI = makeMutationURI(LinkURI, "delete", { withId: true });
+const VectorItemsURI = makeMutationURI(LinkURI, "list", { withId: false });
 
 export const DeleteLink = ({ 
     item, 
@@ -50,10 +50,11 @@ export const DeleteButton = ({
     oneOfRoles=["superadmin"],
     mode="absolute",
     DefaultContent: DefaultContent_ = DefaultContent,
+    vectorItemsURI=VectorItemsURI,
     ...props 
 }) => {
     // const { can, roleNames } = useRoles(item, ["superadmin"])
-    const { follow } = useLink({ to: VectorItemsURI })
+    const { follow } = useLink({ to: vectorItemsURI })
     const [visible, setVisible] = useState(false)
     const togleVisible = () => setVisible(prev => !prev)
     const handleOkClick = () => {
@@ -73,6 +74,7 @@ export const DeleteButton = ({
                     onCancel={handleCancelClick} 
                     mutationAsyncAction={mutationAsyncAction}
                     DefaultContent={DefaultContent_}
+                    vectorItemsURI={vectorItemsURI}
                 />
             )}
             {/* {JSON.stringify(visible)} */}
@@ -89,6 +91,7 @@ export const DeleteDialog = ({
     onOk: handleOk = dummyFunc,
     onCancel: handleCancel = dummyFunc,
     mutationAsyncAction = DeleteAsyncAction,
+    vectorItemsURI=VectorItemsURI,
     DefaultContent: DefaultContent_ = DefaultContent
 
 }) => {
@@ -116,6 +119,7 @@ export const DeleteDialog = ({
             cancellabel={cancellabel}
             onCancel={handleCancel}
             onOk={handleConfirm}
+            vectorItemsURI={vectorItemsURI}
         >
             <AsyncStateIndicator error={error} loading={saving} text={"Odstraňuji"} />
             <DefaultContent_ item={item} />
@@ -128,7 +132,8 @@ export const DeleteBody = ({
     mutationAsyncAction = DeleteAsyncAction,
     DefaultContent: DefaultContent_=DefaultContent,
     oneOfRoles=["superadmin"],
-    mode="absolute"
+    mode="absolute",
+    vectorItemsURI=VectorItemsURI,
 }) => {
     const navigate = useNavigate();
     const { item } = useGQLEntityContext()
@@ -146,7 +151,7 @@ export const DeleteBody = ({
         const result = await commitNow(item)
         console.log("handleConfirm", result)
         if (result && navigate) {
-            navigate(VectorItemsURI, { replace: true })
+            navigate(vectorItemsURI, { replace: true })
         }
     }, [navigate, commitNow])
 
