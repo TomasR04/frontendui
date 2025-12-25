@@ -5,10 +5,10 @@ import { Row } from "../../Base/Components/Row"
 import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared"
 import { MediumContent as MediumContent_ } from "./MediumContent"
 import { UserRoles } from "../Vectors/UserRoles"
-import { RBACObject } from "../../RoleGQLModel2/Components/RBACObject"
-import { UpdateLink } from "../Mutations/Update"
+import { RBACObject } from "../../RoleGQLModel/Components/RBACObject.jsx"
+// import { UpdateLink } from "../Mutations/Update"
 import { UserMemberships } from "../Vectors/UserMemberships"
-import { InteractiveMutations, PageLink } from "../Mutations/InteractiveMutations"
+import { InteractiveMutations } from "../Mutations/InteractiveMutations"
 
 /**
  * A large card component for displaying detailed content and layout for an template entity.

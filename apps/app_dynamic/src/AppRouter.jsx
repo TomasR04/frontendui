@@ -8,8 +8,8 @@ import {
 import { GroupRouterSegments } from "../../../packages/_template/src/GroupGQLModel/Pages/RouterSegment";
 import { UserRouterSegments } from "../../../packages/_template/src/UserGQLModel/Pages/RouterSegment";
 // import { RoleRouterSegments } from "../../../packages/_template/src/RoleGQLModel2/Pages/RouterSegment";
-import { GroupTypeRouterSegments } from "../../../packages/_template/src/GroupType/Pages/RouterSegment";
-import { RoleTypeRouterSegments } from "../../../packages/_template/src/RoleType/Pages";
+import { GroupTypeRouterSegments } from "../../../packages/_template/src/GroupTypeGQLModel/Pages/RouterSegment";
+import { RoleTypeRouterSegments } from "../../../packages/_template/src/RoleTypeGQLModel/Pages";
 import { RoleRouterSegments } from "../../../packages/_template/src/RoleGQLModel/Pages";
 // import { TemplateRouterSegments } from "../../../packages/_template/src/Template";
 
