@@ -2,6 +2,10 @@ import Nav from 'react-bootstrap/Nav'
 import { ProxyLink, MyNavbar, useHash } from '@hrbolek/uoisfrontend-shared';
 
 import { LinkURI } from '../Components'
+import { RolesURI } from './PageReadItemEx';
+import { Link } from '../../Base/Components';
+import { NavDropdown } from 'react-bootstrap';
+import { VectorItemsURI } from './PageVector';
 
 /**
  * Allow to use HashContainer for determination which component at page will be rendered.
@@ -93,7 +97,7 @@ export const PageNavbar = ({ item, children, onSearchChange }) => {
     return (
         <div className='screen-only'>
             <MyNavbar onSearchChange={onSearchChange} >
-                {item && TemplatePageSegments.map(({ segment, label }) => (
+                {/* {item && TemplatePageSegments.map(({ segment, label }) => (
                     <Nav.Item key={segment} >
                         <TitleNavButton
                             template={item}
@@ -102,7 +106,29 @@ export const PageNavbar = ({ item, children, onSearchChange }) => {
                             className={segment === currentHash ? "active" : ""} aria-current={segment === currentHash ? "page" : undefined}
                         />
                     </Nav.Item>
-                ))}
+                ))} */}
+                {item && (<>
+                    <Nav.Item>
+                        <Nav.Link as={"span"} to={VectorItemsURI}>
+                            <ProxyLink to={VectorItemsURI}>
+                                Seznam všech skupin
+                            </ProxyLink>
+                        </Nav.Link>
+                    </Nav.Item>
+                    <span className="border-start mx-2" aria-hidden="true" />
+                    <Nav.Item>
+                        <Nav.Link as={Link} item={item} action="roles">
+                            Role
+                        </Nav.Link>
+                    </Nav.Item>
+                    <span className="border-start mx-2" aria-hidden="true" />
+                    <Nav.Item>
+                        <Nav.Link as={Link} item={item} action="subgroups">
+                            Podskupiny
+                        </Nav.Link>
+                    </Nav.Item>
+                </>)}
+                  
                 {children}
             </MyNavbar>
         </div>

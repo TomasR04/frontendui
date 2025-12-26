@@ -8,6 +8,7 @@ import { UpdateLink } from "../Mutations/Update"
 import { LinkURI } from "../Components"
 import { label } from "happy-dom/lib/PropertySymbol"
 import { Attribute } from "../../Base/Components/Attribute"
+import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
 
 const CellName = ({ row, name }) => (
     <td key={name}>
@@ -95,15 +96,13 @@ const table_def = {
     }
 }
 
-export const GroupRolesOn = ({ item, skiproles=true, children }) => {
-    const attribute_value = item?.rolesOn || []
-    const rolesOn = skiproles && attribute_value.filter(
-        r => r?.group?.id !== item?.id
-    )
+export const GroupRoles = ({ item, children }) => {
+    const attribute_value = item?.roles || []
     return (
         <>
-            <CardCapsule item={item} title={"Odvozené role "}>
-                <BaseTable data={rolesOn || attribute_value} table_def={table_def}/>
+            <CardCapsule item={item} title={"Přímé role "}>
+                <SimpleCardCapsuleRightCorner>Edit</SimpleCardCapsuleRightCorner>
+                <BaseTable data={attribute_value} table_def={table_def}/>
             </CardCapsule>
             {children}
         </>

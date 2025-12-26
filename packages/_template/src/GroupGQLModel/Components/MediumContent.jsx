@@ -39,9 +39,14 @@ export const MediumContent = ({ item }) => {
             <BaseLink item={item?.grouptype} />
         </Attribute>
         <hr />
-        <Attribute label={"Nadřízený"}>
+        <Attribute label={"Přímý nadřízený"}>
             <BaseLink item={item?.mastergroup} />
         </Attribute>
+        {item?.mastergroups?.map(g=>
+            <Attribute label={g?.grouptype?.name ?? " "}>
+                <BaseLink item={g} />
+            </Attribute>
+        )}
         <hr/>
         <Attribute label="Poslední změna" item={item} attribute_name={"lastchange"} />
         <Attribute label="Provedl" item={item} attribute_name={"lastchange"}>

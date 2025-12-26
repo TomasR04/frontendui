@@ -8,6 +8,7 @@ import { UpdateLink } from "../Mutations/Update"
 import { LinkURI } from "../Components"
 import { label } from "happy-dom/lib/PropertySymbol"
 import { Attribute } from "../../Base/Components/Attribute"
+import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
 
 const CellName = ({ row, name }) => (
     <td key={name}>
@@ -17,7 +18,7 @@ const CellName = ({ row, name }) => (
 
 const CellType = ({ row, name }) => (
     <td key={name}>
-        <BaseLink item={row?.roletype || {}} />
+        <BaseLink item={row?.grouptype || {}} />
     </td>
 )
 
@@ -34,14 +35,6 @@ const CellValidTill = ({ row, name }) => (
         {/* {row?.valid?"ano":"ne"} */}
     </td>
 )
-
-const CellUser = ({ row, name }) => (
-    <td key={name}>
-        <BaseLink item={row?.user} />
-        {/* {row?.valid?"ano":"ne"} */}
-    </td>
-)
-
 
 const CellTools = ({ row, name }) => {
     const navigate = useNavigate()
@@ -69,15 +62,11 @@ const CellTools = ({ row, name }) => {
 }
 
 const table_def = {
-    // "name": {
-    //     label: "Název",
-    //     component: CellName
-    // },
-    "user": {
-        label: "Kdo",
-        component: CellUser
+    "name": {
+        label: "Název",
+        component: CellName
     },
-    "roletype": {
+    "grouptype": {
         label: "Typ",
         component: CellType
     },
@@ -95,19 +84,14 @@ const table_def = {
     }
 }
 
-export const GroupRolesOn = ({ item, skiproles=true, children }) => {
-    const attribute_value = item?.rolesOn || []
-    const rolesOn = skiproles && attribute_value.filter(
-        r => r?.group?.id !== item?.id
-    )
+export const GroupSubgroups = ({ item, children }) => {
+    const attribute_value = item?.subgroups || []
     return (
-        <>
-            <CardCapsule item={item} title={"Odvozené role "}>
-                <BaseTable data={rolesOn || attribute_value} table_def={table_def}/>
-            </CardCapsule>
+        <CardCapsule item={item} title={"Podřízené prvky"}>
+            {/* <SimpleCardCapsuleRightCorner>Edit</SimpleCardCapsuleRightCorner> */}
             {children}
-        </>
-        
+            <BaseTable data={attribute_value} table_def={table_def}/>
+        </CardCapsule>            
     )
 }
 

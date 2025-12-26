@@ -7,7 +7,7 @@ import { DeleteURI } from "../Mutations/Delete"
 import { CreateURI } from "../Mutations/Create"
 import { UpdateURI } from "../Mutations/Update"
 
-import { PageReadItemRolesOn } from './PageReadItemEx'
+import { PageReadItemRoles, PageReadItemRolesOn, PageReadItemSubgroups, RolesOnURI, RolesURI, SubgroupsURI } from './PageReadItemEx'
 
 /**
  * Definice segmentů rout pro Template stránky.
@@ -60,7 +60,15 @@ export const GroupRouterSegments = [
         element: (<PageDeleteItem />),
     },   
     {
-        path: "sad",
+        path: RolesOnURI,
         element: (<PageReadItemRolesOn />)
     },
+    {
+        path: RolesURI,
+        element: (<PageReadItemRoles />)
+    },
+    {
+        path: SubgroupsURI,
+        element: (<PageReadItemSubgroups />)
+    }
 ]

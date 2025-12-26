@@ -2,11 +2,12 @@ import { BaseUI } from "../../Base"
 import { Attribute } from "../../Base/Components/Attribute"
 import { CardCapsule } from "../Components"
 
-export const GroupRoles = ({ item }) => {
+export const GroupRoles = ({ item, children }) => {
     const { rolesOn } = item || []
 
     return (
         <CardCapsule item={item} title="Vedoucí">
+            {children}
             <Roles roles={rolesOn} />
             {/* <AllRoles roles={rolesOn} /> */}
         </CardCapsule>

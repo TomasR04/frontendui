@@ -1,7 +1,9 @@
-import { PersonFill } from "react-bootstrap-icons"
+import { MegaphoneFill, PencilFill, PeopleFill, PersonFill } from "react-bootstrap-icons"
 import { CardCapsule } from "./CardCapsule"
 import { MediumContent } from "./MediumContent"
 import { Link } from "./Link"
+import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
+import { UpdateButton, UpdateLink } from "../Mutations/Update"
 
 /**
  * A card component that displays detailed content for an template entity.
@@ -31,6 +33,13 @@ import { Link } from "./Link"
 export const MediumCard = ({ item, children }) => {
     return (
         <CardCapsule title={<><PersonFill /> <Link item={item} /></>}>
+            <SimpleCardCapsuleRightCorner>
+                <UpdateLink item={item}>
+                    <PencilFill />
+                </UpdateLink>&nbsp;
+                {/* className="btn btn-sm btn-outline-secondary border-0" */}
+                {/* <Link item={item} action={"roles"}><MegaphoneFill /></Link> */}
+            </SimpleCardCapsuleRightCorner>
             <MediumContent item={item}>
                 {children}
             </MediumContent>

@@ -8,6 +8,10 @@ import { InteractiveMutations } from '../Mutations/InteractiveMutations'
 import { RBACObject } from "../Scalars/RBACObject"
 import { MasterGroup } from "../Scalars/MasterGroup"
 import { GroupRoles } from "../Scalars/GroupRoles"
+import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
+import { UpdateLink } from "../Mutations/Update"
+import { RolesURI } from "../Pages/PageReadItemEx"
+import { MegaphoneFill } from "react-bootstrap-icons"
 
 /**
  * A large card component for displaying detailed content and layout for an template entity.
@@ -39,10 +43,17 @@ export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumCont
         <CardCapsule item={item} >
             <Row>
                 <LeftColumn>
-                    <CardCapsule item={item} title="Detail">
+                    <MediumCard item={item} title="Detail" />
+                    {/* <CardCapsule item={item} title="Detail">
                         <MediumContent item={item} />
-                    </CardCapsule>
-                    <GroupRoles item={item} />
+                    </CardCapsule> */}
+                    <GroupRoles item={item}>
+                        <SimpleCardCapsuleRightCorner>
+                            <UpdateLink item={item} uriPattern={RolesURI}>
+                                <MegaphoneFill />
+                            </UpdateLink>
+                        </SimpleCardCapsuleRightCorner>
+                    </GroupRoles>
                     <RBACObject item={item} />
                     <InteractiveMutations item={item} />
                 </LeftColumn>

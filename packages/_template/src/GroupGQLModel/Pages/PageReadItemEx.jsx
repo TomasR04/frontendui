@@ -1,12 +1,16 @@
 import { LinkURI } from "../Components"
 import { makeMutationURI } from "../Mutations/helpers"
 import { ReadAsyncAction } from "../Queries"
+import { GroupRoles } from "../Vectors/GroupRoles"
 import { GroupRolesOn } from "../Vectors/GroupRolesOn"
+import { GroupSubgroups } from "../Vectors/GroupSubgroups"
 import { PageReadItem } from "./PageReadItem"
 
 export const ReadItemURI = `${LinkURI}:id`
 
 export const RolesOnURI = makeMutationURI(LinkURI, "roleson", { withId: true })
+export const RolesURI = makeMutationURI(LinkURI, "roles", { withId: true })
+export const SubgroupsURI = makeMutationURI(LinkURI, "subgroups", { withId: true })
 
 /**
  * Základní obálka pro „read“ stránku entity podle `:id` z routy.
@@ -28,17 +32,24 @@ export const RolesOnURI = makeMutationURI(LinkURI, "roleson", { withId: true })
  *
  * @returns {import("react").JSX.Element}
  */
-export const PageReadItemRolesOn = ({ 
-    queryAsyncAction=ReadAsyncAction, 
-    children, 
-    ...props 
-}) => {
-    return (
-        <PageReadItem 
-            queryAsyncAction={queryAsyncAction}
-            SubPage={GroupRolesOn}
-            {...props}
-        />
-    )
-}
+export const PageReadItemRolesOn = ({ queryAsyncAction=ReadAsyncAction}) => (
+    <PageReadItem queryAsyncAction={queryAsyncAction} SubPage={GroupRolesOn}/>
+)
+
+// export const PageReadItemRoles = ({ queryAsyncAction=ReadAsyncAction}) => (
+//     <PageReadItem queryAsyncAction={queryAsyncAction} SubPage={GroupRoles}/>
+// )
+
+const CombinedRoles = ({ item }) => <>
+    <GroupRoles item={item} />
+    <GroupRolesOn item={item} />
+</>
+
+export const PageReadItemRoles = ({ queryAsyncAction=ReadAsyncAction}) => (
+    <PageReadItem queryAsyncAction={queryAsyncAction} SubPage={CombinedRoles}/>
+)
+
+export const PageReadItemSubgroups = ({ queryAsyncAction=ReadAsyncAction}) => (
+    <PageReadItem queryAsyncAction={queryAsyncAction} SubPage={GroupSubgroups}/>
+)
 

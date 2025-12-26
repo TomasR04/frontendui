@@ -15,22 +15,22 @@ export const UpdateURI = makeMutationURI(LinkURI, "edit", { withId: true });
 const DefaultContent = MediumEditableContent
 const mutationAsyncAction = UpdateAsyncAction
 
-const permissions = {
-    oneOfRoles: ["superadmin"],
-    mode: "absolute",
-}
-
-// ALTERNATIVE, CHECK GQLENDPOINT
 // const permissions = {
-//     oneOfRoles: ["administrátor", "personalista"],
-//     mode: "item",
+//     oneOfRoles: ["superadmin"],
+//     mode: "absolute",
 // }
 
+// ALTERNATIVE, CHECK GQLENDPOINT
+const permissions = {
+    oneOfRoles: ["administrátor", "personalista"],
+    mode: "item",
+}
 
-export const UpdateLink = ({...props}) => {
+
+export const UpdateLink = ({uriPattern=UpdateURI, ...props}) => {
     return <BaseUpdateLink 
         {...props} 
-        uriPattern={UpdateURI} 
+        uriPattern={uriPattern} 
         {...permissions}
     />
 }

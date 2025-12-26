@@ -38,6 +38,9 @@ fragment Medium on GroupGQLModel {
     mastergroup {
         ...Link
     }
+    mastergroups {
+        ...Link
+    }
 }
 `
 
@@ -55,6 +58,9 @@ fragment Large on GroupGQLModel {
     }
   }
   rolesOn {
+    ...Role
+  }
+  roles {
     ...Role
   }
 }
