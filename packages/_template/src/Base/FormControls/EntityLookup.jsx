@@ -75,6 +75,9 @@ export const EntityLookup = ({
     label = "Hledaný text", 
     ...props 
 }) => {
+    if (typeof asyncAction !== "function")
+        throw Error("EntityLookup.asyncAction must be function - dispatchable async action creator")
+
     // const dispatch = useDispatch()
     const [Delayer] = useState(() => CreateDelayer()) // useState checks for a function ;)
     const { run, loading, error } = useAsync(asyncAction, {}, { deferred: true })
@@ -97,6 +100,8 @@ export const EntityLookup = ({
         if (value.length < 3) return
         const searchresult = await Delayer(async () => await run({ pattern: "%" + value + "%" }, gqlClient))
         // console.log("searchresult", searchresult)
+        if (!Array.isArray(searchresult))
+            throw Error("EntityLookup.searchresult doest not return array, check EntityLookup.asyncAction")
         setFetchedItems(old => searchresult)
     }, [asyncAction, skip, limit])
 
