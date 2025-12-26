@@ -34,6 +34,7 @@ export const MediumContent = ({ item }) => {
         </Attribute>
         <Attribute label="Anglický název" item={item} attribute_name={"nameEn"} />
         <Attribute label="Email" item={item} attribute_name={"email"} />
+        <Attribute label="Zkratka" item={item} attribute_name={"abbreviation"} />
         <Attribute label={"Typ"}>
             <BaseLink item={item?.grouptype} />
         </Attribute>
