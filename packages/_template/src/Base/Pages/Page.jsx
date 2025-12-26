@@ -5,13 +5,19 @@ import { useGQLType } from "../../../../dynamic/src/Hooks/useGQLType"
 import { LargeCard } from "../Components/LargeCard"
 import { CardCapsule } from "../Components/CardCapsule"
 import { MediumCardScalars } from "../Scalars/ScalarAttribute"
-import { MediumCardVectors } from "../Vectors/VectorAttribute"
+import { MediumCardVectors, Tree } from "../Vectors/VectorAttribute"
 import { useGQLEntityContext, AsyncActionProvider } from "../Helpers/GQLEntityProvider"
 import { Row } from "../Components/Row"
 import { Col } from "../Components/Col"
 
 
-
+export const GeneratedContentBase = ({ item }) => {
+    return (<>
+        <Tree item={item} />
+        <MediumCardScalars item={item} />
+        <MediumCardVectors item={item} />
+    </>)
+}
 
 /**
  * Vnitřní „skeleton“ stránky pro práci s jednou entitou z `GQLEntityContext`.
