@@ -1,65 +1,79 @@
-import { LinkURI, MediumContent } from "../Components";
+import { DeleteItemURI, ListURI, MediumContent, VectorItemsURI } from "../Components";
 import { DeleteAsyncAction } from "../Queries";
-import { makeMutationURI } from "./helpers";
 import { 
     DeleteBody as BaseDeleteBody, 
     DeleteButton as BaseDeleteButton, 
     DeleteDialog as BaseDeleteDialog, 
     DeleteLink as BaseDeleteLink
 } from "../../Base/Mutations/Delete";
-import { VectorItemsURI } from "../Pages";
 
-
-export const DeleteURI = makeMutationURI(LinkURI, "delete", { withId: true });
 const DefaultContent = MediumContent
-const mutationAsyncAction = DeleteAsyncAction
+const MutationAsyncAction = DeleteAsyncAction
 
 const permissions = {
     oneOfRoles: ["superadmin"],
     mode: "absolute",
 }
 
-export const DeleteLink = ({ ...props }) => {
+export const DeleteLink = ({ 
+    uriPattern=DeleteItemURI,
+    ...props
+ }) => {
     return (
         <BaseDeleteLink 
             {...props} 
-            uriPattern={DeleteURI} 
+            uriPattern={uriPattern} 
             {...permissions}
         />
     )
 };
 
-export const DeleteButton = ({ ...props }) => {
+export const DeleteButton = ({
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    vectorItemsURI=ListURI,
+    ...props 
+}) => {
     return (
         <BaseDeleteButton 
             {...props} 
-            DefaultContent={DefaultContent} 
+            DefaultContent={DefaultContent_} 
             mutationAsyncAction={mutationAsyncAction}
-            vectorItemsURI={VectorItemsURI}
+            vectorItemsURI={vectorItemsURI}
             {...permissions}
         />
     )
 }
 
-export const DeleteDialog = ({ ...props }) => {
+export const DeleteDialog = ({
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    vectorItemsURI=ListURI,
+    ...props 
+}) => {
     return (
         <BaseDeleteDialog 
             {...props} 
             DefaultContent={DefaultContent} 
-            mutationAsyncAction={mutationAsyncAction}
-            vectorItemsURI={VectorItemsURI}
+            mutationAsyncAction={MutationAsyncAction}
+            vectorItemsURI={vectorItemsURI}
             {...permissions}
         />
     )
 }
 
-export const DeleteBody = ({ ...props }) => {
+export const DeleteBody = ({ 
+    mutationAsyncAction=MutationAsyncAction,
+    DefaultContent:DefaultContent_=DefaultContent,
+    vectorItemsURI=ListURI,
+    ...props
+}) => {
     return (
         <BaseDeleteBody 
             {...props} 
             DefaultContent={DefaultContent} 
-            mutationAsyncAction={mutationAsyncAction}
-            vectorItemsURI={VectorItemsURI}
+            mutationAsyncAction={MutationAsyncAction}
+            vectorItemsURI={vectorItemsURI}
             {...permissions}
         />
     )

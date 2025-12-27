@@ -1,7 +1,7 @@
 import { Attribute } from "./Attribute"
 import { Link } from "./Link"
 
-const NonPriorityAttributeValue = ({ datarow = {}, name }) => {
+export const NonPriorityAttributeValue = ({ datarow = {}, name }) => {
     const value = datarow?.[name] || ""
     if (name === "id")
         return (

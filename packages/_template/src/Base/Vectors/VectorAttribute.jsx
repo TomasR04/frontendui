@@ -1,8 +1,10 @@
-import { CardCapsule } from "../Components/CardCapsule"
+import { CardCapsule, SimpleCardCapsule, SimpleCardCapsuleRightCorner } from "../Components/CardCapsule"
+import { NonPriorityAttributeValue } from "../Components/MediumContent"
 import { Table } from "../Components/Table"
 import { Col } from "../Components/Col"
 import { Row } from "../Components/Row"
 import { useState } from "react"
+import { Link } from "../Components"
 
 export const VectorAttributeFactory = (attribute_name) => ({ item }) => {
     const attribute_value = item?.[attribute_name] || []
@@ -50,6 +52,9 @@ const isPlainObject = (v) =>
     (Object.getPrototypeOf(v) === Object.prototype || Object.getPrototypeOf(v) === null);
 
 const SimpleValue = ({ label, value }) => (<><b>{label}</b><br/> {`${value}`} </>)
+// const SimpleValue = ({ datarow, name, label, value }) => (
+//     <NonPriorityAttributeValue datarow={datarow} name={name} />
+// )
 
 const TreeSimpleValues = ({ item }) => {
     return (<Row>
@@ -58,77 +63,75 @@ const TreeSimpleValues = ({ item }) => {
             if (Array.isArray(attribute_value)) return null
             if (isPlainObject(attribute_value)) return null
             return (
+                // <Row key={attribute_name} >
                 <Col key={attribute_name} >
-                    <SimpleValue label={attribute_name} value={attribute_value} />
+                    <SimpleValue datarow={item} name={attribute_name} label={attribute_name} value={attribute_value} />
                 </Col>
+                // </Row>
             )
         })}
     </Row>)
 }
 
-const TreeDict = ({ item }) => {
+const TreeDict = ({ title, item }) => {
     const [collapsed, setCollapsed] = useState(true)
     const toggle = () => setCollapsed(prev => !prev)
 
-    return (<>
-        <button className="btn btn-outline-secondary form-control" onClick={toggle}>
-            <TreeSimpleValues item={item} />
-        </button>
+    return (<SimpleCardCapsule title={<>
+            {`${title} `}
+            <Link item={item} />
+            <button className="btn btn-outline-secondary btn-sm btn-link border-0" onClick={toggle}>
+                <b> {collapsed?"Open":"Close"}</b>
+            </button>
+        </>}>
+        <TreeSimpleValues item={item} />
         {!collapsed && (<>
             {Object.entries(item).map(([attribute_name, attribute_value]) => {
                 if (Array.isArray(attribute_value)) return null
-                if (isPlainObject(attribute_value)) return (<Row>
-                        <Col className={"col-1"}><b>{attribute_name}</b></Col>
-                        <Col className={"col-11"}>
-                        <TreeDict key={attribute_name} item={attribute_value} />
-                        </Col>
-                    </Row>)
+                if (isPlainObject(attribute_value)) return (
+                    <TreeDict key={attribute_name} title={attribute_name} item={attribute_value} />       
+                )
                 return null
             })}
             {Object.entries(item).map(([attribute_name, attribute_value]) => {
                 if (Array.isArray(attribute_value)) return (
-                    <Row>
-                        <Col className={"col-1"}>
-                            <b>{attribute_name} []</b>
-                        </Col>
-                        <Col className={"col-11"}>
-                            <TreeArray key={attribute_name} items={attribute_value} />
-                        </Col>
-                    </Row>
+                    <TreeArray key={attribute_name} title={`${attribute_name}`} items={attribute_value} />
                 )
-                
                 return null
             })}
         </>)}
-    </>)
+    </SimpleCardCapsule>)
 }
 
-const TreeArray = ({ items }) => {
+const TreeArray = ({ title, items }) => {
     const [collapsed, setCollapsed] = useState(true)
     const toggle = () => setCollapsed(prev => !prev)
-    return (<>
-        <button className="btn btn-outline-secondary form-control" onClick={toggle}>
-            {collapsed ? "Open" : "Close"}
-        </button>
+    return (<SimpleCardCapsule title={<>
+            
+    {`${title}[${items?.length}]`}
+            <button className="btn btn-link btn-sm btn-outline-secondary border-0" onClick={toggle}>
+                <b> {collapsed ? "Open" : "Close"}</b>
+            </button>
+            </>
+        }>
+        <SimpleCardCapsuleRightCorner>
+            <button className="btn btn-sm btn-outline-secondary form-control border-0" onClick={toggle}>
+                {collapsed ? "Open" : "Close"}
+            </button>
+        </SimpleCardCapsuleRightCorner>
+        
         {!collapsed && items?.map((item, index) => (
-            <Row>
-                <Col className={"col-1"}>
-                    <b>{index}</b>
-                </Col>
-                <Col className={"col-11"}>
-                    <TreeDict key={item?.id} item={item} />
-                </Col>
-            </Row>
-        )
-        )}
-    </>)
+            <TreeDict key={item?.id} title={`${title}[${index}] `} item={item} />
+        ))}
+    </SimpleCardCapsule>)
 }
 
 export const Tree = ({ item }) => {
     return (
-        <CardCapsule item={item} header={"Tree"}>
-            <TreeDict item={item} />
-        </CardCapsule>
+        <TreeDict title={"Tree"} item={item} />
+        // <CardCapsule item={item} header={"Tree"}>
+        //     <TreeDict title={"Tree"} item={item} />
+        // </CardCapsule>
     )
 }
 

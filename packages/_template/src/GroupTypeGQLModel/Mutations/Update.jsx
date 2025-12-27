@@ -5,12 +5,8 @@ import {
     UpdateLink as BaseUpdateLink 
 } from "../../Base/Mutations/Update";
 
-import { LinkURI, MediumEditableContent } from "../Components";
+import { MediumEditableContent, UpdateItemURI } from "../Components";
 import { UpdateAsyncAction } from "../Queries";
-import { makeMutationURI } from "./helpers";
-//import { UpdateBody, UpdateButton, UpdateDialog, UpdateLink } from "./Update";
-
-export const UpdateURI = makeMutationURI(LinkURI, "edit", { withId: true });
 
 const DefaultContent = MediumEditableContent
 const mutationAsyncAction = UpdateAsyncAction
@@ -27,24 +23,35 @@ const permissions = {
 // }
 
 
-export const UpdateLink = ({...props}) => {
+export const UpdateLink = ({
+    uriPattern=UpdateItemURI, 
+    ...props
+}) => {
     return <BaseUpdateLink 
         {...props} 
-        uriPattern={UpdateURI} 
+        uriPattern={uriPattern} 
         {...permissions}
     />
 }
 
-export const UpdateButton = ({...props}) => {
+export const UpdateButton = ({
+    DefaultContent:DefaultContent_=DefaultContent,
+    mutationAsyncAction:mutationAsyncAction_=mutationAsyncAction,
+    ...props
+}) => {
     return <BaseUpdateButton 
         {...props} 
-        DefaultContent={DefaultContent} 
-        mutationAsyncAction={mutationAsyncAction}
+        DefaultContent={DefaultContent_} 
+        mutationAsyncAction={mutationAsyncAction_}
         {...permissions}
     />
 }
 
-export const UpdateDialog = ({...props}) => {
+export const UpdateDialog = ({
+    DefaultContent:DefaultContent_=DefaultContent,
+    mutationAsyncAction:mutationAsyncAction_=mutationAsyncAction,
+    ...props
+}) => {
     return <BaseUpdateDialog 
         {...props} 
         DefaultContent={DefaultContent} 
@@ -53,7 +60,11 @@ export const UpdateDialog = ({...props}) => {
     />
 }
 
-export const UpdateBody = ({...props}) => {
+export const UpdateBody = ({
+    DefaultContent:DefaultContent_=DefaultContent,
+    mutationAsyncAction:mutationAsyncAction_=mutationAsyncAction,
+    ...props
+}) => {
     return <BaseUpdateBody 
         {...props} 
         DefaultContent={DefaultContent} 

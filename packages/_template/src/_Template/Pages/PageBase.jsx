@@ -50,7 +50,7 @@ export const PageItemBase = ({
 export const PageBase = ({ children }) => {
     return (
         <>
-            <PageNavbar />
+            <PageNavbar_ />
             {children}
         </>
     )

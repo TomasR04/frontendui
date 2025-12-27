@@ -2,8 +2,20 @@ import { ProxyLink } from "@hrbolek/uoisfrontend-shared"
 import { URIRoot } from "../../uriroot";
 import { registerLink } from "../../Base/Components/Link";
 
-export const LinkURI = `${URIRoot}/role/view/`;
+const modelURI = `${URIRoot}/role`
+export const ListURI = `${modelURI}/list/`;
+export const CreateURI = `${modelURI}/create/`;
+export const ReadURI = `${modelURI}/view/`;
+export const UpdateURI = `${modelURI}/edit/`;
+export const DeleteURI = `${modelURI}/delete/`;
 
+export const LinkURI = ReadURI;
+export const VectorItemsURI = ListURI;
+
+const idParam = ":id"
+export const ReadItemURI = `${LinkURI}${idParam}`;
+export const UpdateItemURI = `${UpdateURI}${idParam}`;
+export const DeleteItemURI = `${DeleteURI}${idParam}`;
 /**
  * A React component that renders a `ProxyLink` to an "template" entity's view page.
  *
