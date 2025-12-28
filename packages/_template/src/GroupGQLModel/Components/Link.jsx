@@ -5,7 +5,7 @@ import { registerLink } from "../../Base/Components/Link";
 const modelURI = `${URIRoot}/group`
 export const ListURI = `${modelURI}/list/`;
 export const CreateURI = `${modelURI}/create/`;
-export const ReadURI = `${modelURI}/create/`;
+export const ReadURI = `${modelURI}/view/`;
 export const UpdateURI = `${modelURI}/edit/`;
 export const DeleteURI = `${modelURI}/delete/`;
 
