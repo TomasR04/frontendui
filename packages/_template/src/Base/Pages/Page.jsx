@@ -10,6 +10,8 @@ import { useGQLEntityContext, AsyncActionProvider } from "../Helpers/GQLEntityPr
 import { Row } from "../Components/Row"
 import { Col } from "../Components/Col"
 import { Card } from "react-bootstrap"
+import { SimpleCardCapsuleRightCorner } from "@hrbolek/uoisfrontend-shared"
+import { CopyButton } from "../Components/CopyButton"
 
 
 export const GeneratedContentBase = ({ item }) => {
@@ -131,16 +133,44 @@ export const PageItemBase = ({
 }
 
 
-
-
-
-export const PageContent = ({queryById, children, params}) => {
+export const PageContent = ({queryById, queryVector, mutations, children, params}) => {
      const gqlContext= useGQLEntityContext()
      const {id, typename, action="view"} = useParams()
      const { item } = gqlContext || {}
     if (!item) return (<div>Položka nenalezena<pre>{JSON.stringify(gqlContext)}</pre></div>)
     let content = children
     const attribute_value = item?.[action]
+    if ((action === "__def"))
+        content = <Row>
+            <Col>
+                <CardCapsule header="queryById">
+                    <SimpleCardCapsuleRightCorner>
+                        <CopyButton className="btn btn-sm border-0" text={queryById}/>
+                    </SimpleCardCapsuleRightCorner>
+                    <pre>{queryById?.replaceAll(", ", ", \n\t").replaceAll("(", ", (\n\t")}</pre>
+                </CardCapsule>
+            </Col>
+            <Col>
+                <CardCapsule header="queryVector">
+                    <SimpleCardCapsuleRightCorner>
+                        <CopyButton className="btn btn-sm border-0" text={queryVector}/>
+                    </SimpleCardCapsuleRightCorner>
+                    <pre>{queryVector?.replaceAll(", ", ", \n\t").replaceAll("(", ", (\n\t")}</pre>
+                </CardCapsule>
+            </Col>
+            {Object.entries(mutations).map(([name, value]) => {
+                return (
+                <Col key={name}>
+                    <CardCapsule header={name}>
+                        <SimpleCardCapsuleRightCorner>
+                            <CopyButton className="btn btn-sm border-0" text={value}/>
+                        </SimpleCardCapsuleRightCorner>
+                        <pre>{value?.replaceAll(", ", ", \n\t").replaceAll("(", ", (\n\t")}</pre>
+                    </CardCapsule>
+                </Col>
+                )
+            })}
+        </Row>
     if ((action === "view"))
         content = (
             <>
@@ -156,8 +186,8 @@ export const PageContent = ({queryById, children, params}) => {
     return (<>
         <LargeCard item={item} >
             {content}
-            <MediumCardScalars key={"MediumCardScalars"} item={item} />
-                <MediumCardVectors key={"MediumCardVectors"} item={item} />
+            {/* <MediumCardScalars key={"MediumCardScalars"} item={item} />
+            <MediumCardVectors key={"MediumCardVectors"} item={item} /> */}
         </LargeCard>
         <Row>
             <Col>
@@ -184,12 +214,12 @@ export const Page = ({ children }) => {
     const {id, typename, action="view"} = useParams()
     // const id = "51d101a0-81f1-44ca-8366-6cf51432e8d6";
     const item = {id}
-    const { ByIdAsyncAction, queryById } = useGQLType(typename || "RoleGQLModel")    
+    const { ByIdAsyncAction, queryById, queryVector, mutations } = useGQLType(typename || "RoleGQLModel")    
     return (
         // <div>Hello</div>
         <>{ByIdAsyncAction&&
             <AsyncActionProvider item={item} queryAsyncAction={ByIdAsyncAction}>
-                <PageContent queryById={queryById} params={item}>
+                <PageContent queryById={queryById} queryVector={queryVector} mutations={mutations} params={item}>
                     {children}
                 </PageContent>
             </AsyncActionProvider>

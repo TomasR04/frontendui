@@ -23,7 +23,7 @@ export const VectorAttributeFactory = (attribute_name) => ({ item }) => {
 export const VectorAttribute = ({ attribute_name, item }) => {
     const attribute_value = item?.[attribute_name] || []
     return (
-        <CardCapsule item={item} header={<Link item={item} action={attribute_name}>{attribute_name+'[]'}</Link> }>
+        <CardCapsule item={item} header={<Link item={item} action={attribute_name}>{attribute_name+' []'}</Link> }>
             <Table data={attribute_value} />
         </CardCapsule>
     )

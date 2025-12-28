@@ -135,7 +135,7 @@ export const NavigationHistoryLinks = () => {
     }
 
     if (!items.length) return null;
-    
+
     return (
         <Navbar bg="light">
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
@@ -158,13 +158,13 @@ export const NavigationHistoryLinks = () => {
                 {e.trail.length > 1 && 
                     <span style={{ opacity: 0.7 }}>
                         {e.trail.map(t => (
-                            <a key={t.to} href={t.to} className="btn btn-sm btn-link" onClick={handleClick}>
+                            <a key={t.to} href={t.to} className="btn btn-sm btn-link border-0" onClick={handleClick}>
                                 {t.label}
                             </a>
                         ))}
                     </span>
                 }
-                /
+                |
                 </>
             ))}
 

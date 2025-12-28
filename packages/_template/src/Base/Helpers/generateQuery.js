@@ -352,3 +352,103 @@ export function generateQuery(introspection, typeName) {
     }
     return null
 }
+
+function isListOfNamedType(typeRef, typeName) {
+    if (!typeRef) return false;
+
+    // unwrap top NON_NULL
+    while (typeRef && typeRef.kind === "NON_NULL") {
+        typeRef = typeRef.ofType;
+    }
+    if (!typeRef || typeRef.kind !== "LIST") return false;
+
+    // unwrap list inner (allow NON_NULL inside list)
+    let inner = typeRef.ofType;
+    while (inner && inner.kind === "NON_NULL") {
+        inner = inner.ofType;
+    }
+    return !!inner && inner.name === typeName;
+}
+
+export function generateQueryVector(introspection, typeName) {
+    const schemaData = introspection.__schema;
+    const types = schemaData.types;
+
+    const typesByName = {};
+    for (const t of types) {
+        if (t.name.startsWith("__")) continue;
+        typesByName[t.name] = t;
+    }
+
+    const queryTypeName = schemaData.queryType ? schemaData.queryType.name : null;
+    const queryType = typesByName[queryTypeName];
+    if (!queryType?.fields) return null;
+
+    // najdi field, který vrací list daného typu
+    const matchingField = queryType.fields.find(field => {
+        const namedType = getNamedType(field.type);
+        // namedType.name bude typeName i pro LIST, protože getNamedType unwrapne až na named
+        const returnsCorrectNamed = namedType?.name === typeName;
+        const returnsList = isListOfNamedType(field.type, typeName);
+
+        // tady si můžeš (volitelně) přidat naming heuristiku:
+        // např. preferovat "...Page", "...List", "all...", "search...", "readPage" atd.
+        return returnsCorrectNamed && returnsList;
+    });
+
+    if (!matchingField) return null;
+
+    return generateQueryExample(matchingField, typesByName);
+}
+
+export function findMutationsReturningUnionWithType(introspection, typeName) {
+  const schemaData = introspection.__schema;
+  const types = schemaData.types;
+
+  // typesByName
+  const typesByName = {};
+  for (const t of types) {
+    if (t.name.startsWith("__")) continue;
+    typesByName[t.name] = t;
+  }
+
+  const mutationTypeName = schemaData.mutationType ? schemaData.mutationType.name : null;
+  const mutationType = mutationTypeName ? typesByName[mutationTypeName] : null;
+  if (!mutationType?.fields) return [];
+
+  // helper: vrátí possibleTypes pro union base (někdy jsou na base, někdy jen v definici)
+  function getUnionPossibleTypes(unionBase) {
+    if (!unionBase) return [];
+    if (unionBase.possibleTypes && unionBase.possibleTypes.length) return unionBase.possibleTypes;
+    const unionDef = typesByName[unionBase.name];
+    return unionDef?.possibleTypes || [];
+  }
+
+  const matches = mutationType.fields
+    .filter(field => {
+      const base = getNamedType(field.type); // unwrap LIST/NON_NULL až na named
+      // base.kind bývá "UNION" (v introspekci), ale pojistíme se přes definici
+      const def = typesByName[base?.name];
+      const isUnion = base?.kind === "UNION" || def?.kind === "UNION";
+      if (!isUnion) return false;
+
+      const possibleTypes = getUnionPossibleTypes(base);
+      return possibleTypes.some(t => t?.name === typeName);
+    })
+    .map(field => ({
+      name: field.name,
+      returnUnion: getNamedType(field.type)?.name,
+      query: generateQueryExample(field, typesByName, "mutation"), // ukázková mutation
+    }));
+
+  return matches;
+}
+
+export const mutationQueries = (introspection, typename) => {
+    const allmutations = findMutationsReturningUnionWithType(introspection, typename)
+    const result = {}
+    for (const item of allmutations) {
+        result[item?.name] = item?.query
+    }
+    return result
+}

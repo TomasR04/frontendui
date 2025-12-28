@@ -169,8 +169,7 @@ export const TableRow = ({ row, table_def }) => {
             {Object.keys(table_def).map((name) => {
                 const Cell = table_def[name].component
                 return <Cell key={name} row={row} name={name} />
-            }
-            )}
+            })}
         </tr>
     )
 }
@@ -199,7 +198,7 @@ export const Table = ({ data, table_def = null, TableBody = TableBody_ }) => {
                 <thead>
                     <tr>
                         {colnames.map((name) => (
-                            <th key={name}>{_table_def?.[name]?.label || `Nevim(${name})`}</th>
+                            <th key={name}>{`${name}`}</th>
                         ))}
                     </tr>
                 </thead>
