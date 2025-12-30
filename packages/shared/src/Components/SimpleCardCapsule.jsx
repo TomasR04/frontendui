@@ -1,3 +1,17 @@
+const capsuleTitle = {
+        position: "absolute", // Position the title on the border
+        top: "-10px", // Move above the border
+        // left: "50%", // Center horizontally
+        // transform: "translateX(-50%)", // Adjust for horizontal centering
+        left: "16px", // Center horizontally
+        backgroundColor: "white", // Match background color to container
+        padding: "0 8px", // Add some padding around the text
+        textTransform: "uppercase",
+        fontSize: "0.85rem",
+        fontWeight: "bold",
+        letterSpacing: "0.05em",
+        color: "#6c757d",
+    }
 const styles = {
     capsuleContainer: {
         position: "relative", // Allows positioning of the title
@@ -23,34 +37,21 @@ const styles = {
         // minWidth: "200px",
         // zIndex: 10
     },
-    capsuleTitle: {
-        position: "absolute", // Position the title on the border
-        top: "-10px", // Move above the border
-        // left: "50%", // Center horizontally
-        // transform: "translateX(-50%)", // Adjust for horizontal centering
-        left: "16px", // Center horizontally
-        backgroundColor: "white", // Match background color to container
-        padding: "0 8px", // Add some padding around the text
-        textTransform: "uppercase",
-        fontSize: "0.85rem",
-        fontWeight: "bold",
-        letterSpacing: "0.05em",
-        color: "#6c757d",
-    },
+    capsuleTitle,
     childrenWrapper: {
         width: "100%", // Ensure children fill the width of the container
         textAlign: "left", // Align child content to the left
     },
     capsuleRightCorner: {
         position: "absolute",
-        top: "-10px",
+        top: "-14px",
         right: "16px",
         backgroundColor: "white",
         padding: "0 8px",
         fontSize: "0.85rem",
         fontWeight: "bold",
         color: "#6c757d",
-    },    
+    },   
 };
 
 export const SimpleCardCapsule = ({ id, title, children, style, ...props }) => {
