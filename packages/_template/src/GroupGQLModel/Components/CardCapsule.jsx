@@ -1,6 +1,6 @@
 import { PersonFill } from "react-bootstrap-icons"
 import { Link } from "./Link"
-import { CardCapsule as CardCapsule_ } from "../../Base/Components"
+import { CardCapsule as CardCapsule_ } from "../../../../_template/src/Base/Components"
 
 /**
  * A specialized card component that displays an `TemplateLink` as its title and encapsulates additional content.

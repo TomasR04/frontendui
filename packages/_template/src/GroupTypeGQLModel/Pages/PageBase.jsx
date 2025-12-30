@@ -1,6 +1,6 @@
 import { useParams } from "react-router"
-import { AsyncActionProvider } from "../../Base/Helpers/GQLEntityProvider"
-import { PlaceChild } from "../../Base/Helpers/PlaceChild"
+import { AsyncActionProvider } from "../../../../_template/src/Base/Helpers/GQLEntityProvider"
+import { PlaceChild } from "../../../../_template/src/Base/Helpers/PlaceChild"
 import { PageNavbar } from "./PageNavbar"
 import { ReadAsyncAction } from "../Queries"
 

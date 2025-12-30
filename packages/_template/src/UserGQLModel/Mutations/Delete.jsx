@@ -5,7 +5,7 @@ import {
     DeleteButton as BaseDeleteButton, 
     DeleteDialog as BaseDeleteDialog, 
     DeleteLink as BaseDeleteLink
-} from "../../Base/Mutations/Delete";
+} from "../../../../_template/src/Base/Mutations/Delete";
 
 
 const DefaultContent = MediumContent

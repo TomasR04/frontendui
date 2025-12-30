@@ -1,8 +1,8 @@
 import { Input } from "@hrbolek/uoisfrontend-shared"
-import { EntityLookup } from "../../Base/FormControls/EntityLookup"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
 import { ReadPageAsyncAction } from "../Queries"
 import { SearchAsyncAction } from "../Queries/SearchAsyncAction"
-import { Group } from "../../Base/Helpers/GQLEntityProvider"
+import { Group } from "../../../../_template/src/Base/Helpers/GQLEntityProvider"
 
 /**
  * A component that displays medium-level content for an template entity.

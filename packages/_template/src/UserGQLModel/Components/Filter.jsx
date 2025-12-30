@@ -1,4 +1,4 @@
-import { DateTimeFilter, Filter as BaseFilter, StringFilter, UUIDFilter } from "../../Base/FormControls/Filter"
+import { DateTimeFilter, Filter as BaseFilter, StringFilter, UUIDFilter } from "../../../../_template/src/Base/FormControls/Filter"
 
 export const Filter = ({ id, onChange: handleChange, children }) => {
     return (

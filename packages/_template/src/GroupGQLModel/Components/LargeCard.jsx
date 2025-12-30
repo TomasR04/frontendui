@@ -1,18 +1,18 @@
 // import Row from "react-bootstrap/Row"
 import { MediumCard } from "./MediumCard"
 import { CardCapsule as CardCapsule_} from "./CardCapsule"
-import { Row } from "../../Base/Components/Row"
+import { Row } from "../../../../_template/src/Base/Components/Row"
 import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared"
 import { MediumContent as MediumContent_ } from "./MediumContent"
 import { InteractiveMutations } from '../Mutations/InteractiveMutations'
 import { RBACObject } from "../Scalars/RBACObject"
 import { MasterGroup } from "../Scalars/MasterGroup"
 import { GroupRoles } from "../Scalars/GroupRoles"
-import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
+import { SimpleCardCapsuleRightCorner } from "../../../../_template/src/Base/Components"
 import { UpdateLink } from "../Mutations/Update"
 import { RolesURI } from "../Pages/PageReadItemEx"
 import { MegaphoneFill } from "react-bootstrap-icons"
-import { ProxyLink } from "../../Base/Components/ProxyLink"
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink"
 
 /**
  * A large card component for displaying detailed content and layout for an template entity.

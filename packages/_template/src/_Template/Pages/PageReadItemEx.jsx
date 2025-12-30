@@ -1,4 +1,4 @@
-import { GeneratedContentBase } from "../../Base/Pages/Page"
+import { GeneratedContentBase } from "../../../../_template/src/Base/Pages/Page"
 import { ReadItemURI } from "../Components"
 import { ReadAsyncAction } from "../Queries"
 import { PageReadItem } from "./PageReadItem"

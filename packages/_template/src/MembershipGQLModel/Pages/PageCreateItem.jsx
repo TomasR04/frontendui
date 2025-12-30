@@ -1,5 +1,5 @@
 import { ReadAsyncAction } from "../Queries"
-import { Row } from "../../Base/Components/Row";
+import { Row } from "../../../../_template/src/Base/Components/Row";
 import { CreateBody } from "../Mutations/Create";
 import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared";
 import { PageItemBase } from "./PageBase";

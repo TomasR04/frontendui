@@ -1,4 +1,4 @@
-import { Table as BaseTable } from "../../Base/Components/Table" 
+import { Table as BaseTable } from "../../../../_template/src/Base/Components/Table" 
 
 export const Table = ({ data }) => {
     return (

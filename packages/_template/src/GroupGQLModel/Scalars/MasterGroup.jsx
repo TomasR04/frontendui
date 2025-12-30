@@ -1,6 +1,6 @@
 import { BaseUI } from "../../Base"
-import { Attribute } from "../../Base/Components/Attribute"
-import { Link } from "../../Base/Components/Link"
+import { Attribute } from "../../../../_template/src/Base/Components/Attribute"
+import { Link } from "../../../../_template/src/Base/Components/Link"
 
 export const MasterGroup = ({ item }) => {
     const { mastergroup } = item || {}

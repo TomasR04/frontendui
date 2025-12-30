@@ -6,7 +6,7 @@ import {
     CreateButton as BaseCreateButton, 
     CreateDialog as BaseCreateDialog, 
     CreateLink  as BaseCreateLink
-} from "../../Base/Mutations/Create"
+} from "../../../../_template/src/Base/Mutations/Create"
 
 const DefaultContent = MediumEditableContent
 const MutationAsyncAction = InsertAsyncAction

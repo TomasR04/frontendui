@@ -1,6 +1,6 @@
 import { BaseUI } from "../../Base"
-import { Attribute } from "../../Base/Components/Attribute"
-import { Table } from "../../Base/Components/Table"
+import { Attribute } from "../../../../_template/src/Base/Components/Attribute"
+import { Table } from "../../../../_template/src/Base/Components/Table"
 import { CardCapsule } from "../Components"
 
 export const UserMembershipsCard = ({ item, children }) => {

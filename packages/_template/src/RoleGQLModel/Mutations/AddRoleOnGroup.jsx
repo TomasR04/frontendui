@@ -7,9 +7,9 @@ import {
     CreateButton as BaseCreateButton, 
     CreateDialog as BaseCreateDialog, 
     CreateLink  as BaseCreateLink
-} from "../../Base/Mutations/Create"
-import { EntityLookup } from "../../Base/FormControls/EntityLookup"
-import { Input } from "../../Base/FormControls/Input"
+} from "../../../../_template/src/Base/Mutations/Create"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
 
 const AddRoleOnGroupContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     return (

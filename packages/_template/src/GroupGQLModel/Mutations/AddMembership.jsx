@@ -3,10 +3,10 @@ import {
     CreateButton as BaseCreateButton, 
     CreateDialog as BaseCreateDialog, 
     CreateLink  as BaseCreateLink
-} from "../../Base/Mutations/Create"
+} from "../../../../_template/src/Base/Mutations/Create"
 import { SearchAsyncAction as SearchUserAsyncAction } from "../../UserGQLModel/Queries/SearchAsyncAction"
-import { Input } from "../../Base/FormControls/Input"
-import { EntityLookup } from "../../Base/FormControls/EntityLookup"
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
 import { InsertAsyncAction } from "../../MembershipGQLModel/Queries"
 import { CreateURI, ReadItemURI } from "../Components"
 

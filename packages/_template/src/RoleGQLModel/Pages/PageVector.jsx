@@ -5,12 +5,12 @@ import { LinkURI } from "../Components"
 import { PageBase } from "./PageBase"
 import { Table } from "../Components/Table"
 import { Filter } from "../Components/Filter"
-import { FilterButton, ResetFilterButton } from "../../Base/FormControls/Filter"
+import { FilterButton, ResetFilterButton } from "../../../../_template/src/Base/FormControls/Filter"
 import { useSearchParams } from "react-router"
 import { useEffect } from "react"
 import { useMemo } from "react"
-import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator"
-import { Collapsible } from "../../Base/FormControls/Collapsible"
+import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
+import { Collapsible } from "../../../../_template/src/Base/FormControls/Collapsible"
 
 
 export const VectorItemsURI = LinkURI.replace('view', 'list')

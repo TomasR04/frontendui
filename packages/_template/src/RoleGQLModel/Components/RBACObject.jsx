@@ -1,6 +1,6 @@
-import { Link, SimpleCardCapsule } from "../../Base/Components"
-import { Col } from "../../Base/Components/Col"
-import { Row } from "../../Base/Components/Row"
+import { Link, SimpleCardCapsule } from "../../../../_template/src/Base/Components"
+import { Col as Col_ } from "../../../../_template/src/Base/Components/Col"
+import { Row } from "../../../../_template/src/Base/Components/Row"
 
 export const RBACObject = ({ item }) => {
     const { currentUserRoles=[] } = item || {}
@@ -10,10 +10,10 @@ export const RBACObject = ({ item }) => {
 
             {currentUserRoles.map(role => (
                 <Row key={role?.id}>
-                    <Col>
+                    <Col_>
                         <Link item={role?.roletype} />@
                         <Link item={role?.group} />
-                    </Col>
+                    </Col_>
                 </Row>
             ))}
 

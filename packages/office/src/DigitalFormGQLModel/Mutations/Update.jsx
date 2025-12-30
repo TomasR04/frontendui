@@ -3,7 +3,7 @@ import {
     UpdateButton as BaseUpdateButton, 
     UpdateDialog as BaseUpdateDialog, 
     UpdateLink as BaseUpdateLink 
-} from "../../Base/Mutations/Update";
+} from "../../../../_template/src/Base/Mutations/Update";
 
 import { MediumEditableContent, UpdateItemURI } from "../Components";
 import { UpdateAsyncAction } from "../Queries";

@@ -2,7 +2,7 @@ import { UpdateAsyncAction } from "../Queries";
 import { MediumEditableContent } from "./MediumEditableContent";
 import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
 import { useCallback } from "react";
-import { useGQLEntityContext } from "../../Base/Helpers/GQLEntityProvider";
+import { useGQLEntityContext } from "../../../../_template/src/Base/Helpers/GQLEntityProvider";
 
 
 export const ConfirmEdit = ({ item, children }) => {

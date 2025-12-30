@@ -1,6 +1,6 @@
 import { ProxyLink } from "@hrbolek/uoisfrontend-shared"
 import { URIRoot } from "../../uriroot";
-import { registerLink } from "../../Base/Components/Link";
+import { registerLink } from "../../../../_template/src/Base/Components/Link";
 
 export const LinkURI = `${URIRoot}/template/view/`;
 

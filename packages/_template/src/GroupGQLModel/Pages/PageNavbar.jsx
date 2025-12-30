@@ -14,7 +14,7 @@ import { VectorItemsURI as GroupTypeVectorItemsURI } from '../../GroupTypeGQLMod
 import { CreateGroupInserMembershipButton } from '../Mutations/AddMembership';
 import { UpdateButton, UpdateLink } from '../Mutations/Update';
 import { AddRoleOnGroupButton } from '../../RoleGQLModel/Mutations/AddRoleonGroup';
-import { Link } from '../../Base/Components';
+import { Link } from '../../../../_template/src/Base/Components';
 
 /**
  * Allow to use HashContainer for determination which component at page will be rendered.

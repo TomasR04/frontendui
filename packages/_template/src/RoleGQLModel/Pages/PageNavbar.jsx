@@ -6,7 +6,7 @@ import { CreateLink } from '../Mutations/Create';
 import { UpdateLink } from '../Mutations/Update';
 import { NavDropdown } from 'react-bootstrap';
 import { AddRoleOnGroupButton } from '../Mutations/AddRoleonGroup';
-import { Link } from '../../Base/Components';
+import { Link } from '../../../../_template/src/Base/Components';
 
 /**
  * Allow to use HashContainer for determination which component at page will be rendered.

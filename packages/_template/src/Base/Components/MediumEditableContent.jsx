@@ -1,6 +1,6 @@
 import { SearchAsyncAction } from "../Queries/SearchAsyncAction"
-import { EntityLookup } from "../../Base/FormControls/EntityLookup"
-import { Input } from "../../Base/FormControls/Input"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
 
 /**
  * A component that displays medium-level content for an template entity.

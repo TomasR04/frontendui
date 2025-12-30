@@ -1,6 +1,6 @@
 import { URIRoot } from "../../uriroot";
-import { registerLink } from "../../Base/Components/Link";
-import { ProxyLink } from "../../Base/Components/ProxyLink";
+import { registerLink } from "../../../../_template/src/Base/Components/Link";
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink";
 
 const modelURI = `${URIRoot}/template`
 export const ListURI = `${modelURI}/list/`;

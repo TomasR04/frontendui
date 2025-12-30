@@ -1,7 +1,7 @@
-import { EntityLookup } from "../../Base/FormControls/EntityLookup"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
 import { SearchAsyncAction as SearchUserAsyncAction } from "../../UserGQLModel/Queries/SearchAsyncAction"
 import { SearchAsyncAction as SearchGroupAsyncAction } from "../../GroupGQLModel/Queries/SearchAsyncAction"
-import { Input } from "../../Base/FormControls/Input"
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
 
 /**
  * A component that displays medium-level content for an template entity.

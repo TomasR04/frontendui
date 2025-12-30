@@ -2,7 +2,7 @@ import { CardCapsule } from "../Components"
 import { VectorItemsURI } from "../Pages"
 import { CreateButton, CreateLink } from "./Create"
 import { UpdateButton, UpdateLink } from "./Update"
-import { ProxyLink } from "../../Base/Components/ProxyLink"
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink"
 import { DeleteButton } from "./Delete"
 
 export const PageLink = ({ children, preserveHash = true, preserveSearch = true, ...props }) => {

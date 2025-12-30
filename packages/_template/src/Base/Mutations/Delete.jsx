@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { useGQLEntityContext } from "../../Base/Helpers/GQLEntityProvider";
+import { useGQLEntityContext } from "../../../../_template/src/Base/Helpers/GQLEntityProvider";
 import { PermissionGate, usePermissionGateContext } from "../../../../dynamic/src/Hooks/useRoles"
 import { useEditAction } from "../../../../dynamic/src/Hooks/useEditAction";
 import { LinkURI, MediumContent } from "../Components";
 import { DeleteAsyncAction } from "../Queries";
-import { AsyncStateIndicator } from "../../Base/Helpers/AsyncStateIndicator";
+import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator";
 import { useState } from "react";
 import { useCallback } from "react";
-import { ProxyLink, useLink } from "../../Base/Components/ProxyLink";
+import { ProxyLink, useLink } from "../../../../_template/src/Base/Components/ProxyLink";
 import { useMemo } from "react";
-import { Dialog } from "../../Base/FormControls/Dialog";
+import { Dialog } from "../../../../_template/src/Base/FormControls/Dialog";
 import { makeMutationURI } from "./helpers";
 import { Lock } from "react-bootstrap-icons";
 

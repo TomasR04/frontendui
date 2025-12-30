@@ -1,9 +1,9 @@
 import { BaseUI } from "../../Base"
-import { Attribute } from "../../Base/Components/Attribute"
-import { Col } from "../../Base/Components/Col"
-import { Row } from "../../Base/Components/Row"
+import { Attribute } from "../../../../_template/src/Base/Components/Attribute"
+import { Col as Col_ } from "../../../../_template/src/Base/Components/Col"
+import { Row } from "../../../../_template/src/Base/Components/Row"
 import { Link } from "./Link"
-import { Link as BaseLink } from "../../Base/Components/Link"
+import { Link as BaseLink } from "../../../../_template/src/Base/Components/Link"
 /**
  * A component that displays medium-level content for an template entity.
  *

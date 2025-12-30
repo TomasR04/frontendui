@@ -1,6 +1,6 @@
 import { BaseUI } from "../../Base"
-import { Col } from "../../Base/Components/Col"
-import { Row } from "../../Base/Components/Row"
+import { Col } from "../../../../_template/src/Base/Components/Col"
+import { Row } from "../../../../_template/src/Base/Components/Row"
 import { Link } from "./Link"
 /**
  * A component that displays medium-level content for an template entity.
@@ -94,4 +94,4 @@ import { Link } from "./Link"
 //     )
 // }
 
-export { MediumContent } from "../../Base/Components/MediumContent"
+export { MediumContent } from "../../../../_template/src/Base/Components/MediumContent"

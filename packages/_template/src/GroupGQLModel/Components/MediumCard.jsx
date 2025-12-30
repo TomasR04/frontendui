@@ -2,9 +2,9 @@ import { MegaphoneFill, PencilFill, PeopleFill, PersonFill } from "react-bootstr
 import { CardCapsule } from "./CardCapsule"
 import { MediumContent } from "./MediumContent"
 import { Link } from "./Link"
-import { Link as BaseLink, SimpleCardCapsuleRightCorner } from "../../Base/Components"
+import { Link as BaseLink, SimpleCardCapsuleRightCorner } from "../../../../_template/src/Base/Components"
 import { UpdateButton, UpdateLink } from "../Mutations/Update"
-import { ProxyLink } from "../../Base/Components/ProxyLink"
+import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink"
 
 /**
  * A card component that displays detailed content for an template entity.

@@ -1,6 +1,6 @@
-import { PlaceChild } from "../../Base/Helpers/PlaceChild"
-import { MediumCardScalars } from "../../Base/Scalars/ScalarAttribute"
-import { MediumCardVectors } from "../../Base/Vectors/VectorAttribute"
+import { PlaceChild } from "../../../../_template/src/Base/Helpers/PlaceChild"
+import { MediumCardScalars } from "../../../../_template/src/Base/Scalars/ScalarAttribute"
+import { MediumCardVectors } from "../../../../_template/src/Base/Vectors/VectorAttribute"
 
 import { PageCapsule } from "./PageCapsule"
 import { PageContent } from "./PageContent"

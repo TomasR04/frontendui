@@ -1,6 +1,6 @@
 import { PageNavbar as PageNavbar_} from "./PageNavbar"
 import { ReadAsyncAction } from "../Queries"
-import { PageItemBase as PageItemBase_} from "../../Base/Pages/Page"
+import { PageItemBase as PageItemBase_} from "../../../../_template/src/Base/Pages/Page"
 import { LargeCard } from "../Components"
 
 

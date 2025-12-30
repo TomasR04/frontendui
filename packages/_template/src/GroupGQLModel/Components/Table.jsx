@@ -1,5 +1,5 @@
-import { Table as BaseTable, KebabMenu } from "../../Base/Components/Table" 
-import { Link as BaseLink } from "../../Base/Components/Link" 
+import { Table as BaseTable, KebabMenu } from "../../../../_template/src/Base/Components/Table" 
+import { Link as BaseLink } from "../../../../_template/src/Base/Components/Link" 
 import { Link, LinkURI } from "./Link"
 import { useNavigate } from "react-router"
 import { UpdateLink } from "../Mutations/Update"

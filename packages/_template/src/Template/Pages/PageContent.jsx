@@ -1,4 +1,4 @@
-import { useGQLEntityContext } from "../../Base/Helpers/GQLEntityProvider"
+import { useGQLEntityContext } from "../../../../_template/src/Base/Helpers/GQLEntityProvider"
 import { LargeCard } from "../Components/LargeCard"
 // import { useGQLEntityContext } from "../Utils/GQLEntityProvider"
 import { PageNavbar } from "./PageNavbar"

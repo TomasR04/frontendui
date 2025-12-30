@@ -1,5 +1,5 @@
 import { BaseUI } from "../../Base"
-import { Attribute } from "../../Base/Components/Attribute"
+import { Attribute } from "../../../../_template/src/Base/Components/Attribute"
 import { CardCapsule } from "../Components"
 
 export const GroupRoles = ({ item, children }) => {

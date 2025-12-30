@@ -1,13 +1,13 @@
-import { Table } from "../../Base/Components/Table"
+import { Table } from "../../../../_template/src/Base/Components/Table"
 import { CardCapsule } from "../Components/CardCapsule"
 
-import { Table as BaseTable, KebabMenu } from "../../Base/Components/Table" 
-import { Link as BaseLink } from "../../Base/Components/Link" 
+import { Table as BaseTable, KebabMenu } from "../../../../_template/src/Base/Components/Table" 
+import { Link as BaseLink } from "../../../../_template/src/Base/Components/Link" 
 import { useNavigate } from "react-router"
 import { UpdateLink } from "../Mutations/Update"
 import { LinkURI } from "../Components"
 import { label } from "happy-dom/lib/PropertySymbol"
-import { Attribute } from "../../Base/Components/Attribute"
+import { Attribute } from "../../../../_template/src/Base/Components/Attribute"
 
 const CellName = ({ row, name }) => (
     <td key={name}>

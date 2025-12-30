@@ -1,5 +1,5 @@
 import { MegaphoneFill, PencilFill, PlusLg } from "react-bootstrap-icons"
-import { SimpleCardCapsuleRightCorner } from "../../Base/Components"
+import { SimpleCardCapsuleRightCorner } from "../../../../_template/src/Base/Components"
 import { ReadItemURI } from "../Components"
 import { UpdateLink } from "../Mutations/Update"
 import { ReadAsyncAction } from "../Queries"
