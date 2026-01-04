@@ -1283,13 +1283,13 @@ export const UpdateForm = ({
                     </SimpleCardCapsule>
                     <pre>{JSON.stringify(initialFormDef, null, 2)}</pre>
                 </Col>)}
-            {debug && (
+            {/* {debug && (
                 <Col>
                     <SimpleCardCapsule title="Draft form definition">
                         <pre>{JSON.stringify(formDef, null, 2)}</pre>
                     </SimpleCardCapsule>
                 </Col>
-            )}
+            )} */}
         </Row>
 
     );

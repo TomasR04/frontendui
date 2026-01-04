@@ -653,7 +653,7 @@ const FormSectionSections = ({
                                 + {form_section?.label ?? form_section?.name ?? "section"} [{filtered.length}/{form_section?.repeatableMax}]
                             </button>
                         )}
-                        {JSON.stringify(digital_submission_section.submission)}
+                        {/* {JSON.stringify(digital_submission_section.submission)} */}
                     </div>
                 )
             })}
