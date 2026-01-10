@@ -1,6 +1,6 @@
 import { Link } from "./Link"
 
-export const CardCapsuleBase = ({ title=null, header = null, children, item }) => {
+export const CardCapsuleBase = ({ title = null, header = null, children, item }) => {
     return (
         <div className="card">
             {(header || title) && <div className="card-header">{title || header}</div>}
@@ -36,7 +36,7 @@ const styles = {
         flexDirection: "column",
         alignItems: "center",
         border: "var(--bs-border-width) solid var(--bs-border-color)", // Border around the component
-        
+
         borderRadius: "8px", // Rounded corners
 
         // borderBottom: "2px solid #6c757d", // pouze dolní linka
@@ -81,7 +81,32 @@ const styles = {
         fontSize: "0.85rem",
         fontWeight: "bold",
         color: "#6c757d",
-    },    
+    },
+
+    // NEW: footer label na spodní hraně (vlevo)
+    capsuleFooter: {
+        position: "absolute",
+        bottom: "-10px",
+        left: "16px",
+        backgroundColor: "white",
+        padding: "0 8px",
+        fontSize: "0.85rem",
+        fontWeight: "bold",
+        letterSpacing: "0.02em",
+        color: "#6c757d",
+    },
+
+    // NEW: footer corner (vpravo dole)
+    capsuleFooterCorner: {
+        position: "absolute",
+        bottom: "-10px",
+        right: "16px",
+        backgroundColor: "white",
+        padding: "0 8px",
+        fontSize: "0.85rem",
+        fontWeight: "bold",
+        color: "#6c757d",
+    },
 };
 
 /**
@@ -124,7 +149,7 @@ const styles = {
  */
 export const SimpleCardCapsule = ({ id, header, title, children, style, className, ...props }) => {
     return (
-        <div id={{id}} style={{...styles.capsuleContainer, ...style}} className={className} >
+        <div id={id} style={{ ...styles.capsuleContainer, ...style }} className={className} >
             <span style={styles.capsuleTitle}>{title || header}</span>
             <div style={styles.childrenWrapper}>
                 {children}
@@ -132,9 +157,45 @@ export const SimpleCardCapsule = ({ id, header, title, children, style, classNam
         </div>
     );
 };
-    
+
 export const CardCapsule = SimpleCardCapsule
 
 export const SimpleCardCapsuleRightCorner = ({ children }) => {
     return <span style={styles.capsuleRightCorner}>{children}</span>;
+};
+
+export const SimpleCardCapsuleTitle = ({ children, style, className, ...props }) => {
+    return (
+        <span
+            style={{ ...styles.capsuleTitle, ...style }}
+            className={className}
+            {...props}
+        >
+            {children}
+        </span>
+    );
+};
+
+export const SimpleCardCapsuleFooter = ({ children, style, className, ...props }) => {
+    return (
+        <span
+            style={{ ...styles.capsuleFooter, ...style }}
+            className={className}
+            {...props}
+        >
+            {children}
+        </span>
+    );
+};
+
+export const SimpleCardCapsuleFooterCorner = ({ children, style, className, ...props }) => {
+    return (
+        <span
+            style={{ ...styles.capsuleFooterCorner, ...style }}
+            className={className}
+            {...props}
+        >
+            {children}
+        </span>
+    );
 };

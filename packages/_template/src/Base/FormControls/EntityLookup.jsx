@@ -72,7 +72,7 @@ export const EntityLookup = ({
     onChange = null,
     skip = 0, 
     limit = 10, 
-    label = "Hledaný text", 
+    label, 
     ...props 
 }) => {
     if (typeof asyncAction !== "function")
@@ -86,6 +86,7 @@ export const EntityLookup = ({
     const [value_, setValue_] = useState(value)
 
     useEffect(()=>{
+        console.log("EntityLookup.useEffect", value)
         setValue_(value)
     },[value])
 
@@ -125,27 +126,38 @@ export const EntityLookup = ({
 
     // const sureValue = value || {}
     // const inputValue = sureValue?.fullname || sureValue?.name
-    return (
-        <>
-            <AsyncStateIndicator loading={loading} error={error} text={"Hledám"} />
-            {/* {JSON.stringify(value_)}<br/>
-            {value_?.fullname || value_?.name} */}
-            <Label title={label}>
-                <Input {...props} 
-                    id={"__phrase"} 
-                    onChange={handleChange} 
-                    placeholder="Napiště alespoň 3 znaky" 
-                    value={value_?.fullname || value_?.name}
-                    reset={value_}
-                    // defaultValue={value_?.name}
-                />
-                {fetchedItems.map(
-                    item => <SearchResult key={item?.id} item={item} onSelect={handleSelect} />
-                )}
-            </Label>
-            
-        </>
-    )
+    const content = (<>
+        <Input {...props} 
+            id={"__phrase"} 
+            onChange={handleChange} 
+            placeholder="Napiště alespoň 3 znaky" 
+            value={value_?.fullname || value_?.name}
+            reset={value_}
+            // defaultValue={value_?.name}
+        />
+        {fetchedItems.map(
+            item => <SearchResult key={item?.id} item={item} onSelect={handleSelect} />
+        )}
+    </>)
+
+    if (label)
+        return (
+            <>
+                <AsyncStateIndicator loading={loading} error={error} text={"Hledám"} />
+                {/* {JSON.stringify(value_)}<br/>
+                {value_?.fullname || value_?.name} */}
+                <Label title={label}>{content}</Label>
+            </>
+        )
+        return (
+            <>
+                <AsyncStateIndicator loading={loading} error={error} text={"Hledám"} />
+                {/* {JSON.stringify(value_)}<br/>
+                {value_?.fullname || value_?.name} */}
+                {content}
+            </>
+        )
+
 }
 
 const SearchResult = ({ item, onSelect }) => {
