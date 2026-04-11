@@ -47,4 +47,5 @@ const Routes = [
 
 const router = createBrowserRouter(Routes);
 
+
 export const AppRouter = () => <RouterProvider router={router} />;

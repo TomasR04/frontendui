@@ -10,6 +10,8 @@ query programById($id: UUID!) {
 }
 `
 
+// RoleFragmentStr
+
 const ReadQuery = createQueryStrLazy(`${ReadQueryStr}`, LargeFragment)
 
 /**
@@ -41,4 +43,5 @@ const ReadQuery = createQueryStrLazy(`${ReadQueryStr}`, LargeFragment)
  *   });
  */
 // export const ReadAsyncAction = createAsyncGraphQLAction2(ReadQuery, reduceToFirstEntity("result"))
+//console.log("ReadQuery", ReadQuery)
 export const ReadAsyncAction = createAsyncGraphQLAction2(ReadQuery)

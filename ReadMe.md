@@ -1,11 +1,28 @@
-# Změny
+# 11.4.2026
 
-## 3.4.2025
+## Změny
 
-- script `createscalar.js`
-- script `createvector.js`
-- template `EmptyVectorsAttribute.jsx`
+- vytvoření apps/app_program
+- vytvoření packages/program
+- úprava Fragments.jsx
+- úprava MediumContent.jsx
+- publikace npm
 
+## Problémy k vyřešení
+
+- funkčnost a využití queries
+- obsah a návaznost entit
+- formulace dotazů
+
+## Objevy
+
+- komplexnost projektu
+- funkčnost a dynamika MediumContent
+
+## Problémy
+
+- v určitých entitách dotazy (query) vracely na místo očekávaných dat null, využili jsme dat, které byly k dispozici
+- využití queries a vytvoření vlastních sránek
 
 
 

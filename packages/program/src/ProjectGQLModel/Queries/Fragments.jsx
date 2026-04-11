@@ -1,5 +1,7 @@
 import { createQueryStrLazy } from "@hrbolek/uoisfrontend-gql-shared"
 
+
+
 const LinkFragmentStr = `
 fragment Link on ProgramGQLModel {
   __typename
@@ -11,6 +13,18 @@ fragment Link on ProgramGQLModel {
   rbacobjectId
   name
   nameEn
+  guarantors {
+    id
+  }
+
+  subjects {
+        id
+  }
+        students {
+      id
+  }
+      type{
+        id}              
   
   
 }
@@ -85,6 +99,8 @@ fragment RBRoles on RBACObjectGQLModel {
     }
   }
 }`
+
+
 
 export const RoleFragment = createQueryStrLazy(`${RoleFragmentStr}`)
 export const RBACFragment = createQueryStrLazy(`${RBACFragmentStr}`)

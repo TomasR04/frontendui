@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { AppRouter } from './AppRouter';
 import { RootProviders } from '../../../packages/dynamic/src/Store';
+import { MediumContent } from '../../../packages/program/src/ProjectGQLModel/Components';
 
 export const GQLENDPOINT_ = "/api/gql"
 // const getSdl = () => client.sdl()
@@ -11,7 +12,7 @@ export const GQLENDPOINT_ = "/api/gql"
 export const App = ({ GQLENDPOINT=GQLENDPOINT_}) => {
     return (
         <RootProviders clientOptions={{ endpoint: GQLENDPOINT }}>
-            <AppRouter />
+            <AppRouter />        
         </RootProviders>
     );
 
