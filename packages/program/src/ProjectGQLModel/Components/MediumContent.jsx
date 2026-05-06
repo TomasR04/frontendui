@@ -1,6 +1,7 @@
 import { Col } from "../../../../_template/src/Base/Components/Col"
 import { Row } from "../../../../_template/src/Base/Components/Row"
 import { Link } from "./Link"
+import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RBACObject"
 /**
  * A component that displays medium-level content for an template entity.
  *
@@ -35,7 +36,7 @@ import { Link } from "./Link"
 export const MediumContent = ({ item, children }) => {
     return (
         <>
-        
+            <RBACObject item={item} />
             {Object.entries(item).map(([attribute_name, attribute_value]) => {
                 // if (attribute_name !== "id") return null
                 if (Array.isArray(attribute_value)) return null

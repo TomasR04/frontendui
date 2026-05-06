@@ -2,6 +2,7 @@ import { PersonFill } from "react-bootstrap-icons"
 import { CardCapsule } from "./CardCapsule"
 import { MediumContent } from "./MediumContent"
 import { Link } from "./Link"
+import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RBACObject"
 
 /**
  * A card component that displays detailed content for an template entity.
@@ -34,6 +35,9 @@ export const MediumCard = ({ item, children }) => {
             {children}
             <MediumContent item={item}>
             </MediumContent>
+            
+            
         </CardCapsule>
+        
     )
 }
