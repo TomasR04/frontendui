@@ -4,23 +4,19 @@ import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAs
 
 
 const InsertMutationStr = `
-mutation roleTypeInsert(
-	$mastertypeId: UUID # null, 
+mutation programInsert(
 	$id: UUID # null, 
 	$name: String # null, 
-	$nameEn: String # null, 
-	$subtypes: [RoleTypeInsertGQLModel!] # null
+	$nameEn: String # null
 ) {
-  roleTypeInsert(
-	roleType: {
-	mastertypeId: $mastertypeId, 
+  result: programInsert(
+	program: {
 	id: $id, 
 	name: $name, 
-	nameEn: $nameEn, 
-	subtypes: $subtypes}
+	nameEn: $nameEn}
   ) {
     ... on InsertError { ...InsertError }
-    ... on RoleTypeGQLModel { ...Large }
+    ... on ProgramGQLModel { ...Large }
   }
 }
 

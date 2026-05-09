@@ -4,7 +4,6 @@ import { Link } from "./Link";
 import { CreateButton, CreateLink } from "../Mutations/Create";
 import { UpdateButton, UpdateLink } from "../Mutations/Update";
 import { DeleteButton } from "../Mutations/Delete";
-import { r } from "happy-dom/lib/PropertySymbol";
 
 const CellId = ({ row, name }) => (
     <td key={name}>

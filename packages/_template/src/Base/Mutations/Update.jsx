@@ -171,7 +171,7 @@ export const UpdateBody = ({
     children,
     mutationAsyncAction = UpdateAsyncAction,
     DefaultContent: DefaultContent_ = DefaultContent,
-    oneOfRoles = ["superadmin"],
+    oneOfRoles = ["administrátor"],
     mode = "absolute"
 }) => {
     const { item } = useGQLEntityContext()

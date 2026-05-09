@@ -3,20 +3,20 @@ import { LargeFragment } from "./Fragments";
 import { createAsyncGraphQLAction2 } from "../../../../dynamic/src/Core/createAsyncGraphQLAction2";
 
 const DeleteMutationStr = `
-mutation roleTypeDelete(
+mutation programDelete(
 	$id: UUID! # null, 
 	$lastchange: DateTime! # null
 ) {
-  roleTypeDelete(
-	roleType: {
+  result: programDelete(
+	program: {
 	id: $id, 
 	lastchange: $lastchange}
   ) {
-        ...RoleTypeGQLModelDeleteError
+        ...ProgramGQLModelDeleteError
     }
 }
 
-fragment RoleTypeGQLModelDeleteError on RoleTypeGQLModelDeleteError {
+fragment ProgramGQLModelDeleteError on ProgramGQLModelDeleteError {
   __typename
   Entity {
     ...Large
