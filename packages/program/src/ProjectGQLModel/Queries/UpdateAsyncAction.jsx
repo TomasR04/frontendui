@@ -31,10 +31,31 @@ fragment Error on ProgramGQLModelUpdateError {
   failed
   code
   location
-  input
 }
 `
 
 const UpdateMutation = createQueryStrLazy(`${UpdateMutationStr}`, LargeFragment)
-export const UpdateAsyncAction = createAsyncGraphQLAction2(UpdateMutation, 
-    updateItemsFromGraphQLResult, reduceToFirstEntity)
+const RawUpdateAsyncAction = createAsyncGraphQLAction2(UpdateMutation,
+  updateItemsFromGraphQLResult, reduceToFirstEntity)
+
+const normalizeNullableString = (value) => {
+  if (value === undefined) return null;
+  return value;
+};
+
+const toUpdateVariables = (vars = {}) => {
+  const lastchange = vars?.lastchange;
+  return {
+    id: vars?.id,
+    lastchange: lastchange instanceof Date ? lastchange.toISOString() : lastchange,
+    name: normalizeNullableString(vars?.name),
+    nameEn: normalizeNullableString(vars?.nameEn),
+  };
+};
+
+export const UpdateAsyncAction = (vars, gqlClient) => {
+  const cleanVars = toUpdateVariables(vars);
+  return RawUpdateAsyncAction(cleanVars, gqlClient);
+};
+
+UpdateAsyncAction.__metadata = RawUpdateAsyncAction.__metadata;

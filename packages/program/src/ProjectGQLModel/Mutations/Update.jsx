@@ -13,7 +13,7 @@ const mutationAsyncAction = UpdateAsyncAction
 
 const permissions = {
     oneOfRoles: ["administrátor"],
-    mode: "absolute",
+    mode: "item",
 }
 
 // ALTERNATIVE, CHECK GQLENDPOINT
