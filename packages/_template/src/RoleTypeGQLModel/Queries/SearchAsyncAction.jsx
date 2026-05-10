@@ -14,7 +14,7 @@ query roleTypePage(
 	skip: $skip, 
 	limit: $limit, 
 	orderby: $orderby, 
-	where: {name: {_ilike: $pattern}}
+	where: {path: null, name: {_ilike: $pattern}}
   ) {
   ...Medium
 }

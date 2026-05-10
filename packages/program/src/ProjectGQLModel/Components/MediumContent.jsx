@@ -1,5 +1,15 @@
 import { Col } from "../../../../_template/src/Base/Components/Col"
 import { Row } from "../../../../_template/src/Base/Components/Row"
+import { useCallback, useEffect, useState } from "react"
+import { Dialog } from "../../../../_template/src/Base/FormControls/Dialog"
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
+import { EntityLookup } from "../../../../_template/src/Base/FormControls/EntityLookup"
+import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
+import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
+import { ReadAsyncAction as ReadGroupAsyncAction } from "../../../../_template/src/GroupGQLModel/Queries/ReadAsyncAction"
+import { InsertAsyncAction as InsertRoleAsyncAction } from "../../../../_template/src/RoleGQLModel/Queries"
+import { SearchAsyncAction as SearchUserAsyncAction } from "../../../../_template/src/UserGQLModel/Queries/SearchAsyncAction"
+import { SearchAsyncAction as SearchRoleTypeAsyncAction } from "../../../../_template/src/RoleTypeGQLModel/Queries/SearchAsyncAction"
 import { Link } from "./Link"
 import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RBACObject"
 /**
@@ -25,18 +35,155 @@ import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RB
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-// export const MediumContent = ({ item, children}) => {
-//     return (
-//         <MediumContent_ item={item}>
-//             {children}
-//         </MediumContent_>
-//     )
-// }
+const ProgramRBACEdit = ({ item }) => {
+    const { id = "" } = item || {};
+    const { entity, loading, error, run } = useAsyncThunkAction(ReadGroupAsyncAction, { id }, { deferred: true });
+    const { loading: saving, error: updateError, run: save } = useAsyncThunkAction(InsertRoleAsyncAction, { id }, { deferred: true });
+    const [roles, setRoles] = useState((entity || {})?.roles || []);
+
+    useEffect(() => {
+        if (!id) return;
+        run({ id }).catch(() => null);
+    }, [id, run]);
+
+    useEffect(() => {
+        setRoles((entity || {})?.roles || []);
+    }, [entity]);
+
+    const [role, setRole] = useState({
+        id: crypto.randomUUID(),
+        groupId: entity?.id ?? id,
+    });
+
+    const handleChangeOrBlur = useCallback((e) => {
+        const fieldId = e?.target?.id;
+        const value = e?.target?.value;
+        if (!fieldId) return;
+        setRole((prev) => ({ ...prev, [fieldId]: value }));
+    }, []);
+
+    const handleConfirm = useCallback(async () => {
+        await save(role);
+        await run({ id });
+        setRole((prev) => ({
+            ...prev,
+            id: crypto.randomUUID(),
+            userId: null,
+            user: null,
+        }));
+    }, [id, role, run, save]);
+
+    return (<>
+        <AsyncStateIndicator error={error} loading={loading} text={"Nahrávám"} />
+        <AsyncStateIndicator error={updateError} loading={saving} text={"Ukládám"} />
+        <table className="table table-stripped">
+            <thead>
+                <tr>
+                    <th>Typ role</th>
+                    <th>Osoba</th>
+                    <th>Počátek</th>
+                    <th>Konec</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {roles.map((existingRole) => (
+                    <tr key={existingRole?.id}>
+                        <td>{existingRole?.roletype?.name || "-"}</td>
+                        <td>{existingRole?.user?.fullname || existingRole?.user?.name || "-"}</td>
+                        <td>{existingRole?.startdate || "-"}</td>
+                        <td>{existingRole?.enddate || "-"}</td>
+                        <td />
+                    </tr>
+                ))}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        <EntityLookup
+                            id="roletypeId"
+                            className="form-control"
+                            asyncAction={SearchRoleTypeAsyncAction}
+                            onChange={handleChangeOrBlur}
+                            onBlur={handleChangeOrBlur}
+                            value={role?.roletype}
+                        />
+                    </td>
+                    <td>
+                        <EntityLookup
+                            id="userId"
+                            className="form-control"
+                            asyncAction={SearchUserAsyncAction}
+                            onChange={handleChangeOrBlur}
+                            onBlur={handleChangeOrBlur}
+                            value={role?.user}
+                        />
+                    </td>
+                    <td>
+                        <Input
+                            id="startdate"
+                            type="datetime-local"
+                            className="form-control"
+                            onChange={handleChangeOrBlur}
+                            onBlur={handleChangeOrBlur}
+                            value={role?.startdate}
+                        />
+                    </td>
+                    <td>
+                        <Input
+                            id="enddate"
+                            type="datetime-local"
+                            className="form-control"
+                            onChange={handleChangeOrBlur}
+                            onBlur={handleChangeOrBlur}
+                            value={role?.enddate}
+                        />
+                    </td>
+                    <td>
+                        <button
+                            className="btn btn-outline-primary form-control"
+                            onClick={handleConfirm}
+                            disabled={!(role?.userId && role?.startdate && role?.roletypeId)}
+                        >
+                            Ok
+                        </button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </>);
+};
 
 export const MediumContent = ({ item, children }) => {
+    const programRBACObject = item?.rbacobject;
+    const [rolesVisible, setRolesVisible] = useState(false)
+    const canManageProgramRoles = !!programRBACObject?.id
+
+    const handleShowRoles = useCallback(() => setRolesVisible(true), [])
+    const handleHideRoles = useCallback(() => setRolesVisible(false), [])
+
     return (
         <>
             <RBACObject item={item} />
+            <div className="mb-3">
+                <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={handleShowRoles}
+                    disabled={!canManageProgramRoles}
+                >
+                    Oprávnění programu
+                </button>
+            </div>
+            {rolesVisible && canManageProgramRoles && (
+                <Dialog
+                    title="Oprávnění programu"
+                    onCancel={handleHideRoles}
+                    onOk={handleHideRoles}
+                >
+                    <ProgramRBACEdit item={programRBACObject} />
+                </Dialog>
+            )}
             {Object.entries(item).map(([attribute_name, attribute_value]) => {
                 // if (attribute_name !== "id") return null
                 if (Array.isArray(attribute_value)) return null
