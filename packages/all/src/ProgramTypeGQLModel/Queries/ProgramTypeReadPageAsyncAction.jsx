@@ -2,9 +2,9 @@ import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfront
 import { ProgramTypeLargeFragment } from "./ProgramTypeFragments";
 
 const ProgramTypeReadPageQueryStr = `
-query ProgramTypeReadPageQuery($skip: Int, $limit: Int, $where: ProgramTypeWhereInputFilter) {
-  result: programtypePage(skip: $skip, limit: $limit, where: $where) {
-    ...ProgramTypeLarge
+query ProgramTypeReadPageQuery($skip: Int, $limit: Int, $where: ProgramTypeInputFilter) {
+  result: programTypePage(skip: $skip, limit: $limit, where: $where) {
+    ...ProgramTypeLargeFragment
   }
 }
 `

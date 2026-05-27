@@ -4,7 +4,7 @@ import { ProgramTypeLargeFragment } from "./ProgramTypeFragments";
 const ProgramTypeReadQueryStr = `
 query ProgramTypeReadQuery($id: UUID!) {
   result: programtypeById(id: $id) {
-    ...ProgramTypeLarge
+    ...ProgramTypeLargeFragment
   }
 }
 `

@@ -12,7 +12,7 @@ mutation ProgramTypeInsertMutation($id: UUID, $name: String, $name_en: String) {
       msg
       input
     }
-    ...ProgramTypeLarge
+    ...ProgramTypeLargeFragment
   }
 }
 `

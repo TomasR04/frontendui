@@ -26,8 +26,8 @@ import { Input } from "@hrbolek/uoisfrontend-shared"
 export const ProgramTypeMediumEditableContent = ({programtype, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     return (
         <>           
-            <Input id={"name"} label={"Název"} className="form-control" defaultValue={programtype?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={programtype?.name_en|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"name"} label={"Název"} className="form-control" value={programtype?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"name_en"} label={"Anglický název"} className="form-control" value={programtype?.name_en|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
             {children}
         </>
     )

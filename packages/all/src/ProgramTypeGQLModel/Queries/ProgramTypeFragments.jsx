@@ -68,8 +68,6 @@ fragment ProgramTypeMediumFragment on ProgramTypeGQLModel {
   rbacobject {
     __typename
     id
-    userCanWithState
-    userCanWithoutState
   }
   levelType {
     __typename

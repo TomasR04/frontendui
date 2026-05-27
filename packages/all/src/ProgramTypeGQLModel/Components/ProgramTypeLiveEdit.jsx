@@ -57,8 +57,8 @@ export const ProgramTypeLiveEdit = ({programtype, children, asyncAction=ProgramT
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && (
-            <ProgramTypeMediumEditableContent programtype={entity} onChange={onChange_} onBlur={onChange_} />
+        {programtype && (
+            <ProgramTypeMediumEditableContent programtype={entity || programtype} onChange={onChange_} onBlur={onChange_} />
         )}
         {children}
     </>)

@@ -7,13 +7,15 @@ const InsertMutationStr = `
 mutation programInsert(
 	$id: UUID # null, 
 	$name: String # null, 
-	$nameEn: String # null
+	$nameEn: String # null,
+	$typeId: UUID # null
 ) {
   result: programInsert(
 	program: {
 	id: $id, 
 	name: $name, 
-	nameEn: $nameEn}
+	nameEn: $nameEn,
+	typeId: $typeId}
   ) {
     ... on InsertError { ...InsertError }
     ... on ProgramGQLModel { ...Large }

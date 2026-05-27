@@ -2,19 +2,19 @@ import { createAsyncGraphQLAction, createQueryStrLazy } from "@hrbolek/uoisfront
 import { ProgramTypeLargeFragment } from "./ProgramTypeFragments";
 
 const ProgramTypeUpdateMutationStr = `
-mutation ProgramTypeUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $name_en: String) {
-  result: programtypeUpdate(
-    programtype: {id: $id, lastchange: $lastchange, name: $name, nameEn: $name_en}
+mutation ProgramTypeUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $nameEn: String) {
+  result: programTypeUpdate(
+    programType: {id: $id, lastchange: $lastchange, name: $name, nameEn: $nameEn}
   ) {
     ... on ProgramTypeGQLModelUpdateError {
       failed
       msg
       input
       Entity {
-        ...ProgramTypeLarge
+        ...ProgramTypeLargeFragment
       }      
     }
-    ...ProgramTypeLarge
+    ...ProgramTypeLargeFragment
   }
 }
 `

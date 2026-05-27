@@ -1,4 +1,9 @@
 import { Input } from "../../../../_template/src/Base/FormControls/Input"
+import {EntityLookup} from "../../../../_template/src/Base/FormControls/EntityLookup"
+import {Select} from "../../../../_template/src/Base/FormControls/Select"
+import { ProgramTypeMediumEditableContent } from "../../../../all/src/ProgramTypeGQLModel/Components/ProgramTypeMediumEditableContent"
+import { Options } from "../../../../shared/src/Components/Options"
+import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeGQLModel/Queries/ProgramTypeReadPageAsyncAction"
 
 /**
  * A component that displays medium-level content for an template entity.
@@ -24,13 +29,30 @@ import { Input } from "../../../../_template/src/Base/FormControls/Input"
  * </TemplateMediumContent>
  */
 export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
+    
     return (
         <>           
-        {/* defaultValue={item?.name|| "Název"}  */}
-        
+        {/* defaultValue={item?.name|| "Název"}  */}      
             <Input id={"name"} label={"Jméno"} className="form-control" value={item?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
             <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={item?.nameEn|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Select id={"typeId"} label={"Typ programu"} className="form-control" value={item?.type?.id || ""} onChange={onChange} onBlur={onBlur}>
+                <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{limit:200}} valueSelector={(opt)=>(opt?.name)}/>
+            </Select>
             {children}
         </>
     )
+    
 }
+
+export const MediumEditableTypeContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
+    return (
+        <>           
+        {/* defaultValue={item?.name|| "Název"}  */}      
+            <Input id={"name"} label={"Typ programu"} className="form-control" value={item?.type?.name|| "Typ programu"} onChange={onChange} onBlur={onBlur} />
+           
+            {children}
+        </>
+    )
+    
+}
+

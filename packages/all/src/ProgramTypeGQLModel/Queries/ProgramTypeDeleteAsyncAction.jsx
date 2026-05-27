@@ -11,7 +11,7 @@ mutation ProgramTypeDeleteMutation($id: UUID!, $lastchange: DateTime!) {
       msg
       input
       Entity {
-        ...ProgramTypeLarge
+        ...ProgramTypeLargeFragment
       }
     }
   }

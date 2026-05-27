@@ -7,9 +7,13 @@ import {
 
 import { MediumEditableContent, UpdateItemURI } from "../Components";
 import { UpdateAsyncAction } from "../Queries";
+import { MediumEditableTypeContent } from "../Components/MediumEditableContent";
+import { UpdateTypeAsyncAction } from "../Queries/UpdateAsyncAction";
 
 const DefaultContent = (props) => <MediumEditableContent {...props} />
+const DefaultContentType = (props) => <MediumEditableTypeContent {...props} />
 const mutationAsyncAction = UpdateAsyncAction
+const mutationTypeAsyncAction = UpdateTypeAsyncAction
 
 const permissions = {
     oneOfRoles: ["administrátor"],
@@ -134,14 +138,20 @@ export const UpdateButton = ({
 export const UpdateBody = ({
     DefaultContent: DefaultContent_ = DefaultContent,
     mutationAsyncAction: mutationAsyncAction_ = mutationAsyncAction,
+    DefaultContentType: DefaultTypeContent_ = DefaultContentType,
+    mutationTypeAsyncAction: mutationTypeAsyncAction_ = mutationTypeAsyncAction,
     ...props
 }) => {
     return (
+        <>
         <BaseUpdateBody
             {...props}
             DefaultContent={DefaultContent_}
             mutationAsyncAction={mutationAsyncAction_}
             {...permissions}
         />
+        
+        </>
+        
     );
 };
