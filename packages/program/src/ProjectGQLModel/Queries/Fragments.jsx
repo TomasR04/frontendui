@@ -14,14 +14,20 @@ fragment Link on ProgramGQLModel {
   name
   nameEn
   guarantors {
-    
+    __typename
+    id
     name
     memberships {
       user {
         fullname
       }
     }
+  }
 
+  licencedGroup {
+    __typename
+    id
+    name
   }
 
   subjects {

@@ -11,11 +11,15 @@ const DefaultContent = (props) => <MediumEditableContent {...props} />
 const MutationAsyncAction = InsertAsyncAction
 
 const permissions = {
-    oneOfRoles: ["superadmin"],
+    oneOfRoles: ["administrátor"],
     mode: "absolute",
 }
 
-const defaultitem = { name: "Nový" };
+const defaultitem = {
+    name: "Nový",
+    licencedGroupId: null,
+    guarantorsGroupId: null,
+};
 
 /**
  * Wrapper nad `BaseCreateLink` (alias importu `CreateLink` z Base/Mutations/Create),

@@ -4,6 +4,7 @@ import {Select} from "../../../../_template/src/Base/FormControls/Select"
 import { ProgramTypeMediumEditableContent } from "../../../../all/src/ProgramTypeGQLModel/Components/ProgramTypeMediumEditableContent"
 import { Options } from "../../../../shared/src/Components/Options"
 import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeGQLModel/Queries/ProgramTypeReadPageAsyncAction"
+import { SearchAsyncAction as SearchGroupAsyncAction } from "../../../../_template/src/GroupGQLModel/Queries/SearchAsyncAction"
 
 /**
  * A component that displays medium-level content for an template entity.
@@ -29,7 +30,6 @@ import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeG
  * </TemplateMediumContent>
  */
 export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
-    
     return (
         <>           
         {/* defaultValue={item?.name|| "Název"}  */}      
@@ -38,6 +38,36 @@ export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>nu
             <Select id={"typeId"} label={"Typ programu"} className="form-control" value={item?.type?.id || ""} onChange={onChange} onBlur={onBlur}>
                 <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{limit:200}} valueSelector={(opt)=>(opt?.name)}/>
             </Select>
+            <EntityLookup
+                id={"licencedGroupId"}
+                label={"Licencovaná skupina"}
+                className="form-control"
+                asyncAction={SearchGroupAsyncAction}
+                value={item?.licencedGroup}
+                onChange={onChange}
+                onSelect={(group) => {
+                    if (group) {
+                        onChange({ target: { id: "licencedGroup", value: group } });
+                    }
+                    return { clear: true };
+                }}
+                onBlur={onBlur}
+            />
+            <EntityLookup
+                id={"guarantorsGroupId"}
+                label={"Garanti programu"}
+                className="form-control"
+                asyncAction={SearchGroupAsyncAction}
+                value={item?.guarantors}
+                onChange={onChange}
+                onSelect={(group) => {
+                    if (group) {
+                        onChange({ target: { id: "guarantors", value: group } });
+                    }
+                    return { clear: true };
+                }}
+                onBlur={onBlur}
+            />
             {children}
         </>
     )

@@ -8,29 +8,32 @@ mutation programInsert(
 	$id: UUID # null, 
 	$name: String # null, 
 	$nameEn: String # null,
-	$typeId: UUID # null
+	$typeId: UUID # null,
+	$licencedGroupId: UUID! # null,
+	$guarantorsGroupId: UUID! # null
 ) {
   result: programInsert(
 	program: {
 	id: $id, 
 	name: $name, 
 	nameEn: $nameEn,
-	typeId: $typeId}
+	typeId: $typeId,
+	licencedGroupId: $licencedGroupId,
+	guarantorsGroupId: $guarantorsGroupId}
   ) {
-    ... on InsertError { ...InsertError }
+    ... on ProgramGQLModelInsertError { ...Error }
     ... on ProgramGQLModel { ...Large }
   }
 }
 
 
-fragment InsertError on InsertError {
+fragment Error on ProgramGQLModelInsertError {
   __typename
   msg
   failed
   code
   location
   input
-
 }
 `
 
