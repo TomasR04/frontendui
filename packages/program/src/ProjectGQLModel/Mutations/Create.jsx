@@ -201,6 +201,7 @@ export const CreateBody = ({
         DefaultContent={defaultContent} 
         readItemURI={readItemURI}
         mutationAsyncAction={mutationAsyncAction}
+        {...permissions}
     />
 };
 

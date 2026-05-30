@@ -12,10 +12,18 @@ export const ErrorHandler = ({ errors = "DEMO ERROR", show = true }) => {
     }
     console.log("ErrorHandler", errors)
     
-    try {
-        parsedErrors = Array.isArray(errors) ? errors : JSON.parse(errors);
-    } catch {
-        parsedErrors = [{ message: "Unparsable error", raw: errors }];
+    if (Array.isArray(errors)) {
+        parsedErrors = errors
+    } else if (typeof errors === "string") {
+        try {
+            parsedErrors = JSON.parse(errors)
+        } catch {
+            parsedErrors = [{ message: "Unparsable error", raw: errors }]
+        }
+    } else if (errors && typeof errors === "object") {
+        parsedErrors = [errors]
+    } else {
+        parsedErrors = [{ message: "Unparsable error", raw: errors }]
     }
 
     if (!visible) return null
