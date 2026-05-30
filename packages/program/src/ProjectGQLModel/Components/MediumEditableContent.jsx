@@ -29,45 +29,49 @@ import { SearchAsyncAction as SearchGroupAsyncAction } from "../../../../_templa
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
+export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, showEntityLookups = true, children}) => {
     return (
-        <>           
-        {/* defaultValue={item?.name|| "Název"}  */}      
+        <>
+        {/* defaultValue={item?.name|| "Název"}  */}
             <Input id={"name"} label={"Jméno"} className="form-control" value={item?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
             <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={item?.nameEn|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
             <Select id={"typeId"} label={"Typ programu"} className="form-control" value={item?.type?.id || ""} onChange={onChange} onBlur={onBlur}>
                 <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{limit:200}} valueSelector={(opt)=>(opt?.name)}/>
             </Select>
-            <EntityLookup
-                id={"licencedGroupId"}
-                label={"Licencovaná skupina"}
-                className="form-control"
-                asyncAction={SearchGroupAsyncAction}
-                value={item?.licencedGroup}
-                onChange={onChange}
-                onSelect={(group) => {
-                    if (group) {
-                        onChange({ target: { id: "licencedGroup", value: group } });
-                    }
-                    return { clear: true };
-                }}
-                onBlur={onBlur}
-            />
-            <EntityLookup
-                id={"guarantorsGroupId"}
-                label={"Garanti programu"}
-                className="form-control"
-                asyncAction={SearchGroupAsyncAction}
-                value={item?.guarantors}
-                onChange={onChange}
-                onSelect={(group) => {
-                    if (group) {
-                        onChange({ target: { id: "guarantors", value: group } });
-                    }
-                    return { clear: true };
-                }}
-                onBlur={onBlur}
-            />
+            {showEntityLookups && (
+                <>
+                    <EntityLookup
+                        id={"licencedGroupId"}
+                        label={"Licencovaná skupina"}
+                        className="form-control"
+                        asyncAction={SearchGroupAsyncAction}
+                        value={item?.licencedGroup}
+                        onChange={onChange}
+                        onSelect={(group) => {
+                            if (group) {
+                                onChange({ target: { id: "licencedGroup", value: group } });
+                            }
+                            return { clear: true };
+                        }}
+                        onBlur={onBlur}
+                    />
+                    <EntityLookup
+                        id={"guarantorsGroupId"}
+                        label={"Garanti programu"}
+                        className="form-control"
+                        asyncAction={SearchGroupAsyncAction}
+                        value={item?.guarantors}
+                        onChange={onChange}
+                        onSelect={(group) => {
+                            if (group) {
+                                onChange({ target: { id: "guarantors", value: group } });
+                            }
+                            return { clear: true };
+                        }}
+                        onBlur={onBlur}
+                    />
+                </>
+            )}
             {children}
         </>
     )

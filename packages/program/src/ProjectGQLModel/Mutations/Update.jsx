@@ -10,7 +10,7 @@ import { UpdateAsyncAction } from "../Queries";
 import { MediumEditableTypeContent } from "../Components/MediumEditableContent";
 import { UpdateTypeAsyncAction } from "../Queries/UpdateAsyncAction";
 
-const DefaultContent = (props) => <MediumEditableContent {...props} />
+const DefaultContent = (props) => <MediumEditableContent {...props} showEntityLookups={false} />
 const DefaultContentType = (props) => <MediumEditableTypeContent {...props} />
 const mutationAsyncAction = UpdateAsyncAction
 const mutationTypeAsyncAction = UpdateTypeAsyncAction
