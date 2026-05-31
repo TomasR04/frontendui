@@ -1,19 +1,14 @@
 {
-  "name": "@tomasr04/app_program",
+  "name": "@tomasr04/app_programType",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.1",
   "type": "module",
-  "files": [
-    "dist",
-    "src"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview", 
-    "build:production": "NODE_ENV=production vite build",
-    "prepublishOnly": "npm run build"
+    "build:production": "NODE_ENV=production vite build"    
   },
   "dependencies": {
     "react": "^19.2.1",
