@@ -28,7 +28,8 @@
     "@hrbolek/uoisfrontend-gql-shared": "*",
     "@hrbolek/uoisfrontend-ug": "*",
     "@hrbolek/uoisfrontend-requests": "*",
-    "@hrbolek/uoisfrontend-zp": "*"
+    "@hrbolek/uoisfrontend-zp": "*",
+    "@tomasr04/pck_program": "*"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
