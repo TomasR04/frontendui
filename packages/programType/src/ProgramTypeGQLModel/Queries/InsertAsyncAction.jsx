@@ -8,18 +8,21 @@ mutation programTypeInsert(
 	$id: UUID # null, 
 	$name: String # null, 
 	$nameEn: String # null,
-	$typeId: UUID # null,
-	$licencedGroupId: UUID! # null,
-	$guarantorsGroupId: UUID! # null
+	$levelId: UUID # null,
+	$titleId: UUID # null,
+	$languageId: UUID # null,
+	$formId: UUID # null
 ) {
   result: programTypeInsert(
-	program: {
+	programType: {
 	id: $id, 
 	name: $name, 
 	nameEn: $nameEn,
-	typeId: $typeId,
-	licencedGroupId: $licencedGroupId,
-	guarantorsGroupId: $guarantorsGroupId}
+	levelId: $levelId,
+	titleId: $titleId,
+	languageId: $languageId,
+	formId: $formId
+	}
   ) {
     ... on ProgramTypeGQLModelInsertError { ...Error }
     ... on ProgramTypeGQLModel { ...Large }

@@ -8,7 +8,7 @@ mutation programTypeDelete(
 	$lastchange: DateTime! # null
 ) {
   result: programTypeDelete(
-	program: {
+	programType: {
 	id: $id, 
 	lastchange: $lastchange}
   ) {
