@@ -30,6 +30,7 @@
     "@hrbolek/uoisfrontend-requests": "*",
     "@hrbolek/uoisfrontend-zp": "*",
     "@tomasr04/pck_program": "*"
+    
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
