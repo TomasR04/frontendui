@@ -16,7 +16,7 @@ const mutationAsyncAction = UpdateAsyncAction
 const mutationTypeAsyncAction = UpdateTypeAsyncAction
 
 const permissions = {
-    oneOfRoles: ["administrátor"],
+    oneOfRoles: ["studijní administrátor"],
     mode: "item",
 }
 

@@ -1,4 +1,4 @@
-import { CreateURI, MediumEditableContent, ReadItemURI } from "../Components"
+import { CreateURI, ReadItemURI } from "../Components"
 import { InsertAsyncAction } from "../Queries"
 import { 
     CreateBody as BaseCreateBody, 
@@ -6,8 +6,9 @@ import {
     CreateDialog as BaseCreateDialog, 
     CreateLink  as BaseCreateLink
 } from "../../../../_template/src/Base/Mutations/Create"
+import { CreateContent } from "../Components/CreateContent"
 
-const DefaultContent = (props) => <MediumEditableContent {...props} />
+const DefaultContent = (props) => <CreateContent {...props} />
 const MutationAsyncAction = InsertAsyncAction
 
 const permissions = {

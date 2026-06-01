@@ -1,0 +1,119 @@
+import { Input } from "../../../../_template/src/Base/FormControls/Input"
+import {EntityLookup} from "../../../../_template/src/Base/FormControls/EntityLookup"
+import {Select} from "../../../../_template/src/Base/FormControls/Select"
+import { ProgramTypeMediumEditableContent } from "../../../../all/src/ProgramTypeGQLModel/Components/ProgramTypeMediumEditableContent"
+import { Options } from "@hrbolek/uoisfrontend-shared/Components/Options"
+import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeGQLModel/Queries/ProgramTypeReadPageAsyncAction"
+import { SearchAsyncAction as SearchGroupAsyncAction } from "../../../../_template/src/GroupGQLModel/Queries/SearchAsyncAction"
+
+/**
+ * A component that displays medium-level content for an template entity.
+ *
+ * This component renders a label "TemplateMediumContent" followed by a serialized representation of the `template` object
+ * and any additional child content. It is designed to handle and display information about an template entity object.
+ *
+ * @component
+ * @param {Object} props - The properties for the TemplateMediumContent component.
+ * @param {Object} props.template - The object representing the template entity.
+ * @param {string|number} props.template.id - The unique identifier for the template entity.
+ * @param {string} props.template.name - The name or label of the template entity.
+ * @param {React.ReactNode} [props.children=null] - Additional content to render after the serialized `template` object.
+ *
+ * @returns {JSX.Element} A JSX element displaying the entity's details and optional content.
+ *
+ * @example
+ * // Example usage:
+ * const templateEntity = { id: 123, name: "Sample Entity" };
+ * 
+ * <TemplateMediumContent template={templateEntity}>
+ *   <p>Additional information about the entity.</p>
+ * </TemplateMediumContent>
+ */
+export const CreateContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, showEntityLookups = true, children}) => {
+    const subjects = item?.subjects || [];
+
+    const handleAddSubject = () => {
+        const newSubject = {
+            id: `temp-${Date.now()}-${Math.random()}`,
+            name: "",
+            nameEn: "",
+        };
+        const nextSubjects = [...subjects, newSubject];
+        onChange({ target: { id: "subjects", value: nextSubjects } });
+    };
+
+    const handleRemoveSubject = (index) => {
+        const nextSubjects = subjects.filter((_, i) => i !== index);
+        onChange({ target: { id: "subjects", value: nextSubjects } });
+    };
+
+    const handleSubjectChange = (index, key) => (e) => {
+        const nextSubjects = subjects.map((subject, i) =>
+            i === index ? { ...subject, [key]: e.target.value } : subject
+        );
+        onChange({ target: { id: "subjects", value: nextSubjects } });
+    };
+
+    return (
+        <>
+        {/* defaultValue={item?.name|| "Název"}  */}
+            <Input id={"name"} label={"Jméno"} className="form-control" value={item?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={item?.nameEn|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Select id={"typeId"} label={"Typ programu"} className="form-control" value={item?.type?.id || ""} onChange={onChange} onBlur={onBlur}>
+                <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{limit:200}} valueSelector={(opt)=>(opt?.name)}/>
+            </Select>
+            {showEntityLookups && (
+                <>
+                    <EntityLookup
+                        id={"licencedGroupId"}
+                        label={"Licencovaná skupina"}
+                        className="form-control"
+                        asyncAction={SearchGroupAsyncAction}
+                        value={item?.licencedGroup}
+                        onChange={onChange}
+                        onSelect={(group) => {
+                            if (group) {
+                                onChange({ target: { id: "licencedGroup", value: group } });
+                            }
+                            return { clear: true };
+                        }}
+                        onBlur={onBlur}
+                    />
+                    <EntityLookup
+                        id={"guarantorsGroupId"}
+                        label={"Garanti programu"}
+                        className="form-control"
+                        asyncAction={SearchGroupAsyncAction}
+                        value={item?.guarantors}
+                        onChange={onChange}
+                        onSelect={(group) => {
+                            if (group) {
+                                onChange({ target: { id: "guarantors", value: group } });
+                            }
+                            return { clear: true };
+                        }}
+                        onBlur={onBlur}
+                    />
+                </>
+            )}
+
+            
+
+            {children}
+        </>
+    )
+    
+}
+
+export const MediumEditableTypeContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
+    return (
+        <>           
+        {/* defaultValue={item?.name|| "Název"}  */}      
+            <Input id={"name"} label={"Typ programu"} className="form-control" value={item?.type?.name|| "Typ programu"} onChange={onChange} onBlur={onBlur} />
+           
+            {children}
+        </>
+    )
+    
+}
+

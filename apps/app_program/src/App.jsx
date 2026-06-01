@@ -11,7 +11,9 @@ export const GQLENDPOINT_ = "/api/gql"
 // eslint-disable-next-line react/prop-types
 export const App = ({ GQLENDPOINT=GQLENDPOINT_}) => {
     return (
+        
         <RootProviders clientOptions={{ endpoint: GQLENDPOINT }}>
+  
             <AppRouter />        
         </RootProviders>
     );
