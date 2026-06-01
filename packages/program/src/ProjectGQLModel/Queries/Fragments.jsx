@@ -109,6 +109,35 @@ fragment Large on ProgramTypeGQLModel {
 }
 `
 
+const LinkFragmentSubjectStr = `
+fragment LinkSubject on SubjectGQLModel {
+  __typename
+  id
+  lastchange
+  created
+  createdbyId
+  changedbyId
+  rbacobjectId
+  name
+  nameEn            
+}
+`
+
+const MediumFragmentSubjectStr = `
+fragment MediumSubject on SubjectGQLModel {
+  ...LinkSubject
+  rbacobject {
+    ...RBRoles
+  }
+}
+`
+
+const LargeFragmentSubjectStr = `
+fragment LargeSubject on SubjectGQLModel {
+  ...MediumSubject
+}
+`
+
 const RoleFragmentStr = `
 fragment Role on RoleGQLModel {
     __typename
@@ -175,4 +204,8 @@ export const LargeFragment = createQueryStrLazy(`${LargeFragmentStr}`, MediumFra
 export const LinkFragmentType = createQueryStrLazy(`${LinkFragmentTypeStr}`)
 export const MediumFragmentType = createQueryStrLazy(`${MediumFragmentTypeStr}`, LinkFragmentType, RBACFragment)
 export const LargeFragmentType = createQueryStrLazy(`${LargeFragmentTypeStr}`, MediumFragmentType)
+
+export const LinkFragmentSubject = createQueryStrLazy(`${LinkFragmentSubjectStr}`)
+export const MediumFragmentSubject = createQueryStrLazy(`${MediumFragmentSubjectStr}`, LinkFragmentSubject, RBACFragment)
+export const LargeSubjectFragment = createQueryStrLazy(`${LargeFragmentSubjectStr}`, MediumFragmentSubject)
   

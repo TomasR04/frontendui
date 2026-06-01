@@ -5,6 +5,8 @@ import { ProgramTypeMediumEditableContent } from "../../../../all/src/ProgramTyp
 import { Options } from "@hrbolek/uoisfrontend-shared/Components/Options"
 import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeGQLModel/Queries/ProgramTypeReadPageAsyncAction"
 import { SearchAsyncAction as SearchGroupAsyncAction } from "../../../../_template/src/GroupGQLModel/Queries/SearchAsyncAction"
+import { useState } from "react";
+import {SearchSubjectAsyncAction} from "../Queries/SearchAsyncAction"
 
 /**
  * A component that displays medium-level content for an template entity.
@@ -29,39 +31,62 @@ import { SearchAsyncAction as SearchGroupAsyncAction } from "../../../../_templa
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-export const CreateContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, showEntityLookups = true, children}) => {
-    const subjects = item?.subjects || [];
+export const CreateContent = ({
+    item,
+    onChange = (e) => null,
+    onBlur = (e) => null,
+    showEntityLookups = true,
+    children
+}) => {
+    const [subjects, setSubjects] = useState([]);
+
+    const normalizeSubjectInput = (subject) => {
+        if (!subject || typeof subject !== "object") return null;
+        if (!subject.name) return null;
+        const result = {
+            name: subject.name,
+            programId: item?.id ?? subject.programId,
+        };
+        if (subject.nameEn !== undefined) result.nameEn = subject.nameEn;
+        if (subject.description !== undefined) result.description = subject.description;
+        if (subject.descriptionEn !== undefined) result.descriptionEn = subject.descriptionEn;
+        if (subject.groupId !== undefined) result.groupId = subject.groupId;
+        return result;
+    };
 
     const handleAddSubject = () => {
-        const newSubject = {
-            id: `temp-${Date.now()}-${Math.random()}`,
-            name: "",
-            nameEn: "",
-        };
-        const nextSubjects = [...subjects, newSubject];
-        onChange({ target: { id: "subjects", value: nextSubjects } });
+        setSubjects(prev => [
+            ...prev,
+            { id: crypto.randomUUID(), subject: null }
+        ]);
     };
 
-    const handleRemoveSubject = (index) => {
-        const nextSubjects = subjects.filter((_, i) => i !== index);
-        onChange({ target: { id: "subjects", value: nextSubjects } });
-    };
-
-    const handleSubjectChange = (index, key) => (e) => {
-        const nextSubjects = subjects.map((subject, i) =>
-            i === index ? { ...subject, [key]: e.target.value } : subject
-        );
-        onChange({ target: { id: "subjects", value: nextSubjects } });
+    const handleSelectSubject = (index) => (selectedSubject) => {
+        setSubjects(prev => {
+            const next = prev.map((rowItem, idx) =>
+                idx === index ? { ...rowItem, subject: selectedSubject } : rowItem
+            );
+            onChange({
+                target: {
+                    id: "subjects",
+                    value: next
+                        .map(rowItem => normalizeSubjectInput(rowItem.subject))
+                        .filter(Boolean)
+                }
+            });
+            return next;
+        });
     };
 
     return (
         <>
-        {/* defaultValue={item?.name|| "Název"}  */}
-            <Input id={"name"} label={"Jméno"} className="form-control" value={item?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={item?.nameEn|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"name"} label={"Jméno"} className="form-control" value={item?.name || "Název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"nameEn"} label={"Anglický název"} className="form-control" value={item?.nameEn || "Anglický název"} onChange={onChange} onBlur={onBlur} />
+
             <Select id={"typeId"} label={"Typ programu"} className="form-control" value={item?.type?.id || ""} onChange={onChange} onBlur={onBlur}>
-                <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{limit:200}} valueSelector={(opt)=>(opt?.name)}/>
+                <Options asyncAction={ProgramTypeReadPageAsyncAction} params={{ limit: 200 }} valueSelector={(opt) => (opt?.name)} />
             </Select>
+
             {showEntityLookups && (
                 <>
                     <EntityLookup
@@ -97,13 +122,32 @@ export const CreateContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, show
                 </>
             )}
 
-            
+            <div className="subjects-section">
+                <h3 className="border-bottom">Předměty</h3>
+                <div className="subjects">
+                    {subjects.map((subject, index) => (
+                        <div key={subject.id} className="subject-item border border-round p-2">
+                            <EntityLookup
+                                id={`subjectId-${subject.id}`}
+                                label={"Předmět"}
+                                className="form-control"
+                                asyncAction={SearchSubjectAsyncAction}
+                                value={subject.subject}
+                                onSelect={handleSelectSubject(index)}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <button className="btn btn-primary" type="button" onClick={handleAddSubject}>
+                    Přidat předmět
+                </button>
+            </div>
 
             {children}
         </>
-    )
-    
-}
+    );
+};
 
 export const MediumEditableTypeContent = ({ item, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     return (

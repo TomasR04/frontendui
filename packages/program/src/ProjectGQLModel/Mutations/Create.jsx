@@ -12,7 +12,7 @@ const DefaultContent = (props) => <CreateContent {...props} />
 const MutationAsyncAction = InsertAsyncAction
 
 const permissions = {
-    oneOfRoles: ["administrátor"],
+    oneOfRoles: ["studijní administrátor"],
     mode: "absolute",
 }
 

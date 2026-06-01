@@ -18,6 +18,8 @@ import { ProgramGQLModelRouterSegments} from "../../../packages/program/src/Proj
 import { ProgramTypeGQLModelRouterSegments} from "../../../packages/programType/src/ProgramTypeGQLModel/Pages/RouterSegment";
 import { ProgramFormTypeGQLModelRouterSegments} from "../../../packages/programFormType/src/ProgramFormTypeGQLModel/Pages/RouterSegment";
 import { ProgramTitleTypeGQLModelRouterSegments} from "../../../packages/programTitleType/src/ProgramTitleTypeGQLModel/Pages/RouterSegment";
+import { ProgramLanguageTypeGQLModelRouterSegments} from "../../../packages/programLanguageType/src/ProgramLanguageTypeGQLModel/Pages/RouterSegment";
+import { ProgramLevelTypeGQLModelRouterSegments} from "../../../packages/programLevelType/src/ProgramLevelTypeGQLModel/Pages/RouterSegment";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ProgramRouter = () => {
@@ -27,6 +29,8 @@ const ProgramRouter = () => {
         <a href="/programTypeGQLModel/list/" className="btn btn-primary flex-fill">Typy programů</a>
         <a href="/programTitleTypeGQLModel/list/" className="btn btn-primary flex-fill">Tituly</a>
         <a href="/programFormTypeGQLModel/list/" className="btn btn-primary flex-fill">Formy</a>
+        <a href="/programLanguageTypeGQLModel/list/" className="btn btn-primary flex-fill">Jazyky</a>
+        <a href="/programLevelTypeGQLModel/list/" className="btn btn-primary flex-fill">Úrovně</a>
         </div>
     );
 };
@@ -50,6 +54,8 @@ const Routes = [
             ...ProgramTypeGQLModelRouterSegments,
             ...ProgramFormTypeGQLModelRouterSegments,
             ...ProgramTitleTypeGQLModelRouterSegments,
+            ...ProgramLanguageTypeGQLModelRouterSegments,
+            ...ProgramLevelTypeGQLModelRouterSegments,
             ...BaseRouterSegments,
             // ...GroupRouterSegments,
             // ...RoleTypeRouterSegments,

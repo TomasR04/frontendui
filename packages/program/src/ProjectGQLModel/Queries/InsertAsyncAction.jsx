@@ -10,7 +10,8 @@ mutation programInsert(
 	$nameEn: String # null,
 	$typeId: UUID # null,
 	$licencedGroupId: UUID! # null,
-	$guarantorsGroupId: UUID! # null
+	$guarantorsGroupId: UUID! # null,
+	$subjects: [SubjectInsertGQLModel!]
 ) {
   result: programInsert(
 	program: {
@@ -19,7 +20,9 @@ mutation programInsert(
 	nameEn: $nameEn,
 	typeId: $typeId,
 	licencedGroupId: $licencedGroupId,
-	guarantorsGroupId: $guarantorsGroupId}
+	guarantorsGroupId: $guarantorsGroupId,
+	subjects: $subjects
+	}
   ) {
     ... on ProgramGQLModelInsertError { ...Error }
     ... on ProgramGQLModel { ...Large }
