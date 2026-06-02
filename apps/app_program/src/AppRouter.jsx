@@ -22,15 +22,34 @@ import { ProgramLanguageTypeGQLModelRouterSegments} from "../../../packages/prog
 import { ProgramLevelTypeGQLModelRouterSegments} from "../../../packages/programLevelType/src/ProgramLevelTypeGQLModel/Pages/RouterSegment";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { Link } from "react-router-dom";
+
 const ProgramRouter = () => {
     return (
         <div className="d-flex w-100 gap-2 mt-2 mb-2">
-        <a href="/programGQLModel/list/" className="btn btn-primary flex-fill">Programy</a>
-        <a href="/programTypeGQLModel/list/" className="btn btn-primary flex-fill">Typy programů</a>
-        <a href="/programTitleTypeGQLModel/list/" className="btn btn-primary flex-fill">Tituly</a>
-        <a href="/programFormTypeGQLModel/list/" className="btn btn-primary flex-fill">Formy</a>
-        <a href="/programLanguageTypeGQLModel/list/" className="btn btn-primary flex-fill">Jazyky</a>
-        <a href="/programLevelTypeGQLModel/list/" className="btn btn-primary flex-fill">Úrovně</a>
+            <Link to="program/programGQLModel/list/" className="btn btn-primary flex-fill">
+                Programy
+            </Link>
+
+            <Link to="programType/programTypeGQLModel/list/" className="btn btn-primary flex-fill">
+                Typy programů
+            </Link>
+
+            <Link to="programTitleType/programTitleTypeGQLModel/list/" className="btn btn-primary flex-fill">
+                Tituly
+            </Link>
+
+            <Link to="programFormType/programFormTypeGQLModel/list/" className="btn btn-primary flex-fill">
+                Formy
+            </Link>
+
+            <Link to="programLanguageType/programLanguageTypeGQLModel/list/" className="btn btn-primary flex-fill">
+                Jazyky
+            </Link>
+
+            <Link to="programLevelType/programLevelTypeGQLModel/list/" className="btn btn-primary flex-fill">
+                Úrovně
+            </Link>
         </div>
     );
 };
