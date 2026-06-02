@@ -1,3 +1,17 @@
+# 1.6.2026
+
+## Změny
+- vytvoření kompletních mutací pro ProgramGQLModel
+- vytvoření stránek a mutací pro ProgramType, Form, Level, Title a language
+- přidání ProgramRouter pro navigování mezi entitami
+
+## Problěmy k vyřešení
+
+- přidání role superadmina pro editaci dílčích entit
+- nalinkování mezi entitami
+- publish
+
+
 # 12.5.2026
 
 ## Změny
