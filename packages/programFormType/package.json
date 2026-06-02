@@ -5,8 +5,8 @@
     "publishConfig": {
         "access": "public"
     },
-    "_main": "src/index.js",
-    "_module": "src/index.js",
+    "main": "dist/index.js",
+    "module": "dist/index.js",
     "files": [
         "dist",
         "src"
@@ -21,8 +21,10 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "react-bootstrap-icons": "^1.11.5",
-        "react-router": "^7.0.2",
+        "react-router": "^6.28.0", 
         "@hrbolek/uoisfrontend-shared": "*",
         "@hrbolek/uoisfrontend-gql-shared": "*"
     }
