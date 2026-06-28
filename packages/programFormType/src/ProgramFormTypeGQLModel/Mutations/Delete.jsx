@@ -12,7 +12,7 @@ const MutationAsyncAction = DeleteAsyncAction
 
 const permissions = {
     oneOfRoles: ["superadmin"],
-    mode: "absolute",
+    mode: "item",
 }
 
 /**

@@ -15,7 +15,7 @@ const mutationAsyncAction = UpdateAsyncAction
 
 
 const permissions = {
-    oneOfRoles: ["administrátor"],
+    oneOfRoles: ["superadmin"],
     mode: "item",
 }
 

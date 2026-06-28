@@ -35,8 +35,6 @@ export const MediumCard = ({ item, children }) => {
             {children}
             <MediumContent item={item}>
             </MediumContent>
-            
-            
         </CardCapsule>
         
     )

@@ -5,7 +5,9 @@ import { Row } from "../../../../_template/src/Base/Components/Row"
 // import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared"
 import { MediumContent as MediumContent_ } from "./MediumContent"
 import { InteractiveMutations } from '../Mutations/InteractiveMutations'
-import { LeftColumn, MiddleColumn } from "../../../../_template/src/Base/Components/Col"
+import { LeftColumn, MiddleColumn } from "./Col"
+import { MainContent } from "./MainContent"
+import React from "react";
 /**
  * A large card component for displaying detailed content and layout for an template entity.
  *
@@ -30,8 +32,43 @@ import { LeftColumn, MiddleColumn } from "../../../../_template/src/Base/Compone
  *   <p>Additional content for the middle column.</p>
  * </TemplateLargeCard>
  */
+const FIELDS_TO_REMOVE = [
+    "__typename",
+    "lastchange",
+    "changedbyId",
+    "createdbyId",
+    "created",
+    "_updatedAt",
+    "_version",
+    "rbacobject",
+    "rbacobjectId",
+    "id",
+    "name"
+];
+
+function cleanItem(item) {
+    if (!item || typeof item !== "object") return item;
+    const cleaned = { ...item };
+    FIELDS_TO_REMOVE.forEach((field) => delete cleaned[field]);
+    return cleaned;
+}
+
+function ClearChildren(children) {
+    if (!children) return null;
+
+    return React.Children.map(children, (child) => {
+        if (!React.isValidElement(child)) return child;
+        if (!child.props?.item) return child;
+
+        return React.cloneElement(child, {
+            item: cleanItem(child.props.item),
+        });
+    });
+}
 export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumContent=MediumContent_ }) => {
-    // console.log("LargeCard.item", item)
+    //console.log("Item:", item);
+    //console.log("Children:", children);
+    var clearChildren = ClearChildren(children)
     return (
         <CardCapsule item={item} >
             <Row>
@@ -41,10 +78,32 @@ export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumCont
                     </CardCapsule>
                     <InteractiveMutations item={item} />
                 </LeftColumn>
+                
                 <MiddleColumn>
+                    
                     {children}
                 </MiddleColumn>
             </Row>
         </CardCapsule>
     )
 }
+/*export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumContent=MediumContent_ }) => {
+    //console.log("Item:", item);
+    //console.log("Children:", children);
+    return (
+        <CardCapsule item={item} >
+            <Row>
+                <LeftColumn>
+                    <CardCapsule item={item} title="Detail">
+                        <MediumContent item={item} />
+                    </CardCapsule>
+                    <InteractiveMutations item={item} />
+                </LeftColumn>
+                
+                <MainContent>
+                    {children}
+                </MainContent>
+            </Row>
+        </CardCapsule>
+    )
+}*/

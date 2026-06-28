@@ -18,7 +18,9 @@ import { ReadAsyncAction } from "../Queries"
 export const GeneratedContentBase = ({ item }) => {
     return (<>
         <Tree item={item} />
+        
         <MediumCardScalars item={item} />
+        
         <MediumCardVectors item={item} />
     </>)
 }
@@ -164,6 +166,7 @@ export const PageContent = ({queryById, queryVector, mutations, children, params
                 <Col key={name}>
                     <CardCapsule header={name}>
                         <SimpleCardCapsuleRightCorner>
+                            
                             <CopyButton className="btn btn-sm border-0" text={value}/>
                         </SimpleCardCapsuleRightCorner>
                         <pre>{value?.replaceAll(", ", ", \n\t").replaceAll("(", "(\n\t")}</pre>
@@ -223,6 +226,7 @@ export const Page = ({ children }) => {
             <AsyncActionProvider item={item} queryAsyncAction={ByIdAsyncAction}>
                 <PageContent queryById={queryById} queryVector={queryVector} mutations={mutations} params={item}>
                     {children}
+                    
                 </PageContent>
             </AsyncActionProvider>
         }

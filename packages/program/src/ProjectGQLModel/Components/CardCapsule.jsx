@@ -38,6 +38,7 @@ export const CardCapsule = ({ item, children, title=null}) => {
         
         <CardCapsule_ title={title}>
             {children}
+            
         </CardCapsule_>
     )
 }

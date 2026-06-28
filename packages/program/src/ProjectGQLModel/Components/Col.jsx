@@ -10,7 +10,7 @@ export const Col0 = ({ children, className, ...props }) => {
 }
 
 export function Col({ className, classNames, xs, sm, md, lg, xl, xxl, as: Tag = "div", ...props }) {
-    //console.log("Col props:", props);
+    console.log("Col props:", props);
   return (
     <Tag
       {...props}

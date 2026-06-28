@@ -244,7 +244,9 @@ export const MediumContent = ({ item, children }) => {
                         <Row key={attribute_name}>
                             <Col className="col-4"><b>{attribute_name}</b></Col>
                             <Col className="col-8">{attribute_value_result}</Col>
+                            
                         </Row>
+                        
                     )
             })}
             {children}

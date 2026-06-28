@@ -13,7 +13,7 @@ const MutationAsyncAction = InsertAsyncAction
 
 const permissions = {
     oneOfRoles: ["superadmin"],
-    mode: "absolute",
+    mode: "item",
 }
 
 const defaultitem = {
