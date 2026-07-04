@@ -14,10 +14,11 @@ import { SimpleCardCapsuleRightCorner } from "@hrbolek/uoisfrontend-shared"
 import { CopyButton } from "../Components/CopyButton"
 import { ReadAsyncAction } from "../Queries"
 
+//         <Tree item={item} />
 
 export const GeneratedContentBase = ({ item }) => {
     return (<>
-        <Tree item={item} />
+
         
         <MediumCardScalars item={item} />
         
