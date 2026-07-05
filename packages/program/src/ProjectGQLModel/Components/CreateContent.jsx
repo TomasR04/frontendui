@@ -122,7 +122,7 @@ export const CreateContent = ({
                 </>
             )}
 
-            <div className="subjects-section">
+            {/* <div className="subjects-section">
                 <h3 className="border-bottom">Předměty</h3>
                 <div className="subjects">
                     {subjects.map((subject, index) => (
@@ -142,7 +142,7 @@ export const CreateContent = ({
                 <button className="btn btn-primary" type="button" onClick={handleAddSubject}>
                     Přidat předmět
                 </button>
-            </div>
+            </div>*/}
 
             {children}
         </>

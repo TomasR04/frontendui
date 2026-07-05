@@ -70,6 +70,7 @@ export const MediumEditableContent = ({ item, onChange=(e)=>null, onBlur=(e)=>nu
                         }}
                         onBlur={onBlur}
                     />
+                    
                 </>
             )}
             {children}

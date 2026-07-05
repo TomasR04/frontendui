@@ -32,6 +32,7 @@ fragment Link on ProgramGQLModel {
 
   subjects {
     id
+    lastchange
     name
   }
   students {   
