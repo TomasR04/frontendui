@@ -22,6 +22,7 @@ export const LinkURI = GenericURIRoot + "/view/";
 export const VectorItemsURI = GenericURIRoot + "/list/";
 
 export const Link = ({ item, action="view", children, ...others }) => {
+    console.log(item)
     const SpecificLink = item?.__typename ? RegisterOfLinks[item.__typename] : null;
     if (SpecificLink && SpecificLink !== Link) {
         // console.log('Using specific link for typename:', item.__typename);

@@ -17,8 +17,20 @@ export const CellName = ({ row, name }) => (
     </td>
 )
 
+const CellNestedLink = ({ row, name }) => {
+    
+    const parentKey = name.split(".")[0]
+    const nestedItem = row?.[parentKey]
+
+    return (
+        <td key={name}>
+            <Link item={nestedItem} />
+        </td>
+    )
+}
+
 const CellDefault = ({ row, name }) => {
-    const value = row?.[name] ?? ""
+    const value = name.includes(".") ? getByPath(row, name) : (row?.[name] ?? "")
 
     const idpos = name.indexOf("Id")
     if (idpos === -1) {
@@ -39,16 +51,57 @@ const CellDefault = ({ row, name }) => {
     return <td key={name}>{typeof value === "object" ? `${value}` : (value || "")}</td>
 }
 
-// 2) Funkce, která z dat vyrobí table_def
+export const LABELS = {
+    __typename: "Typ",
+    id: "ID",
+    name: "Název",
+    nameEn: "Název (EN)",
+    lastchange: "Poslední změna",
+    created: "Vytvořeno",
+    createdbyId: "Vytvořil",
+    changedbyId: "Změnil",
+    rbacobjectId: "RBAC objekt",
+    subjects: "Předměty",
+    students: "Studenti",
+    guarantors: "Garanti",
+    licencedGroup: "Licencovaná skupina",
+    type: "Typ programu",
+    user: "Uživatel",
+    fullname: "Jméno",
+    tools: "Nástroje",
+}
+
+export const translateLabel = (name) => {
+    if (LABELS[name]) return LABELS[name]
+    if (name.includes(".")) {
+        // "user.fullname" -> zkusí najít label pro "fullname", jinak pro "user"
+        const parts = name.split(".")
+        return LABELS[parts[1]] || LABELS[parts[0]] || name
+    }
+    return name
+}
+
 export const buildTableDef = (data) => {
     const row = data?.[0] ?? {}
-    const priority = ["__typename", "id", "name"]
+    const priority = ["name"] 
 
-    const attribute_names = Object.keys(row).filter((attribute_name) => {
+    const HIDDEN_ATTRIBUTES = ["__typename", "id"] 
+
+    const attribute_names = []
+
+    Object.keys(row).forEach((attribute_name) => {
+        if (HIDDEN_ATTRIBUTES.includes(attribute_name)) return 
+
         const v = row[attribute_name]
-        if (Array.isArray(v)) return false
-        if (typeof v === "object" && v !== null) return false
-        return true
+        if (Array.isArray(v)) return
+        if (typeof v === "object" && v !== null) {
+            const nestedKey = ["fullname", "name", "title"].find((k) => k in v)
+            if (nestedKey) {
+                attribute_names.push(`${attribute_name}.${nestedKey}`)
+            }
+            return
+        }
+        attribute_names.push(attribute_name)
     })
 
     const columns = [
@@ -56,45 +109,30 @@ export const buildTableDef = (data) => {
         ...attribute_names.filter((a) => !priority.includes(a)),
     ]
 
-    // table_def: colname -> { label, component }
     const result = Object.fromEntries(
-        columns.map((name) => {
-            let component = CellDefault
-            if (name === "id") component = CellId
-            if (name === "name") component = CellName
+    columns.map((name) => {
+        let component = CellDefault
+        if (name === "id") component = CellId
+        if (name === "name") component = CellName
+        if (name.includes(".")) component = CellNestedLink
 
-            return [
-                name,
-                {
-                    label: name,        // tady si můžeš dát hezčí label
-                    component,          // React komponenta pro buňku
-                },
-            ]
-        })
-    )
+        return [
+            name,
+            {
+                label: translateLabel(name),   // <-- tady
+                component,
+            },
+        ]
+    })
+)
 
     result["tools"] = {
-        label: "Nástroje",
-        component: ({row}) => <td><KebabMenu actions={[
-            // { label: "Editovat", onClick: () => console.log("edit") },
-            // { label: "Smazat", onClick: () => console.log("delete") },
-            // { label: "Detail", onClick: () => console.log("detail") },
-            { children: <Link 
-                    className="btn btn-sm btn-outline-secondary border-0 text-start w-100"
-                    item={row}
-                >Detail</Link> },
-            { children: <UpdateLink 
-                className="btn btn-sm btn-outline-secondary border-0 text-start w-100"
-                item={row}
-                action="edit"
-                >Editovat</UpdateLink> },
-            { children: <UpdateButton 
-                    className="btn btn-sm btn-outline-secondary border-0 text-start w-100"
-                    item={row}
-                >Editovat (zde)</UpdateButton> },
-            { children: <DeleteButton 
-                className="btn btn-sm btn-outline-secondary border-0 text-start w-100"  
-                >Smazat</DeleteButton> },
+    label: translateLabel("tools"),   // nebo rovnou "Nástroje", jak už máš
+    component: ({row}) => <td><KebabMenu actions={[
+            { children: <Link className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row}>Detail</Link> },
+            { children: <UpdateLink className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row} action="edit">Editovat</UpdateLink> },
+            { children: <UpdateButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row}>Editovat (zde)</UpdateButton> },
+            { children: <DeleteButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100">Smazat</DeleteButton> },
         ]} /></td>,
     }
 
@@ -110,7 +148,7 @@ export const KebabMenu = ({ actions = [] }) => {
 
     const close = () => setOpen(false);
 
-    // zavření při kliku mimo (funguje i s portalem)
+    
     useEffect(() => {
         if (!open) return;
 
@@ -227,6 +265,9 @@ export const KebabMenu = ({ actions = [] }) => {
     );
 };
 
+const getByPath = (obj, path) =>
+    path.split(".").reduce((acc, key) => acc?.[key], obj)
+
 export const TableRow = ({ row, table_def }) => {
     return (
         <tr>
@@ -252,7 +293,7 @@ const TableBody_ = TableBody
 
 export const Table = ({ data, table_def = null, TableBody = TableBody_ }) => {
     if (!data || data.length === 0) return null
-
+    
     const _table_def = useMemo(() => table_def || buildTableDef(data), [data, table_def])
     const colnames = useMemo(() => Object.keys(_table_def).map((k) => _table_def[k].label), [_table_def])
     // console.log(_table_def)

@@ -32,43 +32,11 @@ import React from "react";
  *   <p>Additional content for the middle column.</p>
  * </TemplateLargeCard>
  */
-const FIELDS_TO_REMOVE = [
-    "__typename",
-    "lastchange",
-    "changedbyId",
-    "createdbyId",
-    "created",
-    "_updatedAt",
-    "_version",
-    "rbacobject",
-    "rbacobjectId",
-    "id",
-    "name"
-];
 
-function cleanItem(item) {
-    if (!item || typeof item !== "object") return item;
-    const cleaned = { ...item };
-    FIELDS_TO_REMOVE.forEach((field) => delete cleaned[field]);
-    return cleaned;
-}
-
-function ClearChildren(children) {
-    if (!children) return null;
-
-    return React.Children.map(children, (child) => {
-        if (!React.isValidElement(child)) return child;
-        if (!child.props?.item) return child;
-
-        return React.cloneElement(child, {
-            item: cleanItem(child.props.item),
-        });
-    });
-}
 export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumContent=MediumContent_ }) => {
     //console.log("Item:", item);
     //console.log("Children:", children);
-    var clearChildren = ClearChildren(children)
+    
     return (
         <CardCapsule item={item} >
             <Row>
@@ -82,6 +50,7 @@ export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumCont
                 <MiddleColumn>
                     
                     {children}
+                    
                 </MiddleColumn>
             </Row>
         </CardCapsule>

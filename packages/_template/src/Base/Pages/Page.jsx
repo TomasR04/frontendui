@@ -15,12 +15,12 @@ import { CopyButton } from "../Components/CopyButton"
 import { ReadAsyncAction } from "../Queries"
 
 //         <Tree item={item} />
-
+//         <MediumCardScalars item={item} />
 export const GeneratedContentBase = ({ item }) => {
     return (<>
 
         
-        <MediumCardScalars item={item} />
+        
         
         <MediumCardVectors item={item} />
     </>)

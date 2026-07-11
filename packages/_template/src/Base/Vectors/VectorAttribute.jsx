@@ -5,6 +5,7 @@ import { Col } from "../Components/Col"
 import { Row } from "../Components/Row"
 import { useState } from "react"
 import { Link } from "../Components"
+import { LABELS, translateLabel } from "../Components/Table"
 
 export const VectorAttributeFactory = (attribute_name) => ({ item }) => {
     const attribute_value = item?.[attribute_name] || []
@@ -23,7 +24,12 @@ export const VectorAttributeFactory = (attribute_name) => ({ item }) => {
 export const VectorAttribute = ({ attribute_name, item }) => {
     const attribute_value = item?.[attribute_name] || []
     return (
-        <CardCapsule item={item} header={<Link item={item} action={attribute_name}>{attribute_name+' []'}</Link> }>
+        <CardCapsule 
+            item={item} 
+            header={
+                translateLabel(attribute_name) || attribute_name
+            }
+        >
             <Table data={attribute_value} />
         </CardCapsule>
     )
@@ -31,7 +37,7 @@ export const VectorAttribute = ({ attribute_name, item }) => {
 
 export const MediumCardVectors = ({ item }) => {
     return (
-        <CardCapsule item={item} header={"Vektorové atributy"}>
+        <CardCapsule item={item} header={""}>
             {Object.entries(item).map(([attribute_name, attribute_value]) => {
                 if (Array.isArray(attribute_value)) {
                     return <VectorAttribute key={attribute_name} attribute_name={attribute_name} item={item} />

@@ -31,15 +31,16 @@ fragment Link on ProgramGQLModel {
   }
 
   subjects {
+    __typename
     id
-    lastchange
     name
   }
-  students {   
-  id
-    user {
-    fullname
-    }
+  students{
+      user{
+        __typename
+        id
+        fullname
+      }
   }
   type{
     __typename

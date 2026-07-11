@@ -35,218 +35,69 @@ import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RB
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-const ProgramRBACEdit = ({ item }) => {
-    const { id = "" } = item || {};
-    const { entity, loading, error, run } = useAsyncThunkAction(ReadGroupAsyncAction, { id }, { deferred: true });
-    const { loading: saving, error: updateError, run: save } = useAsyncThunkAction(InsertRoleAsyncAction, { id }, { deferred: true });
-    const [roles, setRoles] = useState((entity || {})?.roles || []);
-
-    useEffect(() => {
-        if (!id) return;
-        run({ id }).catch(() => null);
-    }, [id, run]);
-
-    useEffect(() => {
-        setRoles((entity || {})?.roles || []);
-    }, [entity]);
-
-    const [role, setRole] = useState({
-        id: crypto.randomUUID(),
-        groupId: entity?.id ?? id,
-    });
-
-    const handleChangeOrBlur = useCallback((e) => {
-        const fieldId = e?.target?.id;
-        const value = e?.target?.value;
-        if (!fieldId) return;
-        setRole((prev) => ({ ...prev, [fieldId]: value }));
-    }, []);
-
-    const handleConfirm = useCallback(async () => {
-        await save(role);
-        await run({ id });
-        setRole((prev) => ({
-            ...prev,
-            id: crypto.randomUUID(),
-            userId: null,
-            user: null,
-        }));
-    }, [id, role, run, save]);
-
-    return (<>
-        <AsyncStateIndicator error={error} loading={loading} text={"Nahrávám"} />
-        <AsyncStateIndicator error={updateError} loading={saving} text={"Ukládám"} />
-        <table className="table table-stripped">
-            <thead>
-                <tr>
-                    <th>Typ role</th>
-                    <th>Osoba</th>
-                    <th>Počátek</th>
-                    <th>Konec</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {roles.map((existingRole) => (
-                    <tr key={existingRole?.id}>
-                        <td>{existingRole?.roletype?.name || "-"}</td>
-                        <td>{existingRole?.user?.fullname || existingRole?.user?.name || "-"}</td>
-                        <td>{existingRole?.startdate || "-"}</td>
-                        <td>{existingRole?.enddate || "-"}</td>
-                        <td />
-                    </tr>
-                ))}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>
-                        <EntityLookup
-                            id="roletypeId"
-                            className="form-control"
-                            asyncAction={SearchRoleTypeAsyncAction}
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.roletype}
-                        />
-                    </td>
-                    <td>
-                        <EntityLookup
-                            id="userId"
-                            className="form-control"
-                            asyncAction={SearchUserAsyncAction}
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.user}
-                        />
-                    </td>
-                    <td>
-                        <Input
-                            id="startdate"
-                            type="datetime-local"
-                            className="form-control"
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.startdate}
-                        />
-                    </td>
-                    <td>
-                        <Input
-                            id="enddate"
-                            type="datetime-local"
-                            className="form-control"
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.enddate}
-                        />
-                    </td>
-                    <td>
-                        <button
-                            className="btn btn-outline-primary form-control"
-                            onClick={handleConfirm}
-                            disabled={!(role?.userId && role?.startdate && role?.roletypeId)}
-                        >
-                            Ok
-                        </button>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </>);
-};
-
-export const MediumContent = ({ item, children }) => {
-    const programRBACObject = item?.rbacobject;
-    const [rolesVisible, setRolesVisible] = useState(false)
-    const canManageProgramRoles = !!programRBACObject?.id
-
-    const handleShowRoles = useCallback(() => setRolesVisible(true), [])
-    const handleHideRoles = useCallback(() => setRolesVisible(false), [])
-
+import { MediumContent as MediumContent_} from "../../../../_template/src/Base/Components/MediumContent"
+import {Attribute, formatDateTime} from "../../../../_template/src/Base/Components"
+export const MediumContent = ({ item, children}) => {
+    
     return (
         <>
-            <RBACObject item={item} />
-            <div className="mb-3">
-                <button
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={handleShowRoles}
-                    disabled={!canManageProgramRoles}
-                >
-                    Oprávnění programu
-                </button>
-            </div>
-            {rolesVisible && canManageProgramRoles && (
-                <Dialog
-                    title="Oprávnění programu"
-                    onCancel={handleHideRoles}
-                    onOk={handleHideRoles}
-                >
-                    <ProgramRBACEdit item={programRBACObject} />
-                </Dialog>
+            {item?.name && (
+                <Attribute label="Název">
+                    <Link item={item} />
+                </Attribute>
             )}
-            {Object.entries(item).map(([attribute_name, attribute_value]) => {
-                // if (attribute_name !== "id") return null
-                if (Array.isArray(attribute_value)) return null
-                if (typeof attribute_value === "object" && attribute_value !== null) return null
-                let attribute_value_result = attribute_value
-                // Attribute value is null, display "bez záznamu" instead of "null" for better user experience
-                if (attribute_value_result === "null"){
-                    attribute_value_result = "bez záznamu"
-                }
-                
-                // let attribute_value_result = attribute_value
-                if (Array.isArray(attribute_value))
-                    // attribute_value_result = <CardCapsule><Table data={attribute_value} /></CardCapsule>
-                    return null
-                else if (typeof attribute_value === "object" && attribute_value !== null)
-                    // attribute_value_result = <MediumCard item={attribute_value} />
-                    return null
-                else if (attribute_name === "__typename") {
-                    /*attribute_value_result = <Link item={attribute_value} />*/
-                    // console.log("else1", attribute_name, attribute_value)
-                }
-                if (attribute_name === "id")
-                    attribute_value_result = <Link item={item}>{item?.id || "Data error"}</Link>
-                if (attribute_name === "name")
-                    attribute_value_result = <Link item={item} />
-                // else return null
-                if (attribute_value)
-                    return (
-                        <Row key={attribute_name}>
-                            <Col className="col-4"><b>{attribute_name}</b></Col>
-                            <Col className="col-8">{attribute_value_result}</Col>
-                        </Row>
-                    )
-                else return null
-            })}
-            {Object.entries(item).map(([attribute_name, attribute_value]) => {
-                if (attribute_value !== null) return null
-                let attribute_value_result = JSON.stringify(attribute_value)
+            {item?.nameEn && (
+                <Attribute label="Anglický název">
+                    {item.nameEn}
+                </Attribute>
+            )}
+            {item?.guarantors && (
+                <Attribute label="Garanti">
+                    <Link item={item.guarantors} />
+                </Attribute>
+            )}
+            {item?.licencedGroup && (
+                <Attribute label="Licencovaná skupina">
+                    <Link item={item.licencedGroup} />
+                </Attribute>
+            )}
+            {item?.type && (
+                <Attribute label="Typ">
+                    {item.type.name}
+                </Attribute>
+            )}
+            
 
-                // Attribute value is null, display "bez záznamu" instead of "null" for better user experience
-                if (attribute_value_result === "null"){
-                    attribute_value_result = "bez záznamu"
-                }
-                if (Array.isArray(attribute_value))
-                    // attribute_value_result = <CardCapsule><Table data={attribute_value} /></CardCapsule>
-                    return null
-                else if (typeof attribute_value === "object" && attribute_value !== null)
-                    // attribute_value_result = <MediumCard item={attribute_value} />
-                    return null
-                else if (attribute_name === "__typename") {
-                    /*attribute_value_result = <Link item={attribute_value} />*/
-                    console.log("else2", attribute_name, attribute_value)
-                }
-                if (attribute_value)
-                    return null
-                else
-                    return (
-                        <Row key={attribute_name}>
-                            <Col className="col-4"><b>{attribute_name}</b></Col>
-                            <Col className="col-8">{attribute_value_result}</Col>
-                        </Row>
-                    )
-            })}
+            {item?.rbacobject?.currentUserRoles?.length > 0 && (
+                <Attribute label="Moje role">
+                    {item.rbacobject.currentUserRoles.map(role => (
+                        <span key={role.id} className="badge bg-secondary me-1">
+                    {role.roletype?.name}
+                </span>
+                    ))}
+                </Attribute>
+            )}
+            <hr />
+            {item?.createdby?.fullname && (
+                <Attribute label="Vytvořil">
+                    {item.createdby.fullname}
+                </Attribute>
+            )}
+            {item?.created && (
+                <Attribute label="Vytvořeno">
+                    {formatDateTime(item.created)}
+                </Attribute>
+            )}
+            {item?.lastchange && (
+                <Attribute label="Změněno">
+                    {formatDateTime(item.lastchange)}
+                </Attribute>
+            )}
+            {item?.changedby?.fullname && (
+                <Attribute label="Změnil">
+                    {item.changedby.fullname}
+                </Attribute>
+            )}
             {children}
         </>
     )

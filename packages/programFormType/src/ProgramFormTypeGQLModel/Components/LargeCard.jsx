@@ -41,9 +41,7 @@ export const LargeCard = ({ item, children, CardCapsule=CardCapsule_, MediumCont
                     </CardCapsule>
                     <InteractiveMutations item={item} />
                 </LeftColumn>
-                <MiddleColumn>
-                    {children}
-                </MiddleColumn>
+                
             </Row>
         </CardCapsule>
     )

@@ -35,124 +35,7 @@ import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RB
  *   <p>Additional information about the entity.</p>
  * </TemplateMediumContent>
  */
-const ProgramRBACEdit = ({ item }) => {
-    const { id = "" } = item || {};
-    const { entity, loading, error, run } = useAsyncThunkAction(ReadGroupAsyncAction, { id }, { deferred: true });
-    const { loading: saving, error: updateError, run: save } = useAsyncThunkAction(InsertRoleAsyncAction, { id }, { deferred: true });
-    const [roles, setRoles] = useState((entity || {})?.roles || []);
 
-    useEffect(() => {
-        if (!id) return;
-        run({ id }).catch(() => null);
-    }, [id, run]);
-
-    useEffect(() => {
-        setRoles((entity || {})?.roles || []);
-    }, [entity]);
-
-    const [role, setRole] = useState({
-        id: crypto.randomUUID(),
-        groupId: entity?.id ?? id,
-    });
-
-    const handleChangeOrBlur = useCallback((e) => {
-        const fieldId = e?.target?.id;
-        const value = e?.target?.value;
-        if (!fieldId) return;
-        setRole((prev) => ({ ...prev, [fieldId]: value }));
-    }, []);
-
-    const handleConfirm = useCallback(async () => {
-        await save(role);
-        await run({ id });
-        setRole((prev) => ({
-            ...prev,
-            id: crypto.randomUUID(),
-            userId: null,
-            user: null,
-        }));
-    }, [id, role, run, save]);
-
-    return (<>
-        <AsyncStateIndicator error={error} loading={loading} text={"Nahrávám"} />
-        <AsyncStateIndicator error={updateError} loading={saving} text={"Ukládám"} />
-        <table className="table table-stripped">
-            <thead>
-                <tr>
-                    <th>Typ role</th>
-                    <th>Osoba</th>
-                    <th>Počátek</th>
-                    <th>Konec</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {roles.map((existingRole) => (
-                    <tr key={existingRole?.id}>
-                        <td>{existingRole?.roletype?.name || "-"}</td>
-                        <td>{existingRole?.user?.fullname || existingRole?.user?.name || "-"}</td>
-                        <td>{existingRole?.startdate || "-"}</td>
-                        <td>{existingRole?.enddate || "-"}</td>
-                        <td />
-                    </tr>
-                ))}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>
-                        <EntityLookup
-                            id="roletypeId"
-                            className="form-control"
-                            asyncAction={SearchRoleTypeAsyncAction}
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.roletype}
-                        />
-                    </td>
-                    <td>
-                        <EntityLookup
-                            id="userId"
-                            className="form-control"
-                            asyncAction={SearchUserAsyncAction}
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.user}
-                        />
-                    </td>
-                    <td>
-                        <Input
-                            id="startdate"
-                            type="datetime-local"
-                            className="form-control"
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.startdate}
-                        />
-                    </td>
-                    <td>
-                        <Input
-                            id="enddate"
-                            type="datetime-local"
-                            className="form-control"
-                            onChange={handleChangeOrBlur}
-                            onBlur={handleChangeOrBlur}
-                            value={role?.enddate}
-                        />
-                    </td>
-                    <td>
-                        <button
-                            className="btn btn-outline-primary form-control"
-                            onClick={handleConfirm}
-                            disabled={!(role?.userId && role?.startdate && role?.roletypeId)}
-                        >
-                            Ok
-                        </button>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </>);
-};
 
 import { MediumContent as MediumContent_} from "../../../../_template/src/Base/Components/MediumContent"
 import {Attribute, formatDateTime} from "../../../../_template/src/Base/Components"
@@ -160,7 +43,7 @@ import {Attribute, formatDateTime} from "../../../../_template/src/Base/Componen
 //export { MediumContent } from "../../../../_template/src/Base/Components/MediumContent"
 
 export const MediumContent = ({ item, children}) => {
-    console.log("item", item)
+    
     return (
         <>
             {item?.name && (
@@ -173,23 +56,23 @@ export const MediumContent = ({ item, children}) => {
                     {item.nameEn}
                 </Attribute>
             )}
-            {item?.description && (
-                <Attribute label="Popis">
-                    {item.description}
+            {item?.guarantors && (
+                <Attribute label="Garanti">
+                    <Link item={item.guarantors} />
                 </Attribute>
             )}
-            {item?.descriptionEn && (
-                <Attribute label="Anglický popis">
-                    {item.descriptionEn}
+            {item?.licencedGroup && (
+                <Attribute label="Licencovaná skupina">
+                    <Link item={item.licencedGroup} />
                 </Attribute>
             )}
-            {(item?.program?.name || item?.program?.id) && (
-                <Attribute label="Program">
-                    <a href={`/program/ProgramGQLModel/${item?.program?.id}`}>
-                        {item?.program?.name || item?.program?.id}
-                    </a>
+            {item?.type && (
+                <Attribute label="Typ">
+                    {item.type.name}
                 </Attribute>
             )}
+            
+
             {item?.rbacobject?.currentUserRoles?.length > 0 && (
                 <Attribute label="Moje role">
                     {item.rbacobject.currentUserRoles.map(role => (
