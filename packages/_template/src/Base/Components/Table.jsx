@@ -74,9 +74,11 @@ export const LABELS = {
 export const translateLabel = (name) => {
     if (LABELS[name]) return LABELS[name]
     if (name.includes(".")) {
-        // "user.fullname" -> zkusí najít label pro "fullname", jinak pro "user"
+        // "user.fullname" -> first will try finding label for "fullname", then for "user"
         const parts = name.split(".")
-        return LABELS[parts[1]] || LABELS[parts[0]] || name
+
+        // if in LABELS, will be used, otherwise the original name will be used
+        return LABELS[parts[0]] || LABELS[parts[1]] || name
     }
     return name
 }

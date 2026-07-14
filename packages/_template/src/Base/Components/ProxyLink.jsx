@@ -118,9 +118,19 @@ export const ProxyLink = ({
 }) => {
     const { href, reloadDocument } = useLink({ to, preserveHash, preserveSearch });
 
+    // If the link is disabled, render a span with reduced opacity
     return (
         <>
-        {disabled && children}
+        {disabled && (
+            <span
+                aria-disabled="true"
+                tabIndex={-1}
+                style={{ opacity: 0.5, ...(others.style || {}) }}
+                {...others}
+            >
+                {children}
+            </span>
+        )}
         {!disabled && (
             <Link to={href} reloadDocument={reloadDocument} {...others}>
                 {children}
