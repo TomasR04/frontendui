@@ -94,5 +94,6 @@ export function useCreateSession({
         onBlur,
         handleConfirm,
         handleCancel,
+        commitNow,
     };
 }

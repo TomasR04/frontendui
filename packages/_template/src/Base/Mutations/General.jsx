@@ -137,6 +137,9 @@ export const GeneralDialog = ({
     }
 
     const handleOk_ = () => handleOk?.(draftItem);
+    const renderedChildren = typeof children === "function"
+        ? children({ item: draftItem, onChange: handleChange, onBlur: handleBlur })
+        : children;
 
     return (
         <Dialog
@@ -148,7 +151,7 @@ export const GeneralDialog = ({
             {...props}
         >
             <DefaultContent_ item={draftItem} onChange={handleChange} onBlur={handleBlur}>
-                {children}
+                {renderedChildren}
                 
             </DefaultContent_>
                 {/* <hr/>

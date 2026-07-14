@@ -1,8 +1,12 @@
 import { PermissionGate, usePermissionGateContext } from "../../../../dynamic/src/Hooks/useRoles"
 import { LinkURI, MediumEditableContent } from "../Components"
 import { useState } from "react"
+import { useAsyncThunkAction } from "../../../../dynamic/src/Hooks"
 import { useCreateSession } from "../../../../dynamic/src/Hooks/useCreateSession"
 import { InsertAsyncAction } from "../Queries"
+import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeGQLModel/Queries/ProgramTypeReadPageAsyncAction"
+import { GroupReadPageAsyncAction } from "../../../../all/src/GroupGQLModel/Queries/GroupReadPageAsyncAction"
+import { GENERATE_AMOUNT, makeRandomProgramName, resolveRandomProgramIds } from "../../../../program/src/ProjectGQLModel/Utils/randomProgramGeneration"
 import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
 import { Dialog } from "../../../../_template/src/Base/FormControls/Dialog"
 import { ProxyLink } from "../../../../_template/src/Base/Components/ProxyLink"
@@ -27,12 +31,75 @@ export const CreateLink = ({
 
 const DefaultContent = MediumEditableContent
 
+const BulkGenerateToolbar = ({ item, mutationAsyncAction }) => {
+    const [message, setMessage] = useState("")
+    const [working, setWorking] = useState(false)
+
+    const { run } = useAsyncThunkAction(mutationAsyncAction, item, { deferred: true })
+    const { run: runProgramTypes } = useAsyncThunkAction(ProgramTypeReadPageAsyncAction, {}, { deferred: true })
+    const { run: runGroups } = useAsyncThunkAction(GroupReadPageAsyncAction, {}, { deferred: true })
+
+    const handleGenerate = async () => {
+        if (working) return
+
+        setWorking(true)
+        setMessage("")
+
+        try {
+            // The helper returns shuffled pools, so every generated program can take the next value.
+            const pools = await resolveRandomProgramIds({
+                runProgramTypes,
+                runGroups,
+            })
+
+            if (!pools) {
+                setMessage("Nepodařilo se najít výchozí typ nebo skupiny pro generování.")
+                return
+            }
+
+            for (let index = 0; index < GENERATE_AMOUNT; index += 1) {
+                const suffix = Math.random().toString(36).slice(2, 7).toUpperCase()
+                await run({
+                    id: crypto.randomUUID(),
+                    name: makeRandomProgramName(index),
+                    nameEn: `Random Program ${index + 1} ${suffix}`,
+                    // Cycle through the shuffled pools so the batch does not keep repeating the same values.
+                    typeId: pools.typePool[index % pools.typePool.length],
+                    licencedGroupId: pools.licencedPool[index % pools.licencedPool.length],
+                    guarantorsGroupId: pools.guarantorsPool[index % pools.guarantorsPool.length],
+                })
+            }
+
+            setMessage(`Vygenerováno ${GENERATE_AMOUNT} programů.`)
+        } catch (error) {
+            setMessage(`Nepodařilo se generovat programy: ${error?.message ?? error}`)
+        } finally {
+            setWorking(false)
+        }
+    }
+
+    return (
+        <>
+            <button
+                type="button"
+                className="btn btn-outline-primary form-control"
+                onClick={handleGenerate}
+                disabled={working}
+            >
+                {working ? `Generuji ${GENERATE_AMOUNT} programů...` : `Vygenerovat ${GENERATE_AMOUNT} náhodných programů`}
+            </button>
+            {message && <div className="small text-muted mt-2">{message}</div>}
+        </>
+    )
+}
+
 export const CreateDialog = ({
     title = "Nové oprávnění",
     oklabel = "Ok",
     cancellabel = "Zrušit",
     DefaultContent: DefaultContent_ = DefaultContent,
     item,
+    mutationAsyncAction = InsertAsyncAction,
     onOk,
     onCancel,
     children,
@@ -46,9 +113,15 @@ export const CreateDialog = ({
         item={item}
         onOk={onOk}
         onCancel={onCancel}
+        mutationAsyncAction={mutationAsyncAction}
         {...props}
     >
-        {children}
+        {({ item: liveItem }) => (
+            <>
+                <BulkGenerateToolbar item={liveItem} mutationAsyncAction={mutationAsyncAction} />
+                {children}
+            </>
+        )}
     </GeneralDialog>
 );
 export const CreateButton = ({
@@ -77,6 +150,7 @@ export const CreateBody = ({
     mutationAsyncAction = InsertAsyncAction,
     onOk,
     onCancel,
+    toolbar,
     DefaultContent: DefaultContent_ = DefaultContent,
     readItemURI = ReadItemURI,
     oneOfRoles = ["superadmin"],
@@ -90,6 +164,7 @@ export const CreateBody = ({
                 mutationAsyncAction={mutationAsyncAction}
                 onOk={onOk} 
                 onCancel={onCancel}
+                toolbar={toolbar}
                 DefaultContent={DefaultContent_}
                 readItemURI={readItemURI}
                 {...props}
@@ -103,6 +178,7 @@ const CreateBodyBody = ({
     mutationAsyncAction = InsertAsyncAction,
     onOk,
     onCancel,
+    toolbar,
     DefaultContent: DefaultContent_ = DefaultContent,
     readItemURI = ReadItemURI,
     ...props
@@ -129,6 +205,7 @@ const CreateBodyBody = ({
                 {...props}
             >
                 <AsyncStateIndicator error={session.error} loading={session.saving} />
+                {typeof toolbar === "function" ? toolbar(session) : toolbar}
                 {children}
 
                 <button

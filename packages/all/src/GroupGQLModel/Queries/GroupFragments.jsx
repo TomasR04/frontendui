@@ -56,7 +56,6 @@ fragment GroupMediumFragment on GroupGQLModel {
     createdbyId
     changedbyId
     rbacobjectId
-    categoryId
   }
   mastergroup {
     __typename
