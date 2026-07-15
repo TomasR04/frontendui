@@ -32,9 +32,11 @@ export const CreateLink = ({
 const DefaultContent = MediumEditableContent
 
 const BulkGenerateToolbar = ({ item, mutationAsyncAction }) => {
+    // Local UI state for bulk generation feedback.
     const [message, setMessage] = useState("")
     const [working, setWorking] = useState(false)
 
+    // Deferred async actions allow us to invoke mutations only when the button is clicked.
     const { run } = useAsyncThunkAction(mutationAsyncAction, item, { deferred: true })
     const { run: runProgramTypes } = useAsyncThunkAction(ProgramTypeReadPageAsyncAction, {}, { deferred: true })
     const { run: runGroups } = useAsyncThunkAction(GroupReadPageAsyncAction, {}, { deferred: true })
@@ -46,7 +48,8 @@ const BulkGenerateToolbar = ({ item, mutationAsyncAction }) => {
         setMessage("")
 
         try {
-            // The helper returns shuffled pools, so every generated program can take the next value.
+            // Fetch random candidate pools up front. This prevents repeated network
+            // calls inside the generation loop and improves performance.
             const pools = await resolveRandomProgramIds({
                 runProgramTypes,
                 runGroups,
@@ -63,7 +66,9 @@ const BulkGenerateToolbar = ({ item, mutationAsyncAction }) => {
                     id: crypto.randomUUID(),
                     name: makeRandomProgramName(index),
                     nameEn: `Random Program ${index + 1} ${suffix}`,
-                    // Cycle through the shuffled pools so the batch does not keep repeating the same values.
+                    // Cycle through the shuffled pools so each generated item gets a
+                    // different related type/group assignment, even when the batch
+                    // count is larger than the candidate pool size.
                     typeId: pools.typePool[index % pools.typePool.length],
                     licencedGroupId: pools.licencedPool[index % pools.licencedPool.length],
                     guarantorsGroupId: pools.guarantorsPool[index % pools.guarantorsPool.length],

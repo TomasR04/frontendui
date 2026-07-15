@@ -1,4 +1,17 @@
-const randomWords = [
+// Utility helpers for generating random program data.
+// This module builds random program names and extracts related entity IDs
+// from GraphQL query results so seed/demo generation can run consistently.
+
+const leftRandomWords = [
+    "Vojenská",
+    "Technická",
+    "Informační",
+    "Vědecká",
+    "Výzkumná",
+    "Vývojová",
+]
+
+const rightRandomWords = [
     "Výchova",
     "Matematika",
     "Informatika",
@@ -8,13 +21,16 @@ const randomWords = [
     "Biologie",
 ]
 
+// Pick a random element from an array.
 const pickRandom = (items) => items[Math.floor(Math.random() * items.length)]
 
-// Shuffle a copy so each run starts from a different order without mutating the source list.
+// Return a shuffled copy of the provided array without mutating it.
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5)
 
 export const GENERATE_AMOUNT = 3
 
+// Extract a list of entities from a flexible GraphQL result shape.
+// Supports direct arrays, `data`, `result`, and nested `items` payloads.
 export const entitiesFromResult = (result) => {
     const candidates = [result, result?.data, result?.result, result?.data?.result]
 
@@ -38,12 +54,13 @@ export const pickRandomEntity = (result) => {
     return entities[Math.floor(Math.random() * entities.length)] ?? null
 }
 
-// Convert the GraphQL result into a shuffled list that can be consumed one item at a time.
+// Return a randomized list of entities that can be used as a candidate pool.
 export const pickRandomEntityList = (result) => shuffle(entitiesFromResult(result))
 
+// Generate a random program title from two word sets and the item index.
 export const makeRandomProgramName = (index) => {
-    const left = pickRandom(randomWords)
-    const right = pickRandom(randomWords)
+    const left = pickRandom(leftRandomWords)
+    const right = pickRandom(rightRandomWords)
     return `${left} ${right} ${index + 1}`
 }
 
@@ -51,9 +68,10 @@ export const resolveRandomProgramIds = async ({
     runProgramTypes,
     runGroups,
 }) => {
-    // Load the full candidate sets once; the caller will pick a different entry for each program.
+    // Load candidate pools from the API once.
     const typePage = await runProgramTypes({ skip: 0, limit: 200 })
     const typeList = pickRandomEntityList(typePage)
+
     const groupPage = await runGroups({ skip: 0, limit: 200 })
     const groupList = pickRandomEntityList(groupPage)
 
@@ -61,7 +79,7 @@ export const resolveRandomProgramIds = async ({
         return null
     }
 
-    // Return only pools so the create loop can cycle through them by index.
+    // Return only ID arrays so the caller can assign related IDs by index.
     return {
         typePool: typeList.map((type) => type.id),
         licencedPool: groupList.map((group) => group.id),

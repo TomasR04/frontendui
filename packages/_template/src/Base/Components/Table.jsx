@@ -83,6 +83,10 @@ export const translateLabel = (name) => {
     return name
 }
 
+// `buildTableDef` infers columns from the first record in the data array.
+// It excludes hidden metadata fields like `__typename` and `id`, expands nested
+// objects with a displayable child attribute, and selects a renderer for each
+// field type (default text, linked ID, nested linked item, etc.).
 export const buildTableDef = (data) => {
     const row = data?.[0] ?? {}
     const priority = ["name"] 
@@ -293,6 +297,18 @@ export const TableBody = ({ data, table_def, TableRow = TableRow_ }) => {
 
 const TableBody_ = TableBody
 
+// The main Table component renders a responsive HTML table from raw data.
+// If `table_def` is provided, it is used directly; otherwise the table builder
+// generates a column definition from the first data row.
+//
+// `table_def` controls both the column labels and the React cell components used
+// to render each value.
+// Main table renderer.
+// If a prebuilt `table_def` is passed in, it uses that definition. Otherwise it
+// derives columns from the data automatically using `buildTableDef`.
+//
+// The table uses the definition to produce both the header labels and the
+// correct cell component for each column.
 export const Table = ({ data, table_def = null, TableBody = TableBody_ }) => {
     if (!data || data.length === 0) return null
     

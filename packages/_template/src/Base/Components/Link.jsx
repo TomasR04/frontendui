@@ -39,11 +39,16 @@ const getLinkRoot = (item) => {
     return GenericURIRoot;
 };
 
+// Returns the base view URI for a given item type.
+// The generated value is used for constructing links for view/edit/delete actions.
+// For registered specific link types, `LinkURI` may be overridden via `registerLink`.
 export const LinkURI = (item) => {
     const root = getLinkRoot(item);
     return `${root}/${item?.__typename}/view/`;
 }
 
+// Builds the final target URI for a single item and action.
+// Generic items use `/generic/:typename/:action/:id`, while known roots use `/{root}/{typename}/{action}/{id}`.
 const getLinkTargetURI = (item, action = "view") => {
     const root = getLinkRoot(item);
 
@@ -56,11 +61,14 @@ const getLinkTargetURI = (item, action = "view") => {
     return item?.id ? `${root}/${item.__typename}/${action}/${item.id}` : "#";
 };
 
+// Base Link component for rendering item links across the app.
+// It resolves a type-specific link component if registered, otherwise falls back to a generic path.
+// The default `action` is `view`, but the consumer can request `edit`, `delete`, etc.
 export const Link = ({ item, action="view", children, ...others }) => {
     
     const SpecificLink = item?.__typename ? RegisterOfLinks[item.__typename] : null;
     if (SpecificLink && SpecificLink !== Link) {
-        // console.log('Using specific link for typename:', item.__typename);
+        // Use a type-specific registered Link component when available.
         return <SpecificLink item={item} action={action} {...others}>{children}</SpecificLink>;
     }
     

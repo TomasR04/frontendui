@@ -22,7 +22,8 @@ function safeParseWhere(sp, paramName = "where") {
     }
 }
 
-// 
+// The URL currently uses the `gr_where` parameter for vector page filtering.
+// We parse it as JSON so the filter can be passed to the GraphQL query as an object.
 const filterParameterName = "gr_where"
 export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction }) => {
 
@@ -43,7 +44,9 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
         restart(params)
     }, [whereFromUrl]);
 
-    // Build the table columns for this page and hide metadata fields that should not be shown to users.
+    // `buildTableDef` introspects the first item row to build columns automatically.
+    // We then remove known metadata fields so the table shows only user-facing columns.
+    // If you add a GraphQL field that should remain hidden, add it to `hiddenColumns`.
     const table_def = useMemo(() => {
         if (!items?.length) return null;
 
@@ -78,6 +81,7 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
                 </Filter>
             </Collapsible>
 
+            {/* Pass filtered table_def into Table so hidden metadata columns are not rendered. */}
             <Table data={items} table_def={table_def} />
 
             <AsyncStateIndicator error={error} loading={loading} text="Nahrávám další..." />

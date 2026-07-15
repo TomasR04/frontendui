@@ -9,13 +9,18 @@ import { ProgramTypeReadPageAsyncAction } from "../../../../all/src/ProgramTypeG
 import { GroupReadPageAsyncAction } from "../../../../all/src/GroupGQLModel/Queries/GroupReadPageAsyncAction"
 import { GENERATE_AMOUNT, makeRandomProgramName, resolveRandomProgramIds } from "../Utils/randomProgramGeneration"
 
-// Toolbar for bulk generating random programs
+// Page-specific toolbar for bulk program generation.
+// This toolbar is used only in the program create page and operates over the
+// current session, not a generic create dialog item.
 const BulkGenerateToolbar = ({ session }) => {
     const [message, setMessage] = useState("")
     const [working, setWorking] = useState(false)
+
+    // These actions are deferred so they only execute when the button is clicked.
     const { run: runProgramTypes } = useAsyncThunkAction(ProgramTypeReadPageAsyncAction, {}, { deferred: true })
     const { run: runGroups } = useAsyncThunkAction(GroupReadPageAsyncAction, {}, { deferred: true })
 
+    // `commitNow` is the session API used by this page to persist generated items.
     const canGenerate = Boolean(session?.commitNow)
 
     const handleGenerate = async () => {
@@ -26,7 +31,9 @@ const BulkGenerateToolbar = ({ session }) => {
 
         try {
             const baseDraft = session?.draft ?? {}
-            // The helper returns shuffled pools, so every generated program can take the next value.
+
+            // Fetch shuffled ID pools once so each generated program gets a different
+            // related type/group combination without repeated network queries.
             const pools = await resolveRandomProgramIds({
                 runProgramTypes,
                 runGroups,
@@ -44,7 +51,9 @@ const BulkGenerateToolbar = ({ session }) => {
                     id: crypto.randomUUID(),
                     name: makeRandomProgramName(index),
                     nameEn: `Random Program ${index + 1} ${suffix}`,
-                    // Cycle through the shuffled pools so the batch does not keep repeating the same values.
+                    // Cycle through each pool so repeated values do not occur in
+                    // the generated batch when the arrays are shorter than the
+                    // number of programs being generated.
                     typeId: pools.typePool[index % pools.typePool.length],
                     licencedGroupId: pools.licencedPool[index % pools.licencedPool.length],
                     guarantorsGroupId: pools.guarantorsPool[index % pools.guarantorsPool.length],
