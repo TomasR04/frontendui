@@ -1,5 +1,6 @@
 import { PersonFill } from "react-bootstrap-icons"
-import { Link } from "./Link"
+//import { Link } from "./Link"
+import { Link } from "../../../../_template/src/Base/Components/Link"
 import { CardCapsule as CardCapsule_ } from "../../../../_template/src/Base/Components"
 
 /**

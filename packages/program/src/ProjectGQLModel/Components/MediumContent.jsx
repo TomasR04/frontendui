@@ -10,7 +10,8 @@ import { ReadAsyncAction as ReadGroupAsyncAction } from "../../../../_template/s
 import { InsertAsyncAction as InsertRoleAsyncAction } from "../../../../_template/src/RoleGQLModel/Queries"
 import { SearchAsyncAction as SearchUserAsyncAction } from "../../../../_template/src/UserGQLModel/Queries/SearchAsyncAction"
 import { SearchAsyncAction as SearchRoleTypeAsyncAction } from "../../../../_template/src/RoleTypeGQLModel/Queries/SearchAsyncAction"
-import { Link } from "./Link"
+//import { Link } from "./Link"
+import { Link } from "../../../../_template/src/Base/Components/Link"
 import { RBACObject } from "../../../../_template/src/RoleGQLModel/Components/RBACObject"
 /**
  * A component that displays medium-level content for an template entity.

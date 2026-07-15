@@ -18,11 +18,41 @@ export const registerLink = (__typename, Link, overrideLinkURI) => {
 };
 
 export const GenericURIRoot = "/generic";
+
+export const SubjectURIRoot = "/subject";
+export const UserURIRoot = "/user";
+export const GroupURIRoot = "/group";
+export const ProgramGQLModelURIRoot = "/program";
+
 export const LinkURI = GenericURIRoot + "/view/";
 export const VectorItemsURI = GenericURIRoot + "/list/";
 
+const getLinkRoot = (item) => {
+    const typename = item?.__typename ?? "";
+    const normalizedTypename = typename.toLowerCase();
+
+    if (normalizedTypename.includes("subject")) return SubjectURIRoot;
+    if (normalizedTypename.includes("user")) return UserURIRoot;
+    if (normalizedTypename.includes("group")) return GroupURIRoot;
+    if (normalizedTypename.includes("programgqlmodel")) return ProgramGQLModelURIRoot;
+
+    return GenericURIRoot;
+};
+
+const getLinkTargetURI = (item, action = "view") => {
+    const root = getLinkRoot(item);
+
+    if (root === GenericURIRoot) {
+        return item?.__typename && item?.id
+            ? `${root}/${item.__typename}/${action}/${item.id}`
+            : "#";
+    }
+
+    return item?.id ? `${root}/${item.__typename}/${action}/${item.id}` : "#";
+};
+
 export const Link = ({ item, action="view", children, ...others }) => {
-    console.log(item)
+    
     const SpecificLink = item?.__typename ? RegisterOfLinks[item.__typename] : null;
     if (SpecificLink && SpecificLink !== Link) {
         // console.log('Using specific link for typename:', item.__typename);
@@ -32,9 +62,7 @@ export const Link = ({ item, action="view", children, ...others }) => {
     const label =
         children || item?.fullname || item?.name || item?.id || "Missing";
 
-    const to = item?.__typename && item?.id
-        ? `${GenericURIRoot}/${item.__typename}/${action}/${item.id}`
-        : "#";
+    const to = getLinkTargetURI(item, action);
 
     return <ProxyLink to={to} {...others}>{label}</ProxyLink>;
 };

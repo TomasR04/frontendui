@@ -13,7 +13,7 @@ const pickRandom = (items) => items[Math.floor(Math.random() * items.length)]
 // Shuffle a copy so each run starts from a different order without mutating the source list.
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5)
 
-export const GENERATE_AMOUNT = 2
+export const GENERATE_AMOUNT = 3
 
 export const entitiesFromResult = (result) => {
     const candidates = [result, result?.data, result?.result, result?.data?.result]
