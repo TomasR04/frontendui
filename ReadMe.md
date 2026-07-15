@@ -1,6 +1,22 @@
+# 15.7.2026
+
+## Změny
+
+- pročištění stránek o zbytné údaje
+- vytvoření generátoru programů
+- úprava linkovacího systému
+
+## Problémy k vyřešení
+
+- linkování na generic
+- schování určitých údájů v tabulkách
+
+
+
 # 1.6.2026
 
 ## Změny
+
 - vytvoření kompletních mutací pro ProgramGQLModel
 - vytvoření stránek a mutací pro ProgramType, Form, Level, Title a language
 - přidání ProgramRouter pro navigování mezi entitami
