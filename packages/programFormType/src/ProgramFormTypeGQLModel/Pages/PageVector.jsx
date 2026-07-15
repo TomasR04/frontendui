@@ -10,7 +10,7 @@ import { useEffect } from "react"
 import { useMemo } from "react"
 import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/AsyncStateIndicator"
 import { Collapsible } from "../../../../_template/src/Base/FormControls/Collapsible"
-
+import { buildTableDef } from "../../../../_template/src/Base/Components/Table"
 
 function safeParseWhere(sp, paramName = "where") {
     const raw = sp.get(paramName);
@@ -44,7 +44,18 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
         restart(params)
     }, [whereFromUrl]);
 
-    
+    // Build the table columns for this page and hide metadata fields that should not be shown to users.
+    const table_def = useMemo(() => {
+        if (!items?.length) return null;
+
+        const hiddenColumns = new Set(["created", "lastchange", "createdbyId", "changedbyId", "rbacobjectId"]);
+        const baseDef = buildTableDef(items);
+
+        return Object.fromEntries(
+            Object.entries(baseDef).filter(([name]) => !hiddenColumns.has(name))
+        );
+    }, [items]);
+
     return (
         <PageBase>
             <Collapsible 
@@ -68,7 +79,7 @@ export const PageVector = ({ children, queryAsyncAction = ReadPageAsyncAction })
                 </Filter>
             </Collapsible>
 
-            <Table data={items} />
+            <Table data={items} table_def={table_def} />
 
             <AsyncStateIndicator error={error}  loading={loading} text="Nahrávám další..." />
 

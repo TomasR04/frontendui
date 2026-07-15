@@ -133,8 +133,8 @@ export const buildTableDef = (data) => {
     component: ({row}) => <td><KebabMenu actions={[
             { children: <Link className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row}>Detail</Link> },
             { children: <UpdateLink className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row} action="edit">Editovat</UpdateLink> },
-            { children: <UpdateButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row}>Editovat (zde)</UpdateButton> },
-            { children: <DeleteButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100">Smazat</DeleteButton> },
+            // { children: <UpdateButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100" item={row}>Editovat (zde)</UpdateButton> },
+            // { children: <DeleteButton className="btn btn-sm btn-outline-secondary border-0 text-start w-100">Smazat</DeleteButton> },
         ]} /></td>,
     }
 

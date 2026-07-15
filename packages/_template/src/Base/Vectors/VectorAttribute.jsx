@@ -30,7 +30,9 @@ export const VectorAttribute = ({ attribute_name, item }) => {
                 translateLabel(attribute_name) || attribute_name
             }
         >
-            <Table data={attribute_value} />
+            <div style={{ maxHeight: "50vh", overflowY: "auto", paddingRight: "0.5rem" }}>
+                <Table data={attribute_value} />
+            </div>
         </CardCapsule>
     )
 }

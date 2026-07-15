@@ -9,7 +9,7 @@ import { AsyncStateIndicator } from "../../../../_template/src/Base/Helpers/Asyn
 import { makeMutationURI } from "./helpers"
 import { GeneralButton, GeneralDialog, GeneralLink } from "./General"
 
-export const UpdateURI = makeMutationURI(LinkURI, "edit", { withId: true });
+export const UpdateURI = (item) => makeMutationURI(LinkURI(item), "edit", { withId: true });
 
 // naviguje na stranku, kde se da udelat update
 // testuje opravneni 
@@ -18,9 +18,9 @@ export const UpdateURI = makeMutationURI(LinkURI, "edit", { withId: true });
 // item musi obsahovat rbacobject s rolemi aktualniho uzivatele
 export const UpdateLink = ({
     item,
-    oneOfRoles = ["superadmin"],
+    oneOfRoles = ["studijní administrátor"],
     mode = "absolute",
-    uriPattern = UpdateURI,
+    uriPattern = UpdateURI(item),
     children,
     ...props
 }) => {

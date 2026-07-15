@@ -23,50 +23,6 @@ fragment Link on ProgramLevelTypeGQLModel {
 const MediumFragmentStr = `
 fragment Medium on ProgramLevelTypeGQLModel {
   ...Link
-  createdby {
-    __typename
-    id
-    lastchange
-    created
-    createdbyId
-    changedbyId
-    rbacobjectId
-    name
-    givenname
-    middlename
-    email
-    firstname
-    surname
-    valid
-    startdate
-    enddate
-    typeId
-    isThisMe
-    gdpr
-    fullname
-  }
-  changedby {
-    __typename
-    id
-    lastchange
-    created
-    createdbyId
-    changedbyId
-    rbacobjectId
-    name
-    givenname
-    middlename
-    email
-    firstname
-    surname
-    valid
-    startdate
-    enddate
-    typeId
-    isThisMe
-    gdpr
-    fullname
-  }
   rbacobject {
     ...RBRoles
   }
